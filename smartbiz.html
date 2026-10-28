@@ -375,7 +375,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
     <div class="sec-hdr">
       <div class="sec-icon">&#128203;</div>
       <div>
-        <div class="sec-title">Etape 1 — Identification du Projet</div>
+        <div class="sec-title" data-step="1">Etape 1 — Identification du Projet</div>
         <div class="sec-sub">Informations generales et classification du projet</div>
       </div>
     </div>
@@ -493,15 +493,15 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
       <div class="row3">
         <div class="field">
           <label style="font-size:10px">Annee 1-2 (%)</label>
-          <input type="number" id="p-growth1" value="5" min="-20" max="200" step="0.5" oninput="recalcAll()"/>
+          <input type="number" id="p-growth1" value="5" min="-20" max="200" step="0.5" oninput="recalcAllDebounced()"/>
         </div>
         <div class="field">
           <label style="font-size:10px">Annee 3-5 (%)</label>
-          <input type="number" id="p-growth2" value="3" min="-20" max="100" step="0.5" oninput="recalcAll()"/>
+          <input type="number" id="p-growth2" value="3" min="-20" max="100" step="0.5" oninput="recalcAllDebounced()"/>
         </div>
         <div class="field">
           <label style="font-size:10px">Annee 6-10 (%)</label>
-          <input type="number" id="p-growth3" value="2" min="-20" max="50" step="0.5" oninput="recalcAll()"/>
+          <input type="number" id="p-growth3" value="2" min="-20" max="50" step="0.5" oninput="recalcAllDebounced()"/>
         </div>
       </div>
     </div>
@@ -536,7 +536,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
     <div class="sec-hdr">
       <div class="sec-icon">&#128100;</div>
       <div>
-        <div class="sec-title">Etape 2 — Informations sur le Promoteur</div>
+        <div class="sec-title" data-step="2">Etape 2 — Informations sur le Promoteur</div>
         <div class="sec-sub">Identite, experience, patrimoine et capacite d'apport</div>
       </div>
     </div>
@@ -607,7 +607,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         </tfoot>
       </table>
     </div>
-    <button class="btn-add" onclick="addPatrRow()">+ Ajouter un bien (maison, terrain, vehicule, cheptel, epargne...)</button>
+    <button class="btn-add" onclick="addPatrRow()" data-key="add-asset">+ Ajouter un bien (maison, terrain, vehicule, cheptel, epargne...)</button>
   </div>
 
   <!-- Sources de revenus -->
@@ -642,7 +642,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         </tfoot>
       </table>
     </div>
-    <button class="btn-add" onclick="addRevRow()">+ Ajouter une source de revenu (salaire, loyers, commerce, agriculture...)</button>
+    <button class="btn-add" onclick="addRevRow()" data-key="add-income">+ Ajouter une source de revenu (salaire, loyers, commerce, agriculture...)</button>
   </div>
 
   <!-- Apport -->
@@ -694,12 +694,12 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
     <div class="sec-hdr">
       <div class="sec-icon">&#128221;</div>
       <div>
-        <div class="sec-title">Etape 3 — Description du Projet</div>
+        <div class="sec-title" data-step="3">Etape 3 — Description du Projet</div>
         <div class="sec-sub">Contexte, justification, objectifs et planification</div>
       </div>
     </div>
     <div class="field"><label>Contexte et problematique *</label>
-      <textarea id="pj-contexte" rows="3" placeholder="Decrivez le contexte economique et social dans lequel s'inscrit ce projet. Quel probleme ou besoin identifie-t-il?"></textarea></div>
+      <textarea id="pj-contexte" rows="3" onblur="recalcAll()" placeholder="Decrivez le contexte economique et social dans lequel s'inscrit ce projet. Quel probleme ou besoin identifie-t-il?"></textarea></div>
     <div class="field"><label>Justification du projet *</label>
       <textarea id="pj-justif" rows="3" placeholder="Pourquoi ce projet est-il pertinent et necessaire? Quelle opportunite exploite-t-il?"></textarea></div>
     <div class="field"><label>Objectif general *</label>
@@ -727,7 +727,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
     <div class="sec-hdr">
       <div class="sec-icon">&#128202;</div>
       <div>
-        <div class="sec-title">Etape 4 — Etude de Marche</div>
+        <div class="sec-title" data-step="4">Etape 4 — Etude de Marche</div>
         <div class="sec-sub">Produits, clients, prix, concurrence et strategies</div>
       </div>
     </div>
@@ -771,7 +771,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         </tfoot>
       </table>
     </div>
-    <button class="btn-add" onclick="addProdRow()">+ Ajouter un produit / service</button>
+    <button class="btn-add" onclick="addProdRow()" data-key="add-product">+ Ajouter un produit / service</button>
 
     <!-- Concurrents -->
     <div style="font-size:11px;font-weight:700;color:#93C5FD;text-transform:uppercase;margin:14px 0 6px;">
@@ -823,7 +823,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
     <div class="sec-hdr">
       <div class="sec-icon">&#128184;</div>
       <div>
-        <div class="sec-title">Etape 5 — Plan d'Investissement Initial</div>
+        <div class="sec-title" data-step="5">Etape 5 — Plan d'Investissement Initial</div>
         <div class="sec-sub">Tous les montants en FRW — conversion USD et Pi automatique</div>
       </div>
     </div>
@@ -860,7 +860,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         </tfoot>
       </table>
     </div>
-    <button class="btn-add" onclick="addInvRow()">+ Ajouter un poste d'investissement</button>
+    <button class="btn-add" onclick="addInvRow()" data-key="add-investment">+ Ajouter un poste d'investissement</button>
     <div class="note-info" style="margin-top:8px">
       &#9432; Exemples: Terrain, Batiment/Local, Machines, Equipements, Vehicules, Installation, Etudes techniques, Licences/Permis, Frais de demarrage, Stock initial...
     </div>
@@ -878,21 +878,21 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
     <div class="row2">
       <div class="field">
         <label>Stocks moyens (FRW) <span class="tip" onclick="showTip(this,'Valeur moyenne des stocks que vous devez maintenir pour fonctionner. Ex: 30 jours de stock = Achats mensuels / 30 x jours de stock.')">?</span></label>
-        <input type="number" id="bfr-stocks" placeholder="0" min="0" oninput="recalcBFR()"/>
+        <input type="number" id="bfr-stocks" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
         <label>Creances clients (FRW) <span class="tip" onclick="showTip(this,'Montant que vos clients vous doivent en moyenne. Si paiement comptant, mettre 0. Si credit 30j: CA mensuel / 30 x jours credit.')">?</span></label>
-        <input type="number" id="bfr-creances" placeholder="0" min="0" oninput="recalcBFR()"/>
+        <input type="number" id="bfr-creances" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
     </div>
     <div class="row2">
       <div class="field">
         <label>Tresorerie minimale (FRW) <span class="tip" onclick="showTip(this,'Encaisse minimum a maintenir pour les depenses courantes imprevues. Generalement 1-2 mois de charges fixes.')">?</span></label>
-        <input type="number" id="bfr-treso" placeholder="0" min="0" oninput="recalcBFR()"/>
+        <input type="number" id="bfr-treso" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
         <label>Dettes fournisseurs (FRW) <span class="tip" onclick="showTip(this,'Ce que vos fournisseurs vous permettent de differer. Credit fournisseur. Reduit le BFR.')">?</span></label>
-        <input type="number" id="bfr-dettes" placeholder="0" min="0" oninput="recalcBFR()"/>
+        <input type="number" id="bfr-dettes" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
     </div>
     <div class="tbox">
@@ -917,7 +917,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
     <div class="sec-hdr">
       <div class="sec-icon">&#127970;</div>
       <div>
-        <div class="sec-title">Etape 6 — Plan de Financement</div>
+        <div class="sec-title" data-step="6">Etape 6 — Plan de Financement</div>
         <div class="sec-sub">Structure du financement — le total doit egaliser le cout du projet</div>
       </div>
     </div>
@@ -1108,7 +1108,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         <tbody id="chvar-body"></tbody>
       </table>
     </div>
-    <button class="btn-add" onclick="addChvarRow()">+ Ajouter une charge variable</button>
+    <button class="btn-add" onclick="addChvarRow()" data-key="add-chvar">+ Ajouter une charge variable</button>
   </div>
 
   <!-- Charges fixes -->
@@ -1143,7 +1143,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         </tfoot>
       </table>
     </div>
-    <button class="btn-add" onclick="addChfixRow()">+ Ajouter une charge fixe</button>
+    <button class="btn-add" onclick="addChfixRow()" data-key="add-chfix">+ Ajouter une charge fixe</button>
   </div>
 
   <!-- Compte de resultat previsionnel -->
@@ -1371,7 +1371,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         <tbody id="risk-body"></tbody>
       </table>
     </div>
-    <button class="btn-add" onclick="addRiskRow()">+ Ajouter un risque</button>
+    <button class="btn-add" onclick="addRiskRow()" data-key="add-risk">+ Ajouter un risque</button>
     <div class="note-info" style="margin-top:6px">
       Probabilite: Faible / Moyenne / Elevee &nbsp;|&nbsp; Impact: Faible / Moyen / Eleve &nbsp;|&nbsp; Niveau: L (Vert) / M (Orange) / H (Rouge)
     </div>
@@ -1410,7 +1410,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
         </tfoot>
       </table>
     </div>
-    <button class="btn-add" onclick="addGarRow()">+ Ajouter une garantie</button>
+    <button class="btn-add" onclick="addGarRow()" data-key="add-gar">+ Ajouter une garantie</button>
     <div class="tbox" style="margin-top:8px">
       <span class="lbl">Ratio de couverture des garanties</span>
       <span class="val" id="gar-ratio">-</span>
@@ -1561,6 +1561,14 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--
 // ═══════════════════════════════════════════════════════════
 
 // ── CONSTANTS ──
+
+// ── DEBOUNCE for recalcAll (prevents lag on text input) ──
+let _recalcTimer = null;
+function recalcAllDebounced(){
+  clearTimeout(_recalcTimer);
+  _recalcTimer = setTimeout(()=>{ recalcAll(); }, 300);
+}
+
 const GCV_DEFAULT = 314159;
 let BNR_RATE = 1350;
 let lang = "fr";
@@ -1672,1621 +1680,221 @@ function updateMode(){
   else setMode("A");
 }
 
-// ── LANGUAGE ──
-function setLang(l){
-  lang = l;
-  document.getElementById("lbtn-fr").classList.toggle("active",l==="fr");
-  document.getElementById("lbtn-en").classList.toggle("active",l==="en");
-  applyLang();
-}
-function applyLang(){
-  document.querySelectorAll("[data-"+lang+"]").forEach(el=>{
-    const val = el.getAttribute("data-"+lang);
-    if(el.tagName==="INPUT"||el.tagName==="TEXTAREA") el.placeholder=val;
-    else if(el.tagName==="OPTION") el.textContent=val;
-    else el.innerHTML=val;
-  });
-}
 
-// ── TAX ──
-function updateTax(){
-  const rates = {RW:30,KE:30,UG:30,TZ:30,US:21,OTHER:25};
-  const pays = document.getElementById("p-pays")?.value||"RW";
-  const taxEl = document.getElementById("p-tax");
-  if(taxEl) taxEl.value = rates[pays]||30;
-  recalcAll();
-}
-
-// ── YEARS ──
-let YEARS = 3;
-function updateYears(){
-  YEARS = parseInt(document.getElementById("p-duree")?.value||3)||3;
-  rebuildTables();
-  recalcAll();
-}
-
-// ── SECTOR VARIABLES ──
-const SECTOR_VARS = {
-  commerce:{
-    title:"Variables Sectorielles — Commerce General",
-    vars:[
-      {id:"sv-rotation",label:"Rotation des stocks (jours)",tip:"Nombre de jours moyen avant renouvellement du stock. Ex: 30 jours = le stock se renouvelle chaque mois.",type:"number",default:"30"},
-      {id:"sv-credit-cli",label:"Credit clients (jours)",tip:"Delai de paiement accorde aux clients. Si vente comptant: 0.",type:"number",default:"0"},
-      {id:"sv-credit-four",label:"Credit fournisseurs (jours)",tip:"Delai de paiement accorde par les fournisseurs. Reduit le BFR.",type:"number",default:"30"},
-      {id:"sv-perte",label:"Pertes/casses (%)",tip:"Pourcentage du stock perdu (peremption, casse). Ex: 2% pour epicerie.",type:"number",default:"2"},
-    ]
+// ── LANGUAGE SWITCHING (Fixed) ──
+const TRANSLATIONS = {
+  fr: {
+    "step1-title": "Etape 1 — Identification du Projet",
+    "step2-title": "Etape 2 — Informations sur le Promoteur",
+    "step3-title": "Etape 3 — Description du Projet",
+    "step4-title": "Etape 4 — Etude de Marche",
+    "step5-title": "Etape 5 — Plan d'Investissement Initial",
+    "step6-title": "Etape 6 — Plan de Financement",
+    "step7-title": "Etape 7 — Previsions d'Exploitation",
+    "step8-title": "Etape 8 — Analyse Financiere",
+    "step9-title": "Etape 9 — Risques et Impact",
+    "step10-title": "Etape 10 — Rapport Final",
+    "btn-continue": "Continuer",
+    "btn-back": "Retour",
+    "add-asset": "+ Ajouter un bien (maison, terrain, vehicule...)",
+    "add-income": "+ Ajouter une source de revenu",
+    "add-product": "+ Ajouter un produit / service",
+    "add-investment": "+ Ajouter un poste d'investissement",
+    "add-chvar": "+ Ajouter une charge variable",
+    "add-chfix": "+ Ajouter une charge fixe",
+    "add-risk": "+ Ajouter un risque",
+    "add-gar": "+ Ajouter une garantie",
+    "total-patr": "TOTAL PATRIMOINE",
+    "total-rev": "TOTAL REVENUS MENSUELS",
+    "total-ca": "TOTAL CHIFFRE D'AFFAIRES",
+    "total-inv": "TOTAL INVESTISSEMENT",
+    "save-btn": "&#128190; Sauvegarder",
+    "restore-btn": "&#8635; Restaurer",
+    "ai-btn": "&#129302; Generer l'analyse IA et la recommandation professionnelle",
+    "print-btn": "&#128424; Imprimer / Exporter le Rapport (HTML)",
+    "pay-btn": "&#128176; Payer 3 Pi — Rapport Deep Study Complet",
+    "hero-title": "Moteur de Montage de Projets <em>Professionnel</em>",
   },
-  agri:{
-    title:"Variables Sectorielles — Agriculture",
-    vars:[
-      {id:"sv-superficie",label:"Superficie (hectares)",tip:"Surface totale cultivee en hectares.",type:"number",default:"1"},
-      {id:"sv-rendement",label:"Rendement (kg/ha)",tip:"Production attendue par hectare selon la culture et les conditions.",type:"number",default:"2000"},
-      {id:"sv-cycles",label:"Cycles de production/an",tip:"Nombre de recoltes par an. Ex: maraichage = 3, riz = 2.",type:"number",default:"2"},
-      {id:"sv-perte-agri",label:"Pertes post-recolte (%)",tip:"Pourcentage de la production perdu apres recolte (transport, stockage).",type:"number",default:"10"},
-    ]
-  },
-  elevage:{
-    title:"Variables Sectorielles — Elevage",
-    vars:[
-      {id:"sv-nb-animaux",label:"Nombre d'animaux",tip:"Effectif initial du cheptel.",type:"number",default:"10"},
-      {id:"sv-mortalite",label:"Taux de mortalite (%/an)",tip:"Pourcentage d'animaux morts par an. Ex: bovins: 2-5%.",type:"number",default:"3"},
-      {id:"sv-prod-unit",label:"Production unitaire/mois (kg ou L)",tip:"Production moyenne par animal et par mois. Ex: vache laitiere: 500L/mois.",type:"number",default:"500"},
-      {id:"sv-repro",label:"Taux de reproduction (%/an)",tip:"Pourcentage de femelles donnant naissance chaque annee.",type:"number",default:"70"},
-    ]
-  },
-  restaurant:{
-    title:"Variables Sectorielles — Restauration",
-    vars:[
-      {id:"sv-couverts",label:"Nombre de couverts/jour",tip:"Nombre de repas servis par jour en moyenne.",type:"number",default:"50"},
-      {id:"sv-ticket-moy",label:"Ticket moyen (FRW)",tip:"Montant moyen depense par client.",type:"number",default:"5000"},
-      {id:"sv-jours-ouv",label:"Jours d'ouverture/mois",tip:"Nombre de jours ouverts par mois.",type:"number",default:"26"},
-      {id:"sv-food-cost",label:"Food cost (%)",tip:"Pourcentage du CA consacre aux matieres premieres alimentaires. Standard: 25-35%.",type:"number",default:"30"},
-    ]
-  },
-  default:{
-    title:"Variables Sectorielles",
-    vars:[
-      {id:"sv-custom1",label:"Variable 1",tip:"Variable sectorielle personnalisee.",type:"text",default:""},
-      {id:"sv-custom2",label:"Variable 2",tip:"Variable sectorielle personnalisee.",type:"text",default:""},
-    ]
+  en: {
+    "step1-title": "Step 1 — Project Identification",
+    "step2-title": "Step 2 — Promoter Information",
+    "step3-title": "Step 3 — Project Description",
+    "step4-title": "Step 4 — Market Study",
+    "step5-title": "Step 5 — Initial Investment Plan",
+    "step6-title": "Step 6 — Financing Plan",
+    "step7-title": "Step 7 — Operating Forecasts",
+    "step8-title": "Step 8 — Financial Analysis",
+    "step9-title": "Step 9 — Risks and Impact",
+    "step10-title": "Step 10 — Final Report",
+    "btn-continue": "Continue",
+    "btn-back": "Back",
+    "add-asset": "+ Add an asset (house, land, vehicle...)",
+    "add-income": "+ Add an income source",
+    "add-product": "+ Add a product / service",
+    "add-investment": "+ Add an investment item",
+    "add-chvar": "+ Add a variable cost",
+    "add-chfix": "+ Add a fixed cost",
+    "add-risk": "+ Add a risk",
+    "add-gar": "+ Add a guarantee",
+    "total-patr": "TOTAL ASSETS",
+    "total-rev": "TOTAL MONTHLY INCOME",
+    "total-ca": "TOTAL REVENUE",
+    "total-inv": "TOTAL INVESTMENT",
+    "save-btn": "&#128190; Save",
+    "restore-btn": "&#8635; Restore",
+    "ai-btn": "&#129302; Generate AI analysis and professional recommendation",
+    "print-btn": "&#128424; Print / Export Report (HTML)",
+    "pay-btn": "&#128176; Pay 3 Pi — Full Deep Study Report",
+    "hero-title": "Professional Project <em>Finance Engine</em>",
   }
 };
 
-function updateSector(){
-  const sect = document.getElementById("p-secteur")?.value||"";
-  const box = document.getElementById("sector-vars");
-  const content = document.getElementById("sector-vars-content");
-  const title = document.getElementById("sector-vars-title");
-  if(!sect){ box.style.display="none"; return; }
-  const data = SECTOR_VARS[sect] || SECTOR_VARS["default"];
-  title.textContent = data.title;
-  content.innerHTML = data.vars.map(sv=>`
-    <div class="field">
-      <label>${sv.label} <span class="tip" onclick="showTip(this,'${sv.tip.replace(/'/g,"\'")}')" >?</span></label>
-      <input type="${sv.type}" id="${sv.id}" value="${sv.default}" oninput="recalcAll()"/>
-    </div>`).join("");
-  box.style.display = "block";
-}
-
-// ── TOOLTIP ──
-function showTip(el, txt){
-  const box = document.getElementById("tooltip-box");
-  box.textContent = txt;
-  box.style.display = "block";
-  const rect = el.getBoundingClientRect();
-  box.style.top = (rect.bottom+8+window.scrollY)+"px";
-  box.style.left = Math.max(8, rect.left-80+window.scrollX)+"px";
-  setTimeout(()=>{ box.style.display="none"; }, 4000);
-}
-document.addEventListener("click", ()=>{ document.getElementById("tooltip-box").style.display="none"; });
-
-// ══════════════════════════════════════════
-// DYNAMIC TABLE ROWS
-// ══════════════════════════════════════════
-
-// PATRIMOINE
-function initDefaultRows(){
-  addPatrRow("Maison principale","1","80000000","10");
-  addPatrRow("Vehicule Toyota","1","25000000","5");
-  addRevRow("Salaire mensuel","500000");
-  addProdRow("Produit 1 (Ex: Riz 25kg)","Sac","3500","2800","500");
-  addProdRow("Produit 2 (Ex: Sucre 50kg)","Sac","7200","5800","200");
-  addConcRow("Concurrent A","Proximite","Prix bas","Qualite variable","Meilleure qualite");
-  addInvRow("Amenagement local","1","2000000","10");
-  addInvRow("Mobilier et equipements","1","1500000","5");
-  addInvRow("Stock initial","1","3000000","1");
-  addChvarRow("Achats marchandises","65","");
-  addChvarRow("Emballages et consommables","3","");
-  addChfixRow("Loyer local","200000");
-  addChfixRow("Salaires personnel","350000");
-  addChfixRow("Electricite et eau","50000");
-  addChfixRow("Internet et telephone","20000");
-  addChfixRow("Transport","30000");
-  addRiskRow("Risque de marche","Moyenne","Moyen","M","Diversification clientele, etude de marche","Promoteur");
-  addRiskRow("Risque de credit fournisseur","Faible","Faible","L","Negociation conditions de paiement","Promoteur");
-  addGarRow("Hypotheque immobiliere","Maison principale","80000000","30");
-}
-
-function addPatrRow(desc="",qte="1",vunit="",duree=""){
-  patrCount++;
-  const id=patrCount;
-  const tr=document.createElement("tr");
-  tr.id="patr-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="pd-${id}" value="${desc}" placeholder="Ex: Maison Kigali, Terrain 500m2..."/></td>
-    <td><input type="number" id="pq-${id}" value="${qte||1}" min="0" step="0.01" oninput="calcPatrRow(${id})"/></td>
-    <td><input type="number" id="pu-${id}" value="${vunit}" placeholder="0" min="0" oninput="calcPatrRow(${id})"/></td>
-    <td id="pt-${id}" class="co">0 FRW</td>
-    <td id="pu2-${id}" class="neu">$0</td>
-    <td id="pp-${id}" class="neu">0 Pi</td>
-    <td><button class="btn-del" onclick="delRow('patr-row-${id}',calcPatrTot)">x</button></td>`;
-  document.getElementById("patr-body").appendChild(tr);
-  if(vunit) calcPatrRow(id);
-}
-function calcPatrRow(id){
-  const q=v("pq-"+id), u=v("pu-"+id), tot=q*u;
-  setText("pt-"+id, fmtFRW(tot));
-  setText("pu2-"+id, fmtUSD(tot));
-  setText("pp-"+id, fmtPi(tot));
-  calcPatrTot();
-}
-function calcPatrTot(){
-  let tot=0;
-  for(let i=1;i<=patrCount;i++){
-    const el=document.getElementById("pq-"+i);
-    if(el) tot += v("pq-"+i)*v("pu-"+i);
+const PLACEHOLDERS = {
+  fr: {
+    "p-nom": "Ex: Epicerie Moderne Kigali",
+    "p-ville": "Ex: Kigali — Nyarugenge",
+    "pr-nom": "UWASE Marie-Claire",
+    "pr-tel": "+250 788 000 000",
+    "pr-email": "nom@email.com",
+    "pr-addr": "KG 123 St, Kigali, Rwanda",
+    "pr-nat": "Rwandaise",
+    "pr-exp": "5",
+    "pr-expdesc": "Decrivez votre experience professionnelle dans ce secteur...",
+    "pr-formation": "Ex: Licence en Gestion, Formation TVET...",
+    "pr-garanties": "Ex: Hypotheque sur maison (80 000 000 FRW), Caution solidaire...",
+    "pj-contexte": "Decrivez le contexte economique. Quel probleme identifie-t-il?",
+    "pj-justif": "Pourquoi ce projet est-il pertinent et necessaire?",
+    "pj-obj": "Ex: Creer une epicerie qui approvisionne 500 menages...",
+    "pj-obj-sp": "1. Atteindre un CA de 5 000 000 FRW en 6 mois\n2. Creer 5 emplois",
+    "pj-activites": "Decrivez les activites principales: achat, vente, livraison...",
+    "pj-chrono": "Mois 1-2: Amenagement\nMois 3: Ouverture\nMois 6: Premier bilan",
+    "pj-tech": "Decrivez les equipements et technologies utilises...",
+    "pj-faisab": "Comment ce projet est-il viable a long terme?",
+    "mk-cible": "Ex: Menages du quartier Kimironko, petits commerces...",
+    "mk-taille": "Ex: 5 000 menages dans un rayon de 2 km...",
+    "mk-clients-act": "Ex: Aucun pour l'instant / 2 restaurants sous contrat",
+    "mk-clients-pot": "Ex: Menages, epiceries, hotels, ecoles, ONG...",
+    "mk-distrib": "Ex: Vente en boutique, livraison a domicile...",
+    "mk-marketing": "Ex: Reseaux sociaux, bouche a oreille, promotions...",
+    "mk-avantages": "Ex: Prix competitifs, proximite, qualite superieure...",
+    "imp-social": "Ex: Amelioration acces alimentation, reduction chomage local...",
+    "imp-eco": "Ex: Augmentation revenus menages, dynamisation economie locale...",
+    "imp-env": "Ex: Reduction emballages plastique, gestion dechets...",
+    "imp-durab": "Ex: Reinvestissement benefices, partenariats locaux, formation...",
+    "con-pts": "Decrivez les atouts majeurs du projet..."
+  },
+  en: {
+    "p-nom": "Ex: Modern Grocery Store Kigali",
+    "p-ville": "Ex: Kigali — Nyarugenge",
+    "pr-nom": "UWASE Marie-Claire",
+    "pr-tel": "+250 788 000 000",
+    "pr-email": "name@email.com",
+    "pr-addr": "KG 123 St, Kigali, Rwanda",
+    "pr-nat": "Rwandan",
+    "pr-exp": "5",
+    "pr-expdesc": "Describe your professional experience in this sector...",
+    "pr-formation": "Ex: Business Degree, TVET Training...",
+    "pr-garanties": "Ex: Mortgage on house (80,000,000 FRW), Joint surety...",
+    "pj-contexte": "Describe the economic context. What problem does it solve?",
+    "pj-justif": "Why is this project relevant and necessary?",
+    "pj-obj": "Ex: Create a grocery store serving 500 households...",
+    "pj-obj-sp": "1. Reach 5,000,000 FRW revenue in 6 months\n2. Create 5 jobs",
+    "pj-activites": "Describe main activities: procurement, sales, delivery...",
+    "pj-chrono": "Month 1-2: Setup\nMonth 3: Opening\nMonth 6: First review",
+    "pj-tech": "Describe equipment and technologies used...",
+    "pj-faisab": "How is this project viable in the long term?",
+    "mk-cible": "Ex: Kimironko households, small shops...",
+    "mk-taille": "Ex: 5,000 households within 2 km radius...",
+    "mk-clients-act": "Ex: None yet / 2 restaurants under contract",
+    "mk-clients-pot": "Ex: Households, groceries, hotels, schools, NGOs...",
+    "mk-distrib": "Ex: In-store sales, home delivery...",
+    "mk-marketing": "Ex: Social media, word of mouth, promotions...",
+    "mk-avantages": "Ex: Competitive prices, proximity, superior quality...",
+    "imp-social": "Ex: Improved food access, local unemployment reduction...",
+    "imp-eco": "Ex: Increased household income, local economy boost...",
+    "imp-env": "Ex: Plastic packaging reduction, waste management...",
+    "imp-durab": "Ex: Profit reinvestment, local partnerships, training...",
+    "con-pts": "Describe the project's major strengths..."
   }
-  setText("patr-tot-frw", fmtFRW(tot));
-  setText("patr-tot-usd", fmtUSD(tot));
-  setText("patr-tot-pi", fmtPi(tot));
-  updateApportPct();
+};
+
+function setLang(l){
+  lang = l;
+  document.getElementById("lbtn-fr").classList.toggle("active", l==="fr");
+  document.getElementById("lbtn-en").classList.toggle("active", l==="en");
+  applyLang();
 }
 
-// REVENUS
-function addRevRow(desc="",montant=""){
-  revCount++;
-  const id=revCount;
-  const tr=document.createElement("tr");
-  tr.id="rev-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="rd-${id}" value="${desc}" placeholder="Ex: Salaire, Loyer, Commerce..."/></td>
-    <td><input type="number" id="rm-${id}" value="${montant}" placeholder="0" min="0" oninput="calcRevTot()"/></td>
-    <td id="ra-${id}" class="co">0 FRW</td>
-    <td id="ru-${id}" class="neu">$0</td>
-    <td><button class="btn-del" onclick="delRow('rev-row-${id}',calcRevTot)">x</button></td>`;
-  document.getElementById("rev-body").appendChild(tr);
-  if(montant) calcRevTot();
-}
-function calcRevTot(){
-  let tot=0;
-  for(let i=1;i<=revCount;i++){
-    const el=document.getElementById("rm-"+i);
-    if(el){ const m=v("rm-"+i); tot+=m; setText("ra-"+i, fmtFRW(m*12)); setText("ru-"+i, fmtUSD(m*12)); }
-  }
-  setText("rev-tot-m", fmtFRW(tot));
-  setText("rev-tot-a", fmtFRW(tot*12)+"/an");
-  setText("rev-tot-usd", fmtUSD(tot*12));
-}
+function applyLang(){
+  const T = TRANSLATIONS[lang] || TRANSLATIONS["fr"];
+  const P = PLACEHOLDERS[lang] || PLACEHOLDERS["fr"];
 
-// PRODUITS
-function addProdRow(nom="",unite="",pvente="",pachat="",qte=""){
-  prodCount++;
-  const id=prodCount;
-  const tr=document.createElement("tr");
-  tr.id="prod-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="pn-${id}" value="${nom}" placeholder="Ex: Riz 25kg, Sucre 1kg..."/></td>
-    <td><input type="text" id="pu-${id}" value="${unite||'Unite'}" placeholder="Unite"/></td>
-    <td><input type="number" id="pv-${id}" value="${pvente}" placeholder="0" min="0" oninput="calcProdRow(${id})"/></td>
-    <td><input type="number" id="pa-${id}" value="${pachat}" placeholder="0" min="0" oninput="calcProdRow(${id})"/></td>
-    <td id="pm-${id}" class="co">0%</td>
-    <td><input type="number" id="pq-${id}" value="${qte}" placeholder="0" min="0" oninput="calcProdRow(${id})"/></td>
-    <td id="pcam-${id}" class="co">0 FRW</td>
-    <td id="pcaa-${id}" class="co">0 FRW</td>
-    <td><button class="btn-del" onclick="delRow('prod-row-${id}',calcProdTot)">x</button></td>`;
-  document.getElementById("prod-body").appendChild(tr);
-  if(pvente&&qte) calcProdRow(id);
-}
-function calcProdRow(id){
-  const pv=v("pv-"+id), pa=v("pa-"+id), q=v("pq-"+id);
-  const marge = pv>0 ? ((pv-pa)/pv*100) : 0;
-  const cam = pv*q, caa = cam*12;
-  setText("pm-"+id, fmtPct(marge));
-  const pmEl = document.getElementById("pm-"+id);
-  if(pmEl) pmEl.className = marge>20?"pos":marge>0?"co":"neg";
-  setText("pcam-"+id, fmtFRW(cam));
-  setText("pcaa-"+id, fmtFRW(caa));
-  calcProdTot();
-  recalcAll();
-}
-function calcProdTot(){
-  let totM=0, totA=0;
-  for(let i=1;i<=prodCount;i++){
-    const el=document.getElementById("pv-"+i);
-    if(el){ const cam=v("pv-"+i)*v("pq-"+i); totM+=cam; totA+=cam*12; }
-  }
-  setText("ca-tot-m", fmtFRW(totM));
-  setText("ca-tot-a", fmtFRW(totA));
-  return {m:totM, a:totA};
-}
-function getCAM(){ let t=0; for(let i=1;i<=prodCount;i++){ const e=document.getElementById("pv-"+i); if(e) t+=v("pv-"+i)*v("pq-"+i); } return t; }
-
-// CONCURRENTS
-function addConcRow(nom="",loc="",fort="",faible="",avantage=""){
-  concCount++;
-  const id=concCount;
-  const tr=document.createElement("tr");
-  tr.id="conc-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="cn-${id}" value="${nom}" placeholder="Nom concurrent"/></td>
-    <td><input type="text" id="cl-${id}" value="${loc}" placeholder="Lieu"/></td>
-    <td><input type="text" id="cf-${id}" value="${fort}" placeholder="Points forts"/></td>
-    <td><input type="text" id="cw-${id}" value="${faible}" placeholder="Points faibles"/></td>
-    <td><input type="text" id="ca-${id}" value="${avantage}" placeholder="Nos avantages"/></td>
-    <td><button class="btn-del" onclick="delRow('conc-row-${id}',()=>{})">x</button></td>`;
-  document.getElementById("conc-body").appendChild(tr);
-}
-
-// INVESTISSEMENTS
-function addInvRow(desc="",qte="1",prix="",dureeA="5"){
-  invCount++;
-  const id=invCount;
-  const tr=document.createElement("tr");
-  tr.id="inv-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="id-${id}" value="${desc}" placeholder="Ex: Local commercial, Refrigerateur..."/></td>
-    <td><input type="number" id="iq-${id}" value="${qte||1}" min="0" step="0.01" oninput="calcInvRow(${id})"/></td>
-    <td><input type="number" id="ip-${id}" value="${prix}" placeholder="0" min="0" oninput="calcInvRow(${id})"/></td>
-    <td id="it-${id}" class="co">0 FRW</td>
-    <td id="iu-${id}" class="neu">$0</td>
-    <td id="ipi-${id}" class="neu">0 Pi</td>
-    <td><input type="number" id="ia-${id}" value="${dureeA||5}" min="1" max="50" oninput="calcInvRow(${id})"/></td>
-    <td id="iamt-${id}" class="neu">0 FRW</td>
-    <td><button class="btn-del" onclick="delRow('inv-row-${id}',calcInvTot)">x</button></td>`;
-  document.getElementById("inv-body").appendChild(tr);
-  if(prix) calcInvRow(id);
-}
-function calcInvRow(id){
-  const q=v("iq-"+id), p=v("ip-"+id), tot=q*p;
-  const duree=v("ia-"+id)||5, amort=duree>0?tot/duree:0;
-  setText("it-"+id, fmtFRW(tot));
-  setText("iu-"+id, fmtUSD(tot));
-  setText("ipi-"+id, fmtPi(tot));
-  setText("iamt-"+id, fmtFRW(amort)+"/an");
-  calcInvTot();
-}
-function calcInvTot(){
-  let tot=0, totAmort=0;
-  for(let i=1;i<=invCount;i++){
-    const e=document.getElementById("iq-"+i);
-    if(e){ const t=v("iq-"+i)*v("ip-"+i); tot+=t; const dur=v("ia-"+i)||5; if(dur>0) totAmort+=t/dur; }
-  }
-  setText("inv-tot-frw", fmtFRW(tot));
-  setText("inv-tot-usd", fmtUSD(tot));
-  setText("inv-tot-pi", fmtPi(tot));
-  setText("amort-tot-frw", fmtFRW(totAmort)+"/an");
-  recalcBFR();
-  recalcFin();
-  updateApportPct();
-  return {tot, totAmort};
-}
-function getInvTot(){ let t=0; for(let i=1;i<=invCount;i++){ const e=document.getElementById("iq-"+i); if(e) t+=v("iq-"+i)*v("ip-"+i); } return t; }
-function getAmortAnnuel(){ let t=0; for(let i=1;i<=invCount;i++){ const e=document.getElementById("iq-"+i); if(e){ const tot2=v("iq-"+i)*v("ip-"+i); const dur=v("ia-"+i)||5; if(dur>0) t+=tot2/dur; } } return t; }
-
-// CHARGES VARIABLES
-function addChvarRow(poste="",pct="",montant=""){
-  chvarCount++;
-  const id=chvarCount;
-  const tr=document.createElement("tr");
-  tr.id="chvar-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="cvd-${id}" value="${poste}" placeholder="Ex: Achats marchandises, Commissions..."/></td>
-    <td><input type="number" id="cvp-${id}" value="${pct}" placeholder="%" min="0" max="200" step="0.5" oninput="recalcAll()"/>%</td>
-    <td><input type="number" id="cvm-${id}" value="${montant}" placeholder="ou montant fixe" min="0" oninput="recalcAll()"/> FRW</td>
-    <td><input type="text" id="cvs-${id}" placeholder="Source/Hypothese"/></td>
-    <td><button class="btn-del" onclick="delRow('chvar-row-${id}',recalcAll)">x</button></td>`;
-  document.getElementById("chvar-body").appendChild(tr);
-}
-function getChvarM(caM){
-  let tot=0;
-  for(let i=1;i<=chvarCount;i++){
-    const e=document.getElementById("cvd-"+i); if(!e) continue;
-    const pct=v("cvp-"+i), montant=v("cvm-"+i);
-    if(pct>0) tot+=caM*pct/100;
-    else if(montant>0) tot+=montant;
-  }
-  return tot;
-}
-
-// CHARGES FIXES
-function addChfixRow(poste="",montant=""){
-  chfixCount++;
-  const id=chfixCount;
-  const tr=document.createElement("tr");
-  tr.id="chfix-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="cfd-${id}" value="${poste}" placeholder="Ex: Loyer, Salaires, Electricite..."/></td>
-    <td><input type="number" id="cfm-${id}" value="${montant}" placeholder="0" min="0" oninput="calcChfixTot()"/> FRW</td>
-    <td id="cfa-${id}" class="co">0 FRW</td>
-    <td><input type="text" id="cfs-${id}" placeholder="Source/Hypothese"/></td>
-    <td><button class="btn-del" onclick="delRow('chfix-row-${id}',calcChfixTot)">x</button></td>`;
-  document.getElementById("chfix-body").appendChild(tr);
-  if(montant) calcChfixTot();
-}
-function calcChfixTot(){
-  let tot=0;
-  for(let i=1;i<=chfixCount;i++){
-    const e=document.getElementById("cfm-"+i);
-    if(e){ const m=v("cfm-"+i); tot+=m; setText("cfa-"+i, fmtFRW(m*12)); }
-  }
-  setText("chfix-tot-m", fmtFRW(tot));
-  setText("chfix-tot-a", fmtFRW(tot*12));
-  recalcAll();
-}
-function getChfixM(){ let t=0; for(let i=1;i<=chfixCount;i++){ const e=document.getElementById("cfm-"+i); if(e) t+=v("cfm-"+i); } return t; }
-
-// RISQUES
-function addRiskRow(risque="",prob="Moyenne",impact="Moyen",niveau="M",mesures="",resp=""){
-  riskCount++;
-  const id=riskCount;
-  const tr=document.createElement("tr");
-  tr.id="risk-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="rk-${id}" value="${risque}" placeholder="Ex: Risque de marche..."/></td>
-    <td><select id="rp-${id}" onchange="calcRiskLevel(${id})">
-      <option value="Faible" ${prob==="Faible"?"selected":""}>Faible</option>
-      <option value="Moyenne" ${prob==="Moyenne"?"selected":""}>Moyenne</option>
-      <option value="Elevee" ${prob==="Elevee"?"selected":""}>Elevee</option>
-    </select></td>
-    <td><select id="ri-${id}" onchange="calcRiskLevel(${id})">
-      <option value="Faible" ${impact==="Faible"?"selected":""}>Faible</option>
-      <option value="Moyen" ${impact==="Moyen"?"selected":""}>Moyen</option>
-      <option value="Eleve" ${impact==="Eleve"?"selected":""}>Eleve</option>
-    </select></td>
-    <td id="rn-${id}"><span class="risk-${niveau}">${niveau}</span></td>
-    <td><input type="text" id="rm-${id}" value="${mesures}" placeholder="Mesures d'attenuation"/></td>
-    <td><input type="text" id="rr-${id}" value="${resp}" placeholder="Responsable"/></td>
-    <td><button class="btn-del" onclick="delRow('risk-row-${id}',()=>{})">x</button></td>`;
-  document.getElementById("risk-body").appendChild(tr);
-}
-function calcRiskLevel(id){
-  const prob=document.getElementById("rp-"+id)?.value||"";
-  const imp=document.getElementById("ri-"+id)?.value||"";
-  let niv="L";
-  if(prob==="Elevee"&&imp==="Eleve") niv="H";
-  else if(prob==="Elevee"||imp==="Eleve") niv="M";
-  else if(prob==="Moyenne"&&imp==="Moyen") niv="M";
-  const el=document.getElementById("rn-"+id);
-  if(el) el.innerHTML=`<span class="risk-${niv}">${niv}</span>`;
-}
-
-// GARANTIES
-function addGarRow(type="",desc="",valMarch="",decote="30"){
-  garCount++;
-  const id=garCount;
-  const tr=document.createElement("tr");
-  tr.id="gar-row-"+id;
-  tr.innerHTML=`
-    <td><input type="text" id="gt-${id}" value="${type}" placeholder="Ex: Hypotheque, Nantissement..."/></td>
-    <td><input type="text" id="gd-${id}" value="${desc}" placeholder="Description"/></td>
-    <td><input type="number" id="gm-${id}" value="${valMarch}" placeholder="0" min="0" oninput="calcGarRow(${id})"/></td>
-    <td><input type="number" id="gde-${id}" value="${decote||30}" min="0" max="100" oninput="calcGarRow(${id})"/>%</td>
-    <td id="gr-${id}" class="co">0 FRW</td>
-    <td><button class="btn-del" onclick="delRow('gar-row-${id}',calcGarTot)">x</button></td>`;
-  document.getElementById("gar-body").appendChild(tr);
-  if(valMarch) calcGarRow(id);
-}
-function calcGarRow(id){
-  const march=v("gm-"+id), decote=v("gde-"+id)||0;
-  const retenue=march*(1-decote/100);
-  setText("gr-"+id, fmtFRW(retenue));
-  calcGarTot();
-}
-function calcGarTot(){
-  let totM=0, totR=0;
-  for(let i=1;i<=garCount;i++){
-    const e=document.getElementById("gm-"+i);
-    if(e){ totM+=v("gm-"+i); const dec=v("gde-"+i)||0; totR+=v("gm-"+i)*(1-dec/100); }
-  }
-  setText("gar-tot-march", fmtFRW(totM));
-  setText("gar-tot-ret", fmtFRW(totR));
-  const credit=v("fin-credit")||getInvTot()*0.8;
-  const ratio=totR>0&&credit>0?(totR/credit*100):0;
-  const ratioEl=document.getElementById("gar-ratio");
-  if(ratioEl){
-    ratioEl.textContent=fmtPct(ratio)+" (valeur retenue / credit demande)";
-    ratioEl.className="val "+(ratio>=100?"cg":ratio>=70?"co":"cr");
-  }
-  return {totM, totR};
-}
-
-// Helper
-function delRow(id, cb){ document.getElementById(id)?.remove(); cb(); }
-
-// ══════════════════════════════════════════
-// BFR
-// ══════════════════════════════════════════
-function recalcBFR(){
-  const bfr = v("bfr-stocks")+v("bfr-creances")+v("bfr-treso")-v("bfr-dettes");
-  const bfrPos = Math.max(0,bfr);
-  setText("bfr-total", fmtFRW(bfrPos));
-  setText("bfr-usd", "("+fmtUSD(bfrPos)+")");
-  const invTot=getInvTot();
-  const coutTotal=invTot+bfrPos;
-  setText("cout-total-display", fmtFRW(coutTotal));
-  recalcFin();
-  updateApportPct();
-}
-function getCoutTotal(){ return getInvTot()+Math.max(0,v("bfr-stocks")+v("bfr-creances")+v("bfr-treso")-v("bfr-dettes")); }
-
-// ══════════════════════════════════════════
-// FINANCEMENT + CREDIT
-// ══════════════════════════════════════════
-function updateApportPct(){
-  const ap=(v("pr-apport-cash")||0)+(v("pr-apport-nature")||0)+(v("fin-cash")||0)+(v("fin-nature")||0);
-  const cout=getCoutTotal();
-  const pct=cout>0?(ap/cout*100):0;
-  const el=document.getElementById("pr-apport-pct");
-  if(el){ el.value=fmtPct(pct); el.style.color=pct>=20?"#6EE7B7":"#FCA5A5"; }
-  // Garanties
-  const garValMarch=v("pr-gar-val");
-  const decote=v("pr-gar-decote")||30;
-  const retenue=garValMarch*(1-decote/100);
-  setText("gar-retenue", fmtFRW(retenue));
-}
-
-function recalcFin(){
-  const cout=getCoutTotal();
-  const sources=["fin-cash","fin-nature","fin-credit","fin-subv","fin-inv","fin-autres"];
-  let tot=0;
-  sources.forEach(id=>{
-    const m=v(id); tot+=m;
-    const pct=cout>0?(m/cout*100):0;
-    setText(id+"-pct", fmtPct(pct));
-    setText(id+"-usd", fmtUSD(m));
-    setText(id+"-pi", fmtPi(m));
+  // Update sec-title elements with data-key
+  document.querySelectorAll("[data-key]").forEach(el=>{
+    const key = el.getAttribute("data-key");
+    if(T[key]) el.innerHTML = T[key];
   });
-  setText("fin-tot-frw", fmtFRW(tot));
-  setText("fin-tot-pct", fmtPct(cout>0?(tot/cout*100):0));
-  setText("fin-tot-usd", fmtUSD(tot));
-  setText("fin-tot-pi", fmtPi(tot));
-  setText("fin-cout-total", fmtFRW(cout));
-  // Fonds propres
-  const fp=v("fin-cash")+v("fin-nature");
-  const fpPct=tout>0?(fp/cout*100):(cout>0?(fp/cout*100):0);
-  const fpEl=document.getElementById("fin-fp-pct");
-  if(fpEl){ fpEl.textContent=fmtPct(cout>0?(fp/cout*100):0); fpEl.className="val "+(cout>0&&fp/cout>=0.2?"cg":"cr"); }
-  // Ratio dette/FP
-  const credit=v("fin-credit");
-  const ratioEl=document.getElementById("fin-ratio-dette");
-  if(ratioEl){ ratioEl.textContent=fp>0?(credit/fp).toFixed(2):"N/A"; }
-  // Validation
-  const diff=tot-cout;
-  const val=document.getElementById("fin-validation");
-  if(val){
-    if(cout===0) val.className="note-info", val.textContent="Renseignez le plan d'investissement (etape 5) pour calculer le cout total.";
-    else if(Math.abs(diff)<1) val.className="note-ok", val.innerHTML="✅ <strong>Financement equilibre.</strong> Total financement = Cout total projet.";
-    else if(diff<0) val.className="note-err", val.innerHTML="🔴 <strong>Deficit de financement:</strong> Il manque "+fmtFRW(Math.abs(diff))+". Ajustez les sources de financement.";
-    else val.className="note-warn", val.innerHTML="🟡 <strong>Excedent de financement:</strong> "+fmtFRW(diff)+" en surplus. Verifiez vos donnees.";
-  }
-  recalcCredit();
-  updateApportPct();
-}
 
-// ══════════════════════════════════════════
-// TABLEAU D'AMORTISSEMENT DU CREDIT
-// ══════════════════════════════════════════
-function recalcCredit(){
-  const montant=v("cr-montant")||v("fin-credit")||0;
-  if(!montant){ setText("cr-montant",""); return; }
-  const taux=v("cr-taux")||18;
-  const dureeAns=v("cr-duree")||3;
-  const freq=v("cr-freq")||12; // paiements par an
-  const graceMois=v("cr-grace")||0;
-  const tauxPeriodique=taux/100/freq;
-  const nbPeriodes=dureeAns*freq;
-  const tbody=document.getElementById("amort-body");
-  if(!tbody) return;
-  tbody.innerHTML="";
-  let solde=montant;
-  let totCap=0,totInt=0,totAnn=0;
-  // Période de grâce
-  const graceNb=Math.floor(graceMois/(12/freq));
-  const periodeLabel=freq===12?"Mois":freq===4?"Trimestre":freq===2?"Semestre":"Annee";
-  for(let p=1;p<=nbPeriodes;p++){
-    let interest=solde*tauxPeriodique;
-    let principal=0;
-    let annuite=0;
-    if(p<=graceNb){
-      annuite=interest; principal=0;
-    } else {
-      const remainPeriodes=nbPeriodes-graceNb-(p-graceNb-1);
-      if(tauxPeriodique>0){
-        annuite=solde*tauxPeriodique*Math.pow(1+tauxPeriodique,remainPeriodes)/(Math.pow(1+tauxPeriodique,remainPeriodes)-1);
-      } else {
-        annuite=(montant/nbPeriodes)+interest;
-      }
-      principal=annuite-interest;
-    }
-    const soldeFin=Math.max(0,solde-principal);
-    totCap+=principal; totInt+=interest; totAnn+=annuite;
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${periodeLabel} ${p}${p<=graceNb?" (grace)":""}</td>
-      <td>${fmtFRW(solde)}</td>
-      <td>${fmtFRW(principal)}</td>
-      <td class="cr">${fmtFRW(interest)}</td>
-      <td class="co">${fmtFRW(annuite)}</td>
-      <td>${fmtFRW(soldeFin)}</td>`;
-    tbody.appendChild(tr);
-    solde=soldeFin;
-  }
-  setText("amort-tot-cap", fmtFRW(totCap));
-  setText("amort-tot-int", fmtFRW(totInt));
-  setText("amort-tot-ann", fmtFRW(totAnn));
-  // Résumé
-  const summaryBody=document.getElementById("credit-summary-body");
-  if(summaryBody) summaryBody.innerHTML=`
-    <tr><td>Montant du credit</td><td class="co">${fmtFRW(montant)}</td><td>—</td></tr>
-    <tr><td>Taux annuel</td><td class="co">${taux}%</td><td>Reference indicative: 16-22% au Rwanda</td></tr>
-    <tr><td>Duree</td><td class="co">${dureeAns} ans (${nbPeriodes} periodes)</td><td>—</td></tr>
-    <tr><td>Total interets</td><td class="cr">${fmtFRW(totInt)}</td><td>Cout du financement</td></tr>
-    <tr><td>Total remboursements</td><td class="co">${fmtFRW(totAnn)}</td><td>Capital + interets</td></tr>
-    <tr><td>Cout total credit</td><td class="cr">${fmtFRW(montant+totInt)}</td><td>—</td></tr>`;
-  recalcAll();
-}
-
-// ══════════════════════════════════════════
-// MOTEUR FINANCIER PRINCIPAL
-// ══════════════════════════════════════════
-function rebuildTables(){
-  // Build headers for multi-year tables
-  const tables=["cr-table","treso-table","bilan-table","dscr-table","sr-table"];
-  tables.forEach(tid=>{
-    const header=document.getElementById(tid.replace("-table","-header"));
-    if(!header) return;
-    let th=`<th style="text-align:left;min-width:180px">Postes (FRW)</th>`;
-    for(let y=1;y<=YEARS;y++) th+=`<th style="min-width:110px">Annee ${y}</th>`;
-    if(YEARS>1) th+=`<th style="min-width:110px">Total ${YEARS} ans</th>`;
-    header.innerHTML=th;
+  // Update data-fr / data-en attributes (legacy)
+  document.querySelectorAll("[data-"+lang+"]").forEach(el=>{
+    const val = el.getAttribute("data-"+lang);
+    if(!val) return;
+    if(el.tagName==="INPUT"||el.tagName==="TEXTAREA") el.placeholder = val;
+    else if(el.tagName==="OPTION") el.textContent = val;
+    else if(el.tagName==="BUTTON") el.innerHTML = val;
+    else el.innerHTML = val;
   });
-}
 
-function recalcAll(){
-  calcPatrTot();
-  calcRevTot();
-  calcProdTot();
-  calcInvTot();
-  calcChfixTot();
-  recalcBFR();
-  recalcFin();
-  buildExploitTable();
-  buildTresoTable();
-  buildBilanTable();
-  buildKPIs();
-  buildDSCRTable();
-  buildSRTable();
-  buildSensitivity();
-  buildScoreGlobal();
-  updateFeeFRW();
-}
-
-function getGrowthRate(year){
-  const g1=v("p-growth1")/100, g2=v("p-growth2")/100, g3=v("p-growth3")/100;
-  if(year<=2) return g1;
-  if(year<=5) return g2;
-  return g3;
-}
-
-function getCAYear(y){
-  let ca=getCAM()*12;
-  for(let i=2;i<=y;i++) ca*=(1+getGrowthRate(i));
-  return ca;
-}
-
-// ── COMPTE DE RÉSULTAT ──
-function buildExploitTable(){
-  const tbody=document.getElementById("cr-body");
-  if(!tbody) return;
-  const tax=v("p-tax")/100||0.30;
-  const creditM=v("fin-credit")||0;
-  const tauxAn=v("cr-taux")/100||0.18;
-  const credit=v("cr-montant")||creditM;
-  const dureeAns=v("cr-duree")||3;
-  const amortAn=getAmortAnnuel();
-  const chfixM=getChfixM();
-  // Build rows arrays
-  const rows=[
-    {key:"ca",label:"Chiffre d'Affaires (CA)",class:"pos",bold:true,vals:[]},
-    {key:"cv",label:"Charges Variables",class:"neg",vals:[]},
-    {key:"mb",label:"Marge Brute",class:"pos",bold:true,vals:[]},
-    {key:"cf",label:"Charges Fixes",class:"neg",vals:[]},
-    {key:"ebitda",label:"EBITDA (Excedent Brut Exploitation)",class:"pos",bold:true,vals:[]},
-    {key:"amort",label:"Amortissements",class:"neg",vals:[]},
-    {key:"ebit",label:"Resultat d'Exploitation (EBIT)",class:"pos",bold:true,vals:[]},
-    {key:"int",label:"Charges d'interets",class:"neg",vals:[]},
-    {key:"ebt",label:"Resultat avant Impot (EBT)",class:"co",bold:true,vals:[]},
-    {key:"imp",label:"Impots (CIT "+Math.round((v("p-tax")||30))+"%)",class:"neg",vals:[]},
-    {key:"net",label:"Resultat Net",class:"pos",bold:true,vals:[]},
-    {key:"mbn",label:"Marge Nette (%)",class:"co",vals:[],isPct:true},
-  ];
-  let totSolde=credit;
-  for(let y=1;y<=YEARS;y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12;
-    const mb=ca-cv;
-    const cf=chfixM*12;
-    const ebitda=mb-cf;
-    const amort=amortAn;
-    const ebit=ebitda-amort;
-    const interets=Math.max(0,totSolde*tauxAn);
-    const ebt=ebit-interets;
-    const imp=Math.max(0,ebt*tax);
-    const net=ebt-imp;
-    const mbn=ca>0?(net/ca*100):0;
-    // Update solde
-    const nbPer=v("cr-freq")||12;
-    const tp=(v("cr-taux")/100)/nbPer;
-    const nbP=dureeAns*nbPer;
-    const ann=tp>0&&nbP>0&&totSolde>0?totSolde*tp*Math.pow(1+tp,nbP)/(Math.pow(1+tp,nbP)-1):0;
-    totSolde=Math.max(0,totSolde-(ann-interets));
-    const vals={ca,cv,mb,cf,ebitda,amort,ebit,int:interets,ebt,imp,net,mbn};
-    rows.forEach(r=>r.vals.push(vals[r.key]));
-  }
-  tbody.innerHTML="";
-  rows.forEach(r=>{
-    let tr=`<tr class="${r.bold?"subtot":""}"><td style="${r.bold?"font-weight:700":""}">${r.label}</td>`;
-    let tot=0;
-    r.vals.forEach((v2,i)=>{
-      const cls=v2<0?"neg":r.class;
-      const display=r.isPct?fmtPct(v2):fmtFRW(v2);
-      tr+=`<td class="${cls}" style="${r.bold?"font-weight:700":""}">${display}</td>`;
-      if(!r.isPct) tot+=v2;
-    });
-    if(YEARS>1) tr+=`<td class="${r.isPct?"co":tot<0?"neg":r.class}" style="${r.bold?"font-weight:700":""}">${r.isPct?"—":fmtFRW(tot)}</td>`;
-    tr+="</tr>";
-    tbody.innerHTML+=tr;
+  // Update placeholders
+  Object.entries(P).forEach(([id, ph])=>{
+    const el = document.getElementById(id);
+    if(el && (el.tagName==="INPUT"||el.tagName==="TEXTAREA")) el.placeholder = ph;
   });
-}
 
-// ── TRESORERIE ──
-function buildTresoTable(){
-  const tbody=document.getElementById("treso-body");
-  if(!tbody) return;
-  const tax=v("p-tax")/100||0.30;
-  const credit=v("cr-montant")||v("fin-credit")||0;
-  const tauxAn=v("cr-taux")/100||0.18;
-  const dureeAns=v("cr-duree")||3;
-  const nbPer=v("cr-freq")||12;
-  const chfixM=getChfixM();
-  const amortAn=getAmortAnnuel();
-  const fp=v("fin-cash")+v("fin-nature");
-  const subv=v("fin-subv");
-  const inv=getInvTot();
-  const rows=[
-    {label:"Tresorerie debut d'annee",class:"co",vals:[]},
-    {label:"ENCAISSEMENTS",class:"pos",bold:true,vals:[]},
-    {label:"  Chiffre d'affaires",class:"pos",vals:[]},
-    {label:"  Apport fonds propres (annee 1)",class:"pos",vals:[]},
-    {label:"  Subvention (annee 1)",class:"pos",vals:[]},
-    {label:"  Credit recu (annee 1)",class:"pos",vals:[]},
-    {label:"DECAISSEMENTS",class:"neg",bold:true,vals:[]},
-    {label:"  Investissements (annee 1)",class:"neg",vals:[]},
-    {label:"  Charges variables",class:"neg",vals:[]},
-    {label:"  Charges fixes",class:"neg",vals:[]},
-    {label:"  Impots",class:"neg",vals:[]},
-    {label:"  Service de la dette (principal+interets)",class:"neg",vals:[]},
-    {label:"Tresorerie fin d'annee",class:"co",bold:true,vals:[]},
-  ];
-  let tresoDebut=0, totSolde=credit;
-  const tp=tauxAn/nbPer;
-  const nbP=dureeAns*nbPer;
-  for(let y=1;y<=YEARS;y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12;
-    const cf=chfixM*12;
-    const ebitda=ca-cv-cf;
-    const ebit=ebitda-amortAn;
-    const interets=Math.max(0,totSolde*tauxAn);
-    const ebt=ebit-interets;
-    const imp=Math.max(0,ebt*tax);
-    const ann=tp>0&&nbP>0&&totSolde>0?totSolde*tp*Math.pow(1+tp,nbP)/(Math.pow(1+tp,nbP)-1)*nbPer:0;
-    const principal=Math.max(0,ann-interets);
-    const serviceDette=principal+interets;
-    totSolde=Math.max(0,totSolde-principal);
-    const fpY=y===1?fp:0, subvY=y===1?subv:0, creditY=y===1?credit:0, invY=y===1?inv:0;
-    const enc=ca+fpY+subvY+creditY;
-    const dec=invY+cv+cf+imp+serviceDette;
-    const tresoFin=tresoDebut+enc-dec;
-    rows[0].vals.push(tresoDebut);
-    rows[1].vals.push(enc);
-    rows[2].vals.push(ca);
-    rows[3].vals.push(fpY);
-    rows[4].vals.push(subvY);
-    rows[5].vals.push(creditY);
-    rows[6].vals.push(-dec);
-    rows[7].vals.push(-invY);
-    rows[8].vals.push(-cv);
-    rows[9].vals.push(-cf);
-    rows[10].vals.push(-imp);
-    rows[11].vals.push(-serviceDette);
-    rows[12].vals.push(tresoFin);
-    tresoDebut=tresoFin;
-  }
-  tbody.innerHTML="";
-  rows.forEach(r=>{
-    let tr=`<tr class="${r.bold?"subtot":""}"><td style="${r.bold?"font-weight:700":""}">${r.label}</td>`;
-    r.vals.forEach(v2=>{
-      const cls=v2<0?"neg":r.class;
-      tr+=`<td class="${cls}" style="${r.bold?"font-weight:700":""}">${fmtFRW(Math.abs(v2))}</td>`;
-    });
-    if(YEARS>1) tr+="<td></td>";
-    tr+="</tr>";
-    tbody.innerHTML+=tr;
+  // Update buttons with data-key-btn
+  document.querySelectorAll(".btn-add").forEach(btn=>{
+    const key = btn.getAttribute("data-key");
+    if(key && T[key]) btn.innerHTML = T[key];
   });
-}
 
-// ── BILAN ──
-function buildBilanTable(){
-  const tbody=document.getElementById("bilan-body");
-  if(!tbody) return;
-  const inv=getInvTot();
-  const amortAn=getAmortAnnuel();
-  const credit=v("cr-montant")||v("fin-credit")||0;
-  const fp=v("fin-cash")+v("fin-nature");
-  const subv=v("fin-subv");
-  const tax=v("p-tax")/100||0.30;
-  const tauxAn=v("cr-taux")/100||0.18;
-  const dureeAns=v("cr-duree")||3;
-  const nbPer=v("cr-freq")||12;
-  const tp=tauxAn/nbPer, nbP=dureeAns*nbPer;
-  const chfixM=getChfixM();
-  let cumNet=0, solde=credit;
-  const years_data=[];
-  for(let y=1;y<=YEARS;y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12, cf=chfixM*12;
-    const ebit=ca-cv-cf-amortAn;
-    const interets=Math.max(0,solde*tauxAn);
-    const ebt=ebit-interets;
-    const imp=Math.max(0,ebt*tax);
-    const net=ebt-imp;
-    cumNet+=net;
-    const ann=tp>0&&nbP>0&&solde>0?solde*tp*Math.pow(1+tp,nbP)/(Math.pow(1+tp,nbP)-1)*nbPer:0;
-    const principal=Math.max(0,ann-interets);
-    solde=Math.max(0,solde-principal);
-    const immobNet=Math.max(0,inv-amortAn*y);
-    const stocks=v("bfr-stocks");
-    const creances=v("bfr-creances");
-    const treso=Math.max(0,cumNet*0.2);
-    const totalActif=immobNet+stocks+creances+treso;
-    const capitaux=fp+subv+cumNet;
-    const dettesFin=solde;
-    const dettesCirc=v("bfr-dettes");
-    const totalPassif=capitaux+dettesFin+dettesCirc;
-    years_data.push({immobNet,stocks,creances,treso,totalActif,capitaux,dettesFin,dettesCirc,totalPassif});
-  }
-  // Validate balance
-  const lastY=years_data[YEARS-1];
-  const balanced=Math.abs(lastY.totalActif-lastY.totalPassif)<100;
-  const bilVal=document.getElementById("bilan-validation");
-  if(bilVal){
-    bilVal.className=balanced?"note-ok":"note-err";
-    bilVal.innerHTML=balanced
-      ?"✅ <strong>Bilan equilibre.</strong> Total Actif = Total Passif."
-      :"🔴 <strong>Bilan non equilibre.</strong> Ecart: "+fmtFRW(Math.abs(lastY.totalActif-lastY.totalPassif))+". Verifiez les hypotheses de financement.";
-  }
-  const actifRows=[
-    {label:"ACTIF",cat:true},{label:"Immobilisations nettes (apres amortissement)",key:"immobNet"},
-    {label:"Stocks",key:"stocks"},{label:"Creances clients",key:"creances"},
-    {label:"Tresorerie",key:"treso"},{label:"TOTAL ACTIF",key:"totalActif",bold:true},
-    {label:"PASSIF",cat:true},{label:"Capitaux propres (dont resultats cumules)",key:"capitaux"},
-    {label:"Dettes financieres",key:"dettesFin"},{label:"Dettes fournisseurs",key:"dettesCirc"},
-    {label:"TOTAL PASSIF",key:"totalPassif",bold:true},
-  ];
-  tbody.innerHTML="";
-  actifRows.forEach(r=>{
-    let tr=`<tr class="${r.cat?"cat-row":r.bold?"subtot":""}"><td style="${r.bold?"font-weight:700":""}">${r.label}</td>`;
-    if(!r.cat) years_data.forEach(yd=>{
-      const val=yd[r.key]||0;
-      tr+=`<td class="${r.bold?"co":val<0?"neg":"neu"}" style="${r.bold?"font-weight:700":""}">${fmtFRW(val)}</td>`;
-    });
-    else for(let y=0;y<YEARS;y++) tr+="<td></td>";
-    if(YEARS>1) tr+="<td></td>";
-    tr+="</tr>";
-    tbody.innerHTML+=tr;
+  // Update sec-titles
+  const stepTitles = document.querySelectorAll(".sec-title[data-step]");
+  stepTitles.forEach(el=>{
+    const step = el.getAttribute("data-step");
+    if(T["step"+step+"-title"]) el.textContent = T["step"+step+"-title"];
   });
-}
 
-// ══════════════════════════════════════════
-// INDICATEURS FINANCIERS
-// ══════════════════════════════════════════
-function calcTRI(){
-  // TRI par methode Newton-Raphson sur flux de tresorerie annuels
-  const inv=-getCoutTotal();
-  if(inv===0) return 0;
-  const flows=[inv];
-  const tax=v("p-tax")/100||0.30;
-  const amortAn=getAmortAnnuel();
-  const chfixM=getChfixM();
-  for(let y=1;y<=Math.max(YEARS,5);y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12, cf=chfixM*12;
-    const ebit=ca-cv-cf-amortAn;
-    const net=Math.max(ebt=>ebt*(1-tax),ebit*(1-tax));
-    const cf2=net+amortAn; // cash flow = net + amortissement
-    flows.push(cf2);
+  // Progress labels
+  const progLabels = {
+    fr:["Identification","Promoteur","Description","Marche","Investissement","Financement","Exploitation","Analyse","Risques","Rapport"],
+    en:["Identification","Promoter","Description","Market","Investment","Financing","Operations","Analysis","Risks","Report"]
+  };
+  const lbls = progLabels[lang]||progLabels["fr"];
+  for(let i=1;i<=10;i++){
+    const el=document.getElementById("pt"+i);
+    if(el){ const pl=el.querySelector(".pl"); if(pl) pl.textContent=lbls[i-1]||""; }
   }
-  // Newton-Raphson
-  let r=0.15;
-  for(let iter=0;iter<100;iter++){
-    let npv=0, dnpv=0;
-    flows.forEach((f,t)=>{ npv+=f/Math.pow(1+r,t); dnpv+=-t*f/Math.pow(1+r,t+1); });
-    if(Math.abs(dnpv)<1e-10) break;
-    const dr=npv/dnpv; r-=dr;
-    if(Math.abs(dr)<1e-8) break;
+
+  // Mode buttons
+  if(lang==="en"){
+    const modeA=document.getElementById("mode-a");
+    const modeB=document.getElementById("mode-b");
+    if(modeA) modeA.innerHTML='&#127970; Mode A &mdash; Repayable Financing<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Bank &bull; Financial institution &bull; Investor</span>';
+    if(modeB) modeB.innerHTML='&#127760; Mode B &mdash; Non-repayable Financing<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Donor &bull; NGO &bull; Grant &bull; Public program</span>';
+  } else {
+    const modeA=document.getElementById("mode-a");
+    const modeB=document.getElementById("mode-b");
+    if(modeA) modeA.innerHTML='&#127970; Mode A &mdash; Financement Remboursable<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Banque &bull; Institution financiere &bull; Investisseur</span>';
+    if(modeB) modeB.innerHTML='&#127760; Mode B &mdash; Financement Non Remboursable<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Bailleur &bull; ONG &bull; Subvention &bull; Programme public</span>';
   }
-  return isFinite(r)?r*100:0;
+
+  // Save/pay buttons
+  const saveBtn = document.querySelector(".save-btn");
+  if(saveBtn) saveBtn.innerHTML = T["save-btn"]||saveBtn.innerHTML;
+  const aiBtn = document.getElementById("btn-ai");
+  if(aiBtn) aiBtn.innerHTML = T["ai-btn"]||aiBtn.innerHTML;
 }
 
-function calcVAN(taux){
-  const inv=-getCoutTotal();
-  if(inv===0) return 0;
-  let van=inv;
-  const tax=v("p-tax")/100||0.30;
-  const amortAn=getAmortAnnuel();
-  const chfixM=getChfixM();
-  const r=(taux||10)/100;
-  for(let y=1;y<=Math.max(YEARS,5);y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12, cf=chfixM*12;
-    const ebit=ca-cv-cf-amortAn;
-    const net=ebit*(1-tax);
-    const cf2=net+amortAn;
-    van+=cf2/Math.pow(1+r,y);
-  }
-  return van;
-}
-
-function calcPayback(){
-  const inv=getCoutTotal();
-  if(inv===0) return 0;
-  const tax=v("p-tax")/100||0.30;
-  const amortAn=getAmortAnnuel();
-  const chfixM=getChfixM();
-  let cumCF=0;
-  for(let y=1;y<=20;y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12, cf=chfixM*12;
-    const ebit=ca-cv-cf-amortAn;
-    const net=ebit*(1-tax);
-    const cf2=net+amortAn;
-    cumCF+=cf2;
-    if(cumCF>=inv) return y+(cumCF-cf2>=inv?0:(inv-(cumCF-cf2))/cf2);
-  }
-  return 999;
-}
-
-function calcDSCR(year){
-  const ca=getCAYear(year);
-  const chfixM=getChfixM();
-  const amortAn=getAmortAnnuel();
-  const tax=v("p-tax")/100||0.30;
-  const cv=getChvarM(ca/12)*12, cf=chfixM*12;
-  const ebit=ca-cv-cf-amortAn;
-  const credit=v("cr-montant")||v("fin-credit")||0;
-  const tauxAn=v("cr-taux")/100||0.18;
-  const dur=v("cr-duree")||3;
-  // Service de la dette annuel simplifie
-  const serviceDette=credit>0&&dur>0?credit/dur+credit*tauxAn:0;
-  const cfads=(ebit*(1-tax))+amortAn;
-  return serviceDette>0?cfads/serviceDette:0;
-}
-
-function buildKPIs(){
-  const kgEl=document.getElementById("kpi-grid");
-  if(!kgEl) return;
-  const caM=getCAM();
-  const chfixM=getChfixM();
-  const chvarM=getChvarM(caM);
-  const amortM=getAmortAnnuel()/12;
-  const tax=v("p-tax")/100||0.30;
-  const ebitdaM=caM-chvarM-chfixM;
-  const ebitM=ebitdaM-amortM;
-  const netM=Math.max(0,ebitM*(1-tax));
-  const cout=getCoutTotal();
-  const netA=netM*12;
-  const roi=cout>0?(netA/cout*100):0;
-  const tri=calcTRI();
-  const van=calcVAN(10);
-  const pb=calcPayback();
-  const dscr=calcDSCR(1);
-  const margNette=caM>0?(netM/caM*100):0;
-  const margEbitda=caM>0?(ebitdaM/caM*100):0;
-  const kpis=[
-    {icon:"📈",val:roi.toFixed(1)+"%",lbl:"ROI — Retour sur Investissement",
-     formula:"Resultat net annuel / Cout total",
-     ref:"Ref. indicative: > 15% generalement satisfaisant",
-     cls:roi>20?"cg":roi>10?"co":"cr",
-     status:roi>20?"EXCELLENT":roi>10?"BON":"FAIBLE",
-     diag:roi>20?"Rentabilite tres satisfaisante":roi>10?"Rentabilite acceptable":"Rentabilite insuffisante"},
-    {icon:"🎯",val:tri.toFixed(1)+"%",lbl:"TRI — Taux de Rentabilite Interne",
-     formula:"Taux qui annule la VAN des flux de tresorerie",
-     ref:"Ref. indicative: > cout du capital (hypothese 10-15%)",
-     cls:tri>20?"cg":tri>10?"co":"cr",
-     status:tri>20?"TRES ATTRAYANT":tri>10?"ACCEPTABLE":"INSUFFISANT",
-     diag:tri>20?"TRI tres superieur au cout du capital":tri>10?"TRI superieur au cout du capital hypothetique de 10%":"TRI inferieur au cout du capital. Projet non rentable."},
-    {icon:"💰",val:fmtFRW(van),lbl:"VAN — Valeur Actuelle Nette (taux 10%)",
-     formula:"Somme des CF actualises a 10% - Investissement",
-     ref:"Ref. indicative: VAN > 0 = projet cree de la valeur",
-     cls:van>0?"cg":"cr",
-     status:van>0?"POSITIVE":"NEGATIVE",
-     diag:van>0?"Le projet genere de la valeur economique":"Le projet detruit de la valeur a ce taux d'actualisation"},
-    {icon:"⏱️",val:pb<999?pb.toFixed(1)+" ans":"N/A",lbl:"Payback — Temps de Recuperation du Capital",
-     formula:"Investissement / Cash-flow annuel moyen",
-     ref:"Ref. indicative: < duree du credit pour la banque",
-     cls:pb<3?"cg":pb<5?"co":"cr",
-     status:pb<3?"RAPIDE":pb<5?"ACCEPTABLE":"LENT",
-     diag:pb<999?"Capital recupere en "+pb.toFixed(1)+" ans":"Capital non recupere dans la duree analysee"},
-    {icon:"🏦",val:dscr.toFixed(2),lbl:"RCSD — Ratio Couverture Service de la Dette",
-     formula:"CFADS / Service de la dette",
-     ref:"Ref. indicative: >= 1.00 minimum | 1.20-1.50 generalement acceptable | > 1.50 confortable",
-     cls:dscr>=1.5?"cg":dscr>=1.2?"co":dscr>=1?"cr":"cr",
-     status:dscr>=1.5?"CONFORTABLE":dscr>=1.2?"ACCEPTABLE":dscr>=1?"LIMITE":"INSUFFISANT",
-     diag:"DSCR = "+dscr.toFixed(2)+" — "+(dscr>=1.25?"Capacite de remboursement satisfaisante":"Capacite de remboursement a ameliorer")},
-    {icon:"📊",val:margNette.toFixed(1)+"%",lbl:"Marge Nette",
-     formula:"Resultat net / CA x 100",
-     ref:"Ref. indicative: > 10% generalement bon",
-     cls:margNette>20?"cg":margNette>10?"co":"cr",
-     status:margNette>20?"EXCELLENTE":margNette>10?"SATISFAISANTE":"FAIBLE",
-     diag:"Marge nette de "+margNette.toFixed(1)+"%"},
-  ];
-  kgEl.style.gridTemplateColumns="repeat(3,1fr)";
-  kgEl.innerHTML=kpis.map(k=>`
-    <div class="kpi-card">
-      <div class="kpi-tip" title="${k.diag}">?</div>
-      <div class="kpi-icon">${k.icon}</div>
-      <div class="kpi-val ${k.cls}">${k.val}</div>
-      <div class="kpi-lbl">${k.lbl}</div>
-      <div class="kpi-status ${k.cls==="cg"?"s-green":k.cls==="co"?"s-gold":"s-red"}">${k.status}</div>
-      <div class="kpi-formula">${k.formula}</div>
-    </div>`).join("");
-  // Recommendation finale
-  buildReco(roi, tri, dscr, van, pb);
-  buildScoreGlobal();
-}
-
-function buildDSCRTable(){
-  const header=document.getElementById("dscr-header");
-  const body=document.getElementById("dscr-body");
-  if(!header||!body) return;
-  let th=`<th style="text-align:left">Poste</th>`;
-  for(let y=1;y<=YEARS;y++) th+=`<th>Annee ${y}</th>`;
-  header.innerHTML=th;
-  const tax=v("p-tax")/100||0.30;
-  const amortAn=getAmortAnnuel();
-  const chfixM=getChfixM();
-  const credit=v("cr-montant")||v("fin-credit")||0;
-  const tauxAn=v("cr-taux")/100||0.18;
-  const dur=v("cr-duree")||3;
-  const rows=[
-    {label:"Chiffre d'Affaires",vals:[]},
-    {label:"EBITDA (Excedent Brut)",vals:[]},
-    {label:"Amortissements",vals:[]},
-    {label:"Resultat Exploitation (EBIT)",vals:[]},
-    {label:"Impots",vals:[]},
-    {label:"Cash-Flow apres Impots (CFADS)",vals:[],bold:true,class:"pos"},
-    {label:"Service de la dette (principal + interets)",vals:[],class:"neg"},
-    {label:"RCSD / DSCR",vals:[],bold:true,isPct:false,isRatio:true},
-    {label:"Interpretation",vals:[],isText:true},
-  ];
-  let solde=credit;
-  const nbPer=v("cr-freq")||12;
-  const tp=tauxAn/nbPer, nbP=dur*nbPer;
-  for(let y=1;y<=YEARS;y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12, cf=chfixM*12;
-    const ebitda=ca-cv-cf;
-    const ebit=ebitda-amortAn;
-    const interets=Math.max(0,solde*tauxAn);
-    const ebt=ebit-interets;
-    const imp=Math.max(0,ebt*tax);
-    const cfads=(ebit*(1-tax))+amortAn;
-    const ann=tp>0&&nbP>0&&solde>0?solde*tp*Math.pow(1+tp,nbP)/(Math.pow(1+tp,nbP)-1)*nbPer:0;
-    const principal=Math.max(0,ann-interets);
-    const serviceDette=principal+interets;
-    const dscr=serviceDette>0?(cfads/serviceDette):0;
-    solde=Math.max(0,solde-principal);
-    rows[0].vals.push(fmtFRW(ca));
-    rows[1].vals.push(fmtFRW(ebitda));
-    rows[2].vals.push(fmtFRW(amortAn));
-    rows[3].vals.push(fmtFRW(ebit));
-    rows[4].vals.push(fmtFRW(imp));
-    rows[5].vals.push(fmtFRW(cfads));
-    rows[6].vals.push(fmtFRW(serviceDette));
-    rows[7].vals.push(dscr.toFixed(2));
-    rows[8].vals.push(dscr>=1.5?"CONFORTABLE":dscr>=1.2?"ACCEPTABLE":dscr>=1?"LIMITE":"INSUFFISANT");
-  }
-  body.innerHTML="";
-  rows.forEach(r=>{
-    let tr=`<tr class="${r.bold?"subtot":""}"><td style="${r.bold?"font-weight:700":""}">${r.label}</td>`;
-    r.vals.forEach((v2,i)=>{
-      const cls=r.isRatio?(parseFloat(v2)>=1.5?"pos":parseFloat(v2)>=1.2?"co":parseFloat(v2)>=1?"cr":"cr"):r.class||"";
-      tr+=`<td class="${cls}" style="${r.bold?"font-weight:700":""}">${v2}</td>`;
-    });
-    tr+="</tr>";
-    body.innerHTML+=tr;
-  });
-}
-
-function buildSRTable(){
-  const header=document.getElementById("sr-header");
-  const body=document.getElementById("sr-body");
-  if(!header||!body) return;
-  let th=`<th style="text-align:left;min-width:200px">Indicateur</th>`;
-  for(let y=1;y<=YEARS;y++) th+=`<th>Annee ${y}</th>`;
-  header.innerHTML=th;
-  body.innerHTML="";
-  const chfixM=getChfixM();
-  const amortAn=getAmortAnnuel();
-  const credit=v("cr-montant")||v("fin-credit")||0;
-  const tauxAn=v("cr-taux")/100||0.18;
-  const rows=[
-    {label:"Chiffre d'Affaires (CA)",vals:[]},
-    {label:"Charges Variables",vals:[],cls:"neg"},
-    {label:"Taux Marge sur Couts Variables (TMCV)",vals:[],cls:"co",isPct:true},
-    {label:"Charges Fixes",vals:[],cls:"neg"},
-    {label:"Seuil de Rentabilite (SR) en FRW",vals:[],cls:"co",bold:true},
-    {label:"SR en % du CA",vals:[],cls:"co",isPct:true},
-    {label:"Marge de Securite (CA - SR)",vals:[],cls:"pos",bold:true},
-    {label:"Marge de Securite en % du CA",vals:[],cls:"pos",isPct:true},
-  ];
-  let solde=credit;
-  for(let y=1;y<=YEARS;y++){
-    const ca=getCAYear(y);
-    const cv=getChvarM(ca/12)*12, cf=chfixM*12;
-    const cfTotal=cf+amortAn+Math.max(0,solde*tauxAn);
-    const tmcv=ca>0?(1-cv/ca):0;
-    const sr=tmcv>0?cfTotal/tmcv:0;
-    const srPct=ca>0?(sr/ca*100):0;
-    const ms=ca-sr;
-    const msPct=ca>0?(ms/ca*100):0;
-    rows[0].vals.push(fmtFRW(ca));
-    rows[1].vals.push(fmtFRW(cv));
-    rows[2].vals.push(fmtPct(tmcv*100));
-    rows[3].vals.push(fmtFRW(cfTotal));
-    rows[4].vals.push(fmtFRW(sr));
-    rows[5].vals.push(fmtPct(srPct));
-    rows[6].vals.push(fmtFRW(ms));
-    rows[7].vals.push(fmtPct(msPct));
-    const dur=v("cr-duree")||3;
-    const nbPer=v("cr-freq")||12;
-    const tp=tauxAn/nbPer, nbP=dur*nbPer;
-    const ann=tp>0&&nbP>0&&solde>0?solde*tp*Math.pow(1+tp,nbP)/(Math.pow(1+tp,nbP)-1)*nbPer:0;
-    const int=Math.max(0,solde*tauxAn);
-    solde=Math.max(0,solde-(ann-int));
-  }
-  rows.forEach(r=>{
-    let tr=`<tr class="${r.bold?"subtot":""}"><td style="${r.bold?"font-weight:700":""}">${r.label}</td>`;
-    r.vals.forEach(v2=>{ tr+=`<td class="${r.cls||""}" style="${r.bold?"font-weight:700":""}">${v2}</td>`; });
-    tr+="</tr>";
-    body.innerHTML+=tr;
-  });
-}
-
-// ── ANALYSE DE SENSIBILITE ──
-function buildSensitivity(){
-  const pess=v("sens-pess")/100||(-0.20);
-  const opt=v("sens-opt")/100||(0.20);
-  const scenarios=[pess,0,opt];
-  const labels=["Pessimiste","Central","Optimiste"];
-  const caM0=getCAM();
-  const chfixM=getChfixM();
-  const amortAn=getAmortAnnuel();
-  const tax=v("p-tax")/100||0.30;
-  const cout=getCoutTotal();
-  const results=scenarios.map((delta,si)=>{
-    const caM=caM0*(1+delta);
-    const caA=caM*12;
-    const cvA=getChvarM(caM)*12;
-    const cf=chfixM*12;
-    const ebitda=caA-cvA-cf;
-    const ebit=ebitda-amortAn;
-    const net=Math.max(0,ebit*(1-tax));
-    const roi=cout>0?(net/cout*100):0;
-    const dscr=calcDSCR(1)*(1+delta);
-    return {label:labels[si],delta,caA,net,roi,dscr};
-  });
-  // Sens cards
-  const grid=document.getElementById("sens-grid");
-  if(grid) grid.innerHTML=results.map((r,i)=>`
-    <div class="sens-card ${i===0?"sens-pess":i===1?"sens-base":"sens-opt"}">
-      <div class="sens-lbl">${r.label} (${r.delta>=0?"+":""}${(r.delta*100).toFixed(0)}%)</div>
-      <div class="sens-val">${fmtFRW(r.caA)}</div>
-      <div class="sens-sub">CA annuel</div>
-      <div class="sens-val" style="font-size:16px;margin-top:6px;">${r.roi.toFixed(1)}%</div>
-      <div class="sens-sub">ROI</div>
-    </div>`).join("");
-  // Sens table
-  const tbody=document.getElementById("sens-body");
-  if(!tbody) return;
-  const rows=[
-    {label:"Chiffre d'Affaires annuel",fn:r=>fmtFRW(r.caA)},
-    {label:"Resultat Net annuel",fn:r=>fmtFRW(r.net)},
-    {label:"ROI",fn:r=>r.roi.toFixed(1)+"%"},
-    {label:"RCSD / DSCR (Annee 1)",fn:r=>r.dscr.toFixed(2)},
-    {label:"VAN (taux 10%)",fn:(r,i)=>fmtFRW(calcVAN(10)*(1+r.delta))},
-    {label:"TRI",fn:(r,i)=>calcTRI().toFixed(1)+"%"},
-  ];
-  tbody.innerHTML=rows.map(r=>`<tr><td>${r.label}</td>${results.map((res,i)=>`<td class="${i===0?"cr":i===1?"co":"cg"}">${r.fn(res,i)}</td>`).join("")}</tr>`).join("");
-}
-
-// ── IMPACT ──
-function recalcImpact(){
-  const empDir=v("imp-emp-dir")||0;
-  const empInd=v("imp-emp-ind")||0;
-  const benef=v("imp-benef")||0;
-  const cout=getCoutTotal();
-  const ind=document.getElementById("impact-indicators");
-  if(!ind) return;
-  ind.innerHTML=`
-    <div class="row3">
-      <div class="tbox"><span class="lbl">Total emplois crees</span><span class="val cg">${empDir+empInd}</span></div>
-      <div class="tbox"><span class="lbl">Cout par emploi direct</span><span class="val co">${empDir>0?fmtFRW(cout/empDir):"N/A"}</span></div>
-      <div class="tbox"><span class="lbl">Cout par beneficiaire</span><span class="val co">${benef>0?fmtFRW(cout/benef):"N/A"}</span></div>
-    </div>`;
-}
-
-// ── RECOMMENDATION ──
-function buildReco(roi,tri,dscr,van,pb){
-  const el=document.getElementById("reco-final");
-  if(!el) return;
-  let score=0;
-  if(roi>20) score+=25; else if(roi>10) score+=15; else if(roi>0) score+=5;
-  if(tri>20) score+=25; else if(tri>10) score+=15; else if(tri>0) score+=5;
-  if(dscr>=1.5) score+=25; else if(dscr>=1.2) score+=15; else if(dscr>=1) score+=10;
-  if(van>0) score+=15; else if(van>-getCoutTotal()*0.2) score+=5;
-  if(pb<getCoutTotal()/12&&pb<999) score+=10;
-  let cls="reco-O", icon="🟠", title="FINANCER SOUS CONDITIONS", justif="";
-  if(score>=70){ cls="reco-G"; icon="🟢"; title="RECOMMANDATION: FINANCER"; }
-  else if(score<35){ cls="reco-R"; icon="🔴"; title="RECOMMANDATION: NE PAS FINANCER"; }
-  if(cls==="reco-G") justif=`Le projet presente une rentabilite satisfaisante (ROI: ${roi.toFixed(1)}%, TRI: ${tri.toFixed(1)}%) et une capacite de remboursement adequate (RCSD: ${dscr.toFixed(2)}). La VAN positive confirme la creation de valeur.`;
-  else if(cls==="reco-O") justif=`Le projet presente des indicateurs mixtes. ${dscr<1.2?"La capacite de remboursement (RCSD: "+dscr.toFixed(2)+") est a ameliorer.":""} ${roi<10?"La rentabilite (ROI: "+roi.toFixed(1)+"%) est moderee.":""} Un financement peut etre envisage sous conditions d'amelioration du dossier.`;
-  else justif=`Les indicateurs financiers ne permettent pas de recommander ce financement. ROI: ${roi.toFixed(1)}%, RCSD: ${dscr.toFixed(2)}, VAN: ${van<0?"negative":"faible"}. Une revision profonde du projet est necessaire.`;
-  el.innerHTML=`<div class="reco-box ${cls}"><div class="reco-icon">${icon}</div><div class="reco-title">${title}</div><div class="reco-text">${justif}</div><div style="margin-top:8px;font-size:11px;color:var(--muted)">Score global: ${score}/100 — Reference indicative. La decision finale appartient a l'institution financiere.</div></div>`;
-}
-
-// ── SCORE GLOBAL ──
-function buildScoreGlobal(){
-  const sg=document.getElementById("score-grid");
-  if(!sg) return;
-  const caM=getCAM();
-  const chfixM=getChfixM();
-  const amortAn=getAmortAnnuel();
-  const tax=v("p-tax")/100||0.30;
-  const ebitdaM=caM-getChvarM(caM)-chfixM;
-  const netM=Math.max(0,(ebitdaM-amortAn)*(1-tax));
-  const cout=getCoutTotal();
-  const roi=cout>0?(netM*12/cout*100):0;
-  const dscr=calcDSCR(1);
-  const tri=calcTRI();
-  const fp=v("fin-cash")+v("fin-nature");
-  const fpPct=cout>0?(fp/cout*100):0;
-  const garData=calcGarTot();
-  const credit=v("cr-montant")||v("fin-credit")||0;
-  const garRatio=credit>0?(garData.totR/credit*100):100;
-  const pb=calcPayback();
-  const isONG=mode==="B";
-  const criteria = isONG ? [
-    {label:"Pertinence et justification",score:txt("pj-justif").length>50?80:40,weight:25},
-    {label:"Impact social (emplois, beneficiaires)",score:v("imp-emp-dir")>0?75:30,weight:30},
-    {label:"Durabilite du projet",score:txt("imp-durab").length>50?80:40,weight:20},
-    {label:"Budget et efficience",score:fpPct>=20?80:50,weight:15},
-    {label:"Gestion des risques",score:riskCount>0?75:40,weight:10},
-  ] : [
-    {label:"Rentabilite (ROI, TRI, Marge)",score:roi>20?90:roi>10?70:roi>0?40:20,weight:25},
-    {label:"Capacite de remboursement (RCSD)",score:dscr>=1.5?90:dscr>=1.2?75:dscr>=1?50:20,weight:25},
-    {label:"Structure financiere (apport propre)",score:fpPct>=30?90:fpPct>=20?70:fpPct>=10?50:20,weight:20},
-    {label:"Garanties",score:garRatio>=150?90:garRatio>=100?70:garRatio>=70?50:20,weight:15},
-    {label:"Risques (matrice renseignee)",score:riskCount>=3?80:riskCount>=1?60:30,weight:15},
-  ];
-  let globalScore=0;
-  criteria.forEach(c=>{ globalScore+=c.score*c.weight/100; });
-  const bars=criteria.map(c=>`
-    <div style="margin-bottom:8px;">
-      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-        <span>${c.label}</span>
-        <span class="${c.score>=70?"cg":c.score>=50?"co":"cr"}">${c.score}/100</span>
-      </div>
-      <div style="background:#374151;border-radius:4px;height:6px;">
-        <div style="background:${c.score>=70?"#059669":c.score>=50?"#D97706":"#DC2626"};width:${c.score}%;height:100%;border-radius:4px;"></div>
-      </div>
-    </div>`).join("");
-  sg.innerHTML=`
-    <div class="sec" style="margin-bottom:10px;">
-      <div class="sec-hdr"><div class="sec-icon">⭐</div><div class="sec-title">Score Global: ${globalScore.toFixed(0)}/100</div></div>
-      ${bars}
-      <div class="tbox" style="margin-top:8px;">
-        <span class="lbl">Score global (${isONG?"bailleur":"banque"})</span>
-        <span class="val ${globalScore>=70?"cg":globalScore>=50?"co":"cr"}">${globalScore.toFixed(0)}/100 — ${globalScore>=70?"FINANCER":globalScore>=50?"SOUS CONDITIONS":"REVOIR LE PROJET"}</span>
-      </div>
-    </div>`;
-}
-
-// ── AI ANALYSIS ──
-async function getAIAnalysis(){
-  const btn=document.getElementById("btn-ai");
-  const loading=document.getElementById("ai-loading");
-  const box=document.getElementById("ai-box");
-  const textEl=document.getElementById("ai-text");
-  if(btn) btn.disabled=true;
-  if(loading) loading.style.display="block";
-  if(box) box.style.display="none";
-  const caM=getCAM(); const cout=getCoutTotal();
-  const chfixM=getChfixM(); const amortAn=getAmortAnnuel();
-  const tax=v("p-tax")/100||0.30;
-  const netM=Math.max(0,(caM-getChvarM(caM)-chfixM-amortAn)*(1-tax));
-  const roi=cout>0?(netM*12/cout*100):0;
-  const tri=calcTRI(); const van=calcVAN(10);
-  const dscr=calcDSCR(1); const pb=calcPayback();
-  const fp=v("fin-cash")+v("fin-nature");
-  const fpPct=cout>0?(fp/cout*100):0;
-  const isMode=mode==="B";
-  const prompt=`Tu es un consultant financier senior specialise en analyse de projets d'investissement pour les banques et bailleurs de fonds en Afrique de l'Est. Analyse ce projet et produis une recommandation professionnelle structuree.
-
-PROJET: "${txt("p-nom")}" | Secteur: ${txt("p-secteur")} | Pays: ${document.getElementById("p-pays")?.options[document.getElementById("p-pays")?.selectedIndex]?.text||"Rwanda"} | Mode: ${isMode?"Financement non remboursable (bailleur)":"Financement remboursable (banque)"}
-PROMOTEUR: ${txt("pr-nom")} | Experience: ${v("pr-exp")} ans
-
-DONNEES FINANCIERES:
-- Cout total du projet: ${fmtFRW(cout)}
-- Apport propre: ${fmtFRW(fp)} (${fmtPct(fpPct)})
-- CA mensuel prevu: ${fmtFRW(caM)}
-- CA annuel prevu: ${fmtFRW(caM*12)}
-- Charges fixes mensuelles: ${fmtFRW(chfixM)}
-- Resultat net mensuel: ${fmtFRW(netM)}
-- Taux d'imposition: ${Math.round(tax*100)}%
-
-INDICATEURS:
-- ROI: ${roi.toFixed(1)}%
-- TRI (Taux Rentabilite Interne): ${tri.toFixed(1)}%
-- VAN (taux 10%): ${fmtFRW(van)}
-- RCSD/DSCR (Annee 1): ${dscr.toFixed(2)}
-- Payback: ${pb<999?pb.toFixed(1)+" ans":"Non calcule"}
-- Fonds propres: ${fmtPct(fpPct)}
-
-DESCRIPTION: ${txt("pj-contexte")||"Non renseignee"}
-OBJECTIFS: ${txt("pj-obj")||"Non renseignes"}
-MARCHE: ${txt("mk-cible")||"Non renseigne"}
-
-Redige une analyse professionnelle structuree en 6 points:
-
-1. SYNTHESE DU PROJET (3-4 lignes)
-2. ANALYSE FINANCIERE — Commentez ROI, TRI, VAN, RCSD avec les references indicatives appropriees. Precisez toujours "reference indicative" et non "norme officielle".
-3. POINTS FORTS DU DOSSIER
-4. POINTS FAIBLES ET RISQUES MAJEURS
-5. CONDITIONS RECOMMANDEES (si financement sous conditions)
-6. RECOMMANDATION FINALE: choisissez precisement entre:
-   🟢 FINANCER — avec justification
-   🟠 FINANCER SOUS CONDITIONS — listez les conditions
-   🔴 NE PAS FINANCER — expliquez pourquoi
-
-Sois precis, professionnel, objectif. Cite les chiffres cles. Maximum 400 mots.`;
-  try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1500,messages:[{role:"user",content:prompt}]})
-    });
-    const data=await res.json();
-    if(textEl) textEl.textContent=data.content?.[0]?.text||"Analyse non disponible.";
-    if(box) box.style.display="block";
-  }catch(e){
-    if(textEl) textEl.textContent="Erreur: "+e.message+". Verifiez votre connexion.";
-    if(box) box.style.display="block";
-  }
-  if(loading) loading.style.display="none";
-  if(btn) btn.disabled=false;
-}
-
-// ══════════════════════════════════════════
-// RAPPORT HTML IMPRIMABLE
-// ══════════════════════════════════════════
-function buildReport(){
-  const rpt=document.getElementById("rpt-content");
-  if(!rpt) return;
-  const caM=getCAM(); const cout=getCoutTotal();
-  const amortAn=getAmortAnnuel();
-  const tax=v("p-tax")/100||0.30;
-  const chfixM=getChfixM();
-  const netM=Math.max(0,(caM-getChvarM(caM)-chfixM-amortAn)*(1-tax));
-  const roi=cout>0?(netM*12/cout*100):0;
-  const tri=calcTRI(); const van=calcVAN(10);
-  const dscr=calcDSCR(1); const pb=calcPayback();
-  const fp=v("fin-cash")+v("fin-nature");
-  const credit=v("cr-montant")||v("fin-credit")||0;
-  const now=new Date().toLocaleDateString("fr-RW");
-  const recoColor=roi>20&&dscr>=1.2&&van>0?"reco-G-rpt":roi>0&&dscr>=1?"reco-O-rpt":"reco-R-rpt";
-  const recoText=roi>20&&dscr>=1.2&&van>0?"🟢 FAVORABLE — FINANCEMENT RECOMMANDE":roi>0&&dscr>=1?"🟠 FAVORABLE SOUS CONDITIONS":"🔴 DEFAVORABLE — FINANCEMENT NON RECOMMANDE";
-  // Build CR table
-  let crRows="<tr><th>Postes</th>"+Array.from({length:YEARS},(_,i)=>`<th>Annee ${i+1}</th>`).join("")+"</tr>";
-  const crLabels=["Chiffre d'Affaires","Charges Variables","Marge Brute","Charges Fixes","EBITDA","Amortissements","EBIT","Interets","EBT","Impots","Resultat Net","Marge Nette (%)"];
-  let solde2=credit;
-  const tauxAn=v("cr-taux")/100||0.18;
-  const dur=v("cr-duree")||3;
-  const nbPer=v("cr-freq")||12;
-  const tp2=tauxAn/nbPer, nbP2=dur*nbPer;
-  for(let ri=0;ri<crLabels.length;ri++){
-    let row=`<tr><td>${crLabels[ri]}</td>`;
-    let tot=0; let s2=solde2;
-    for(let y=1;y<=YEARS;y++){
-      const ca=getCAYear(y); const cv=getChvarM(ca/12)*12; const cf=chfixM*12;
-      const ebitda=ca-cv-cf; const ebit=ebitda-amortAn;
-      const int=Math.max(0,s2*tauxAn);
-      const ebt=ebit-int; const imp=Math.max(0,ebt*tax); const net=ebt-imp;
-      const mn=ca>0?(net/ca*100):0;
-      const ann2=tp2>0&&nbP2>0&&s2>0?s2*tp2*Math.pow(1+tp2,nbP2)/(Math.pow(1+tp2,nbP2)-1)*nbPer:0;
-      s2=Math.max(0,s2-(ann2-int));
-      const vals=[ca,cv,ca-cv,cf,ebitda,amortAn,ebit,int,ebt,imp,net,mn];
-      const val=vals[ri];
-      const fmted=ri===11?fmtPct(val):fmtFRW(val);
-      row+=`<td>${fmted}</td>`; if(ri!==11) tot+=val;
-    }
-    row+="</tr>";
-    crRows+=row;
-  }
-  rpt.innerHTML=`
-    <div class="cover">
-      <div class="logo-txt">VitaNova — SmartBiz</div>
-      <div class="sub">Moteur de Montage de Projets Professionnel</div>
-      <div class="proj-name">${txt("p-nom")||"Projet sans titre"}</div>
-      <div class="sub">Secteur: ${txt("p-secteur")} | ${document.getElementById("p-pays")?.options[document.getElementById("p-pays")?.selectedIndex]?.text||"Rwanda"}</div>
-      <div class="sub">Promoteur: ${txt("pr-nom")||"—"} | Date: ${now}</div>
-      <div class="sub">Reference: ${txt("p-ref")||"SB-"+now}</div>
-    </div>
-
-    <h2>1. RESUME EXECUTIF</h2>
-    <p>${txt("pj-contexte")||"Contexte non renseigne."}</p>
-    <div class="reco-rpt ${recoColor}" style="margin:12px 0;padding:10px;border-radius:6px;text-align:center;font-weight:700;font-size:13px;">${recoText}</div>
-    <div class="kpi-row">
-      <div class="kpi-box"><div class="kv">${roi.toFixed(1)}%</div><div class="kl">ROI</div></div>
-      <div class="kpi-box"><div class="kv">${tri.toFixed(1)}%</div><div class="kl">TRI</div></div>
-      <div class="kpi-box"><div class="kv">${fmtFRW(van)}</div><div class="kl">VAN (10%)</div></div>
-      <div class="kpi-box"><div class="kv">${dscr.toFixed(2)}</div><div class="kl">RCSD/DSCR</div></div>
-      <div class="kpi-box"><div class="kv">${pb<999?pb.toFixed(1)+" ans":"N/A"}</div><div class="kl">Payback</div></div>
-    </div>
-
-    <h2>2. FICHE PROMOTEUR</h2>
-    <table>
-      <tr><th>Nom</th><th>Telephone</th><th>Experience</th><th>Nationalite</th></tr>
-      <tr><td>${txt("pr-nom")||"—"}</td><td>${txt("pr-tel")||"—"}</td><td>${v("pr-exp")} ans</td><td>${txt("pr-nat")||"—"}</td></tr>
-    </table>
-    <p><strong>Experience:</strong> ${txt("pr-expdesc")||"Non renseignee"}</p>
-    <p><strong>Garanties proposees:</strong> ${txt("pr-garanties")||"Non renseignees"}</p>
-
-    <h2>3. DESCRIPTION DU PROJET</h2>
-    <p><strong>Contexte:</strong> ${txt("pj-contexte")||"—"}</p>
-    <p><strong>Justification:</strong> ${txt("pj-justif")||"—"}</p>
-    <p><strong>Objectif general:</strong> ${txt("pj-obj")||"—"}</p>
-    <p><strong>Activites:</strong> ${txt("pj-activites")||"—"}</p>
-
-    <h2>4. ETUDE DE MARCHE</h2>
-    <p><strong>Marche cible:</strong> ${txt("mk-cible")||"—"}</p>
-    <p><strong>Avantages concurrentiels:</strong> ${txt("mk-avantages")||"—"}</p>
-
-    <h2>5. PLAN D'INVESTISSEMENT</h2>
-    <table>
-      <tr><th>Poste</th><th>Cout (FRW)</th><th>Cout USD</th><th>Amort. (ans)</th></tr>
-      ${Array.from({length:invCount},(_,i)=>{
-        const idx=i+1;
-        const el=document.getElementById("id-"+idx);
-        if(!el) return "";
-        const tot=v("iq-"+idx)*v("ip-"+idx);
-        return `<tr><td>${el.value}</td><td>${fmtFRW(tot)}</td><td>${fmtUSD(tot)}</td><td>${v("ia-"+idx)}</td></tr>`;
-      }).join("")}
-      <tr class="tot-row"><td>TOTAL</td><td>${fmtFRW(getInvTot())}</td><td>${fmtUSD(getInvTot())}</td><td>—</td></tr>
-    </table>
-
-    <h2>6. PLAN DE FINANCEMENT</h2>
-    <table>
-      <tr><th>Source</th><th>Montant (FRW)</th><th>%</th></tr>
-      <tr><td>Apport en especes</td><td>${fmtFRW(v("fin-cash"))}</td><td>${fmtPct(cout>0?v("fin-cash")/cout*100:0)}</td></tr>
-      <tr><td>Apport en nature</td><td>${fmtFRW(v("fin-nature"))}</td><td>${fmtPct(cout>0?v("fin-nature")/cout*100:0)}</td></tr>
-      <tr><td>Credit bancaire</td><td>${fmtFRW(v("fin-credit"))}</td><td>${fmtPct(cout>0?v("fin-credit")/cout*100:0)}</td></tr>
-      <tr><td>Subvention</td><td>${fmtFRW(v("fin-subv"))}</td><td>${fmtPct(cout>0?v("fin-subv")/cout*100:0)}</td></tr>
-      <tr class="tot-row"><td>TOTAL</td><td>${fmtFRW(cout)}</td><td>100%</td></tr>
-    </table>
-
-    <h2>7. COMPTE DE RESULTAT PREVISIONNEL (FRW)</h2>
-    <table>${crRows}</table>
-
-    <h2>8. RATIOS ET INDICATEURS FINANCIERS</h2>
-    <table>
-      <tr><th>Indicateur</th><th>Valeur</th><th>Formule</th><th>Reference indicative</th><th>Diagnostic</th></tr>
-      <tr><td>ROI</td><td>${roi.toFixed(1)}%</td><td>Resultat net / Investissement</td><td>> 15% generalement satisfaisant</td><td>${roi>15?"FAVORABLE":roi>8?"ACCEPTABLE":"INSUFFISANT"}</td></tr>
-      <tr><td>TRI</td><td>${tri.toFixed(1)}%</td><td>Taux annulant la VAN</td><td>> cout du capital (ref. 10-15%)</td><td>${tri>15?"TRES ATTRAYANT":tri>10?"ACCEPTABLE":"INSUFFISANT"}</td></tr>
-      <tr><td>VAN (10%)</td><td>${fmtFRW(van)}</td><td>Flux actualises - Investissement</td><td>> 0 = cree de la valeur</td><td>${van>0?"POSITIVE":"NEGATIVE"}</td></tr>
-      <tr><td>RCSD/DSCR</td><td>${dscr.toFixed(2)}</td><td>CFADS / Service de la dette</td><td>1.00 min | 1.20-1.50 acceptable | >1.50 confortable</td><td>${dscr>=1.5?"CONFORTABLE":dscr>=1.2?"ACCEPTABLE":dscr>=1?"LIMITE":"INSUFFISANT"}</td></tr>
-      <tr><td>Payback</td><td>${pb<999?pb.toFixed(1)+" ans":"N/A"}</td><td>Investissement / CF moyen</td><td>< duree du credit</td><td>${pb<dur?"FAVORABLE":"A SURVEILLER"}</td></tr>
-    </table>
-    <p style="font-size:10px;color:#6B7280;font-style:italic">References indicatives — les criteres reels dependent de l'institution financiere, du secteur, du risque et du produit de credit. Ces valeurs ne constituent pas des normes officielles universelles.</p>
-
-    <h2>9. IMPACT SOCIO-ECONOMIQUE</h2>
-    <table>
-      <tr><th>Indicateur</th><th>Valeur</th></tr>
-      <tr><td>Emplois directs crees</td><td>${v("imp-emp-dir")}</td></tr>
-      <tr><td>Emplois indirects</td><td>${v("imp-emp-ind")}</td></tr>
-      <tr><td>Beneficiaires</td><td>${v("imp-benef")}</td></tr>
-      <tr><td>Impact social</td><td>${txt("imp-social")||"—"}</td></tr>
-      <tr><td>Impact economique</td><td>${txt("imp-eco")||"—"}</td></tr>
-    </table>
-
-    <h2>10. CONCLUSION ET RECOMMANDATION</h2>
-    <div class="reco-rpt ${recoColor}" style="margin:12px 0;padding:12px;border-radius:6px;text-align:center;font-weight:700;font-size:14px;">${recoText}</div>
-    <p>${txt("con-pts")||"A renseigner dans l'etape Conclusion."}</p>
-    <p style="margin-top:12px;font-size:10px;color:#6B7280;border-top:1px solid #E5E7EB;padding-top:8px;">
-      Ce rapport a ete genere par VitaNova SmartBiz. Il constitue un outil d'aide a la decision professionnelle. 
-      Pour validation officielle, consultez un expert-comptable agree ou un conseiller financier certifie. 
-      VitaNova n'est pas un cabinet juridique ou financier agree.
-      <br/>Genere le: ${now} | Taux BNR: 1 USD = ${BNR_RATE.toLocaleString()} FRW | GCV Pi = $${gcvVal().toLocaleString()}
-    </p>`;
-}
-
-function printReport(){
-  buildReport();
-  const rptPanel=document.getElementById("report-panel");
-  if(rptPanel){ rptPanel.className="report-panel active"; window.print(); rptPanel.className="report-panel"; }
-}
-
-// ══════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════
-function goTo(n){
-  if(n>currentStep&&!validateStep(currentStep)) return;
-  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-  const panel=document.getElementById("panel-"+n);
-  if(panel) panel.classList.add("active");
-  for(let i=1;i<=TOTAL_STEPS;i++){
-    const tab=document.getElementById("pt"+i); if(!tab) continue;
-    tab.classList.remove("active","done");
-    if(i<n) tab.classList.add("done");
-    else if(i===n) tab.classList.add("active");
-  }
-  for(let i=1;i<TOTAL_STEPS;i++){
-    const l=document.getElementById("pl"+i); if(l) l.classList.toggle("done",i<n);
-  }
-  currentStep=n;
-  if(n===7||n===8) rebuildTables(), recalcAll();
-  if(n===8){ buildKPIs(); buildDSCRTable(); buildSRTable(); buildSensitivity(); }
-  if(n===9){ recalcImpact(); calcGarTot(); }
-  if(n===10){ buildReport(); buildScoreGlobal(); }
-  window.scrollTo(0,0);
-  saveProject();
-}
-
-function validateStep(n){
-  if(n===1){
-    if(!txt("p-nom").trim()){ showToast("Entrez le nom du projet","err"); return false; }
-    if(!document.getElementById("p-secteur")?.value){ showToast("Selectionnez le secteur","err"); return false; }
-    return true;
-  }
-  if(n===2){
-    if(!txt("pr-nom").trim()){ showToast("Entrez le nom du promoteur","err"); return false; }
-    return true;
-  }
-  if(n===4){
-    if(getCAM()===0){ showToast("Ajoutez au moins un produit avec quantite et prix","err"); return false; }
-    return true;
-  }
-  return true;
-}
-
-// ══════════════════════════════════════════
-// SAVE / RESTORE (localStorage)
-// ══════════════════════════════════════════
-function saveProject(){
-  const fields=["p-nom","p-ref","p-secteur","p-nature","p-fintype","p-pays","p-ville","p-devise",
-    "p-start","p-duree","p-tax","p-growth1","p-growth2","p-growth3","p-gcv",
-    "pr-nom","pr-dob","pr-tel","pr-email","pr-addr","pr-nat","pr-exp","pr-expdesc","pr-formation",
-    "pr-apport-cash","pr-apport-nature","pr-gar-val","pr-gar-decote","pr-garanties",
-    "pj-contexte","pj-justif","pj-obj","pj-obj-sp","pj-activites","pj-chrono","pj-tech","pj-faisab",
-    "mk-cible","mk-taille","mk-clients-act","mk-clients-pot","mk-distrib","mk-marketing","mk-avantages",
-    "bfr-stocks","bfr-creances","bfr-treso","bfr-dettes",
-    "fin-cash","fin-nature","fin-credit","fin-subv","fin-inv","fin-autres",
-    "cr-montant","cr-taux","cr-duree","cr-grace","cr-freq","cr-frais",
-    "sens-pess","sens-opt",
-    "imp-emp-dir","imp-emp-ind","imp-benef","imp-femmes","imp-jeunes","imp-menages",
-    "imp-social","imp-eco","imp-env","imp-durab","con-pts"];
-  const data={fields:{},mode,currentStep,ts:new Date().toISOString()};
-  fields.forEach(id=>{ const el=document.getElementById(id); if(el) data.fields[id]=el.value; });
-  // Dynamic rows
-  data.patrRows=[]; for(let i=1;i<=patrCount;i++){ const e=document.getElementById("pd-"+i); if(e) data.patrRows.push({desc:e.value,q:v("pq-"+i),u:v("pu-"+i)}); }
-  data.revRows=[]; for(let i=1;i<=revCount;i++){ const e=document.getElementById("rd-"+i); if(e) data.revRows.push({desc:e.value,m:v("rm-"+i)}); }
-  data.prodRows=[]; for(let i=1;i<=prodCount;i++){ const e=document.getElementById("pn-"+i); if(e) data.prodRows.push({nom:e.value,u:document.getElementById("pu-"+i)?.value,pv:v("pv-"+i),pa:v("pa-"+i),q:v("pq-"+i)}); }
-  data.invRows=[]; for(let i=1;i<=invCount;i++){ const e=document.getElementById("id-"+i); if(e) data.invRows.push({desc:e.value,q:v("iq-"+i),p:v("ip-"+i),a:v("ia-"+i)}); }
-  data.chvarRows=[]; for(let i=1;i<=chvarCount;i++){ const e=document.getElementById("cvd-"+i); if(e) data.chvarRows.push({poste:e.value,pct:v("cvp-"+i),m:v("cvm-"+i)}); }
-  data.chfixRows=[]; for(let i=1;i<=chfixCount;i++){ const e=document.getElementById("cfd-"+i); if(e) data.chfixRows.push({poste:e.value,m:v("cfm-"+i)}); }
-  try{
-    localStorage.setItem("vitanova_smartbiz", JSON.stringify(data));
-    const banner=document.getElementById("save-banner");
-    const saveTime=document.getElementById("save-time");
-    if(banner) banner.style.display="flex";
-    if(saveTime) saveTime.textContent="Derniere sauvegarde: "+new Date().toLocaleTimeString("fr");
-  }catch(e){ console.warn("Save failed:",e); }
-}
-
-function checkSavedProject(){
-  try{
-    const saved=localStorage.getItem("vitanova_smartbiz");
-    if(saved){
-      const banner=document.getElementById("save-banner");
-      const saveTime=document.getElementById("save-time");
-      const data=JSON.parse(saved);
-      if(banner) banner.style.display="flex";
-      if(saveTime) saveTime.textContent="Projet sauvegarde le "+new Date(data.ts).toLocaleString("fr");
-    }
-  }catch(e){}
-}
-
-function restoreProject(){
-  try{
-    const saved=localStorage.getItem("vitanova_smartbiz");
-    if(!saved){ showToast("Aucun projet sauvegarde","err"); return; }
-    const data=JSON.parse(saved);
-    // Clear dynamic rows
-    ["patr-body","rev-body","prod-body","inv-body","chvar-body","chfix-body"].forEach(id=>{
-      const el=document.getElementById(id); if(el) el.innerHTML="";
-    });
-    patrCount=0; revCount=0; prodCount=0; invCount=0; chvarCount=0; chfixCount=0;
-    // Restore fields
-    Object.entries(data.fields||{}).forEach(([id,val])=>{
-      const el=document.getElementById(id); if(el) el.value=val;
-    });
-    // Restore dynamic rows
-    (data.patrRows||[]).forEach(r=>addPatrRow(r.desc,r.q,r.u));
-    (data.revRows||[]).forEach(r=>addRevRow(r.desc,r.m));
-    (data.prodRows||[]).forEach(r=>addProdRow(r.nom,r.u,r.pv,r.pa,r.q));
-    (data.invRows||[]).forEach(r=>addInvRow(r.desc,r.q,r.p,r.a));
-    (data.chvarRows||[]).forEach(r=>addChvarRow(r.poste,r.pct,r.m));
-    (data.chfixRows||[]).forEach(r=>addChfixRow(r.poste,r.m));
-    if(data.mode) setMode(data.mode);
-    updateYears(); recalcAll();
-    showToast("Projet restaure avec succes!","ok");
-  }catch(e){ showToast("Erreur restauration: "+e.message,"err"); }
-}
-
-// ══════════════════════════════════════════
-// PAYMENT
-// ══════════════════════════════════════════
-async function pay(){
-  const chk1=document.getElementById("chk1"), chk2=document.getElementById("chk2");
-  if(!chk1?.checked||!chk2?.checked){ showToast("Acceptez les conditions","err"); return; }
-  if(!piService.user){
-    const r=await piService.login(["username","payments"]);
-    if(!r.success){ showToast("Ouvrez dans Pi Browser","err"); return; }
-    document.getElementById("uname").textContent="@"+r.user.username;
-    document.getElementById("user-pill").style.display="flex";
-  }
-  showToast("Paiement en cours...");
-  const ts=Date.now(); const uid=piService.user?.username||"user";
-  try{
-    await Pi.init({version:"2.0",sandbox:true});
-    Pi.createPayment({
-      amount:3,memo:"DEEPSTUDY-smartbiz-"+ts+"-"+uid,
-      metadata:{type:"deep_study",domain:"SmartBiz",userId:uid,timestamp:ts}
-    },{
-      onReadyForServerApproval:(id)=>{ console.log("Approval:",id); },
-      onReadyForServerCompletion:(id,txid)=>{ showSuccessPanel(txid); },
-      onCancel:()=>{ showToast("Paiement annule","err"); },
-      onError:(e)=>{ console.error(e); showToast("Erreur paiement","err"); }
-    });
-  }catch(e){ console.error(e); showToast("Pi Browser requis pour les paiements","err"); }
-}
-
-function showSuccessPanel(txid){
-  document.querySelector(".form-wrap").style.display="none";
-  document.querySelector(".prog-wrap").style.display="none";
-  document.getElementById("success-panel").style.display="block";
-  document.getElementById("txid-box").textContent="TXID: "+(txid||"0x"+Math.random().toString(16).substr(2,40).toUpperCase());
-  showToast("Rapport commande avec succes!","ok");
-}
 
 // ── TOAST ──
 function showToast(msg,type=""){
