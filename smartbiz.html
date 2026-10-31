@@ -345,7 +345,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
   <h1>Moteur de Montage de Projets <em>Professionnel</em></h1>
   <p id="hero-sub">Assistant intelligent pour consultants en investissement. Saisissez les donnees du projet — SmartBiz produit automatiquement l'etude financiere complete.</p>
   <div class="rate-bar" id="rate-bar">&#9203; Chargement des taux en cours...</div>
-  <div style="text-align:center;margin-top:8px;"><button class="restore-btn" onclick="loadDemo()" data-fr="&#128221; Charger un exemple" data-en="&#128221; Load example">&#128221; Charger un exemple</button></div>
+  <div style="text-align:center;margin-top:8px"><button class="restore-btn" onclick="loadDemo()">&#128221; Charger un exemple</button></div>
 </div>
 
 <!-- ── SAVE BANNER ── -->
@@ -389,22 +389,22 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128203;</div>
       <div>
         <div class="sec-title" data-step="1">Etape 1 — Identification du Projet</div>
-        <div class="sec-sub" data-fr="Informations generales et classification du projet" data-en="General information and project classification">Informations generales et classification du projet</div>
+        <div class="sec-sub">Informations generales et classification du projet</div>
       </div>
     </div>
     <div class="row2">
       <div class="field">
-        <label data-fr="Nom du projet *" data-en="Project Name *">Nom du projet * <span class="tip" data-tip="Donnez un nom court et descriptif. Ex: Epicerie UWASE Kigali">?</span></label>
+        <label>Nom du projet * <span class="tip" onclick="showTip(this,'Donnez un nom court et descriptif. Ex: Epicerie UWASE Kigali')">?</span></label>
         <input type="text" id="p-nom" placeholder="Ex: Epicerie Moderne Kigali"/>
       </div>
       <div class="field">
-        <label data-fr="Reference / Code" data-en="Reference / Code">Reference / Code</label>
+        <label>Reference / Code</label>
         <input type="text" id="p-ref" placeholder="Ex: SB-2026-001"/>
       </div>
     </div>
     <div class="row3">
       <div class="field">
-        <label data-fr="Secteur d'activite *" data-en="Sector *">Secteur d'activite *</label>
+        <label>Secteur d'activite *</label>
         <select id="p-secteur" onchange="updateSector()">
 <option value="">-- Sélectionnez le secteur --</option>
 <optgroup label="🛒 COMMERCE DE DÉTAIL">
@@ -480,7 +480,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
 </select>
       </div>
       <div class="field">
-        <label data-fr="Nature du projet *" data-en="Project Nature *">Nature du projet *</label>
+        <label>Nature du projet *</label>
         <select id="p-nature">
           <option value="creation">Creation d'entreprise</option>
           <option value="extension">Extension/Expansion</option>
@@ -490,7 +490,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
         </select>
       </div>
       <div class="field">
-        <label data-fr="Type de financement *" data-en="Financing Type *">Type de financement *</label>
+        <label>Type de financement *</label>
         <select id="p-fintype" onchange="updateMode()">
           <option value="credit">Credit bancaire</option>
           <option value="subvention">Subvention/Don</option>
@@ -502,7 +502,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
     <div class="row3">
       <div class="field">
-        <label data-fr="Pays *" data-en="Country *">Pays *</label>
+        <label>Pays *</label>
         <select id="p-pays" onchange="updateTax()">
           <option value="RW">Rwanda (RW)</option>
           <option value="KE">Kenya (KRA)</option>
@@ -513,11 +513,11 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
         </select>
       </div>
       <div class="field">
-        <label data-fr="Ville / Localisation *" data-en="City / Location *">Ville / Localisation *</label>
+        <label>Ville / Localisation *</label>
         <input type="text" id="p-ville" placeholder="Ex: Kigali — Nyarugenge"/>
       </div>
       <div class="field">
-        <label data-fr="Devise principale" data-en="Main Currency">Devise principale</label>
+        <label>Devise principale</label>
         <select id="p-devise" onchange="updateDevise()">
           <option value="FRW">FRW — Franc Rwandais</option>
           <option value="USD">USD — Dollar Americain</option>
@@ -528,11 +528,11 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
     <div class="row3">
       <div class="field">
-        <label data-fr="Date de demarrage prevue" data-en="Expected Start Date">Date de demarrage prevue</label>
+        <label>Date de demarrage prevue</label>
         <input type="date" id="p-start"/>
       </div>
       <div class="field">
-        <label data-fr="Duree du projet (annees)" data-en="Project Duration (years)">Duree du projet (annees) <span class="tip" data-tip="Duree totale du projet. Pour un credit, correspond generalement a la duree de remboursement. De 1 a 10 ans.">?</span></label>
+        <label>Duree du projet (annees) <span class="tip" onclick="showTip(this,'Duree totale du projet. Pour un credit, correspond generalement a la duree de remboursement. De 1 a 10 ans.')">?</span></label>
         <select id="p-duree" onchange="updateYears()">
           <option value="1">1 an</option>
           <option value="2">2 ans</option>
@@ -547,18 +547,14 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
         </select>
       </div>
       <div class="field">
-        <label data-fr="Taux d'imposition (CIT)" data-en="Corporate Tax Rate (CIT)">Taux d'imposition (CIT) <span class="tip" data-tip="Impot sur les societes. Rwanda: 30%. Kenya: 30%. USA: 21%. Modifiable.">?</span></label>
+        <label>Taux d'imposition (CIT) <span class="tip" onclick="showTip(this,'Impot sur les societes. Rwanda: 30%. Kenya: 30%. USA: 21%. Modifiable.')">?</span></label>
         <input type="number" id="p-tax" value="30" min="0" max="60" step="0.5" oninput="recalcAllDebounced()"/>
         <div class="hint">% — RW: 30% | Kenya: 30% | USA: 21%</div>
       </div>
-      <div class="field">
-        <label>Taux d'actualisation / cout du capital (%) <span data-tip="Hypothese consultant pour VAN et TRI. Ex: 10-15% au Rwanda. Modifiable.">?</span></label>
-        <input type="number" id="p-wacc" value="12" min="0" max="60" step="0.5" oninput="recalcAllDebounced()"/>
-        <div class="hint">Hypothese consultant — Rwanda: 10-15% (indicatif)</div>
-      </div>
+      <div class="field"><label data-fr="Taux d'actualisation / cout du capital (%)" data-en="Discount Rate / Cost of Capital (%)">Taux d'actualisation (%) <span data-tip="Hypothese consultant pour VAN et TRI. Ex: 10-15% au Rwanda.">?</span></label><input type="number" id="p-wacc" value="12" min="0" max="60" step="0.5" oninput="recalcAllDebounced()"/><div class="hint" data-fr="Hypothese consultant — Rwanda: 10-15% (indicatif)" data-en="Consultant assumption — Rwanda: 10-15% (indicative)">Hypothese consultant</div></div>
     </div>
     <div class="field">
-      <label data-fr="Taux de croissance annuelle du CA" data-en="Annual Revenue Growth Rate">Taux de croissance annuelle du CA <span class="tip" data-tip="Hypothese de croissance annuelle du chiffre d&#39;affaires. Ex: 5% = le CA augmente de 5% chaque annee. Ne pas coder une valeur trop optimiste sans justification.">?</span></label>
+      <label>Taux de croissance annuelle du CA <span class="tip" onclick="showTip(this,'Hypothese de croissance annuelle du chiffre d'affaires. Ex: 5% = le CA augmente de 5% chaque annee. Ne pas coder une valeur trop optimiste sans justification.')">?</span></label>
       <div class="row3">
         <div class="field">
           <label style="font-size:10px">Annee 1-2 (%)</label>
@@ -594,7 +590,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
     <div id="sector-vars-content"></div>
   </div>
-  <button class="btn-p" onclick="goTo(2)" data-fr="Continuer &#8594; Promoteur" data-en="Continue &#8594; Promoter">Continuer &#8594; Promoteur</button>
+  <button class="btn-p" onclick="goTo(2)">Continuer &#8594; Promoteur</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -606,21 +602,21 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128100;</div>
       <div>
         <div class="sec-title" data-step="2">Etape 2 — Informations sur le Promoteur</div>
-        <div class="sec-sub" data-fr="Identite, experience, patrimoine et capacite d'apport" data-en="Identity, experience, assets and contribution capacity">Identite, experience, patrimoine et capacite d'apport</div>
+        <div class="sec-sub">Identite, experience, patrimoine et capacite d'apport</div>
       </div>
     </div>
     <div class="row2">
-      <div class="field"><label data-fr="Nom complet *" data-en="Full Name *">Nom complet *</label><input type="text" id="pr-nom" placeholder="UWASE Marie-Claire"/></div>
-      <div class="field"><label data-fr="Date de naissance" data-en="Date of Birth">Date de naissance</label><input type="date" id="pr-dob"/></div>
+      <div class="field"><label>Nom complet *</label><input type="text" id="pr-nom" placeholder="UWASE Marie-Claire"/></div>
+      <div class="field"><label>Date de naissance</label><input type="date" id="pr-dob"/></div>
     </div>
     <div class="row2">
-      <div class="field"><label data-fr="Telephone *" data-en="Phone *">Telephone *</label><input type="tel" id="pr-tel" placeholder="+250 788 000 000"/></div>
-      <div class="field"><label data-fr="Email" data-en="Email">Email</label><input type="email" id="pr-email" placeholder="nom@email.com"/></div>
+      <div class="field"><label>Telephone *</label><input type="tel" id="pr-tel" placeholder="+250 788 000 000"/></div>
+      <div class="field"><label>Email</label><input type="email" id="pr-email" placeholder="nom@email.com"/></div>
     </div>
-    <div class="field"><label data-fr="Adresse complete *" data-en="Full Address *">Adresse complete *</label><input type="text" id="pr-addr" placeholder="KG 123 St, Kigali, Rwanda"/></div>
+    <div class="field"><label>Adresse complete *</label><input type="text" id="pr-addr" placeholder="KG 123 St, Kigali, Rwanda"/></div>
     <div class="row3">
-      <div class="field"><label data-fr="Nationalite" data-en="Nationality">Nationalite</label><input type="text" id="pr-nat" placeholder="Rwandaise"/></div>
-      <div class="field"><label data-fr="Statut juridique" data-en="Legal Status">Statut juridique</label>
+      <div class="field"><label>Nationalite</label><input type="text" id="pr-nat" placeholder="Rwandaise"/></div>
+      <div class="field"><label>Statut juridique</label>
         <select id="pr-statut">
           <option value="physique">Personne physique</option>
           <option value="sarl">SARL / LLC</option>
@@ -629,11 +625,11 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
           <option value="cooperative">Cooperative</option>
         </select>
       </div>
-      <div class="field"><label data-fr="Annees d'experience" data-en="Years of Experience">Annees d'experience</label><input type="number" id="pr-exp" placeholder="5" min="0"/></div>
+      <div class="field"><label>Annees d'experience</label><input type="number" id="pr-exp" placeholder="5" min="0"/></div>
     </div>
-    <div class="field"><label data-fr="Experience et competences dans le secteur *" data-en="Sector Experience and Skills *">Experience et competences dans le secteur *</label>
+    <div class="field"><label>Experience et competences dans le secteur *</label>
       <textarea id="pr-expdesc" rows="2" placeholder="Decrivez votre experience professionnelle dans ce secteur..."></textarea></div>
-    <div class="field"><label data-fr="Formation / Diplomes" data-en="Education / Degrees">Formation / Diplomes</label>
+    <div class="field"><label>Formation / Diplomes</label>
       <textarea id="pr-formation" rows="2" placeholder="Ex: Licence en Gestion, Formation en commerce, Certificat TVET..."></textarea></div>
   </div>
 
@@ -722,37 +718,37 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
     <div class="row3">
       <div class="field">
-        <label data-fr="Apport en especes (FRW) *" data-en="Cash Contribution (FRW) *">Apport en especes (FRW) * <span class="tip" data-tip="Montant cash que vous apportez directement au projet. Minimum 20% du cout total requis par la plupart des banques.">?</span></label>
+        <label>Apport en especes (FRW) * <span class="tip" onclick="showTip(this,'Montant cash que vous apportez directement au projet. Minimum 20% du cout total requis par la plupart des banques.')">?</span></label>
         <input type="number" id="pr-apport-cash" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
-        <label data-fr="Apport en nature (FRW)" data-en="In-kind Contribution (FRW)">Apport en nature (FRW) <span class="tip" data-tip="Valeur des biens apportes au projet (terrain, batiment, materiel...) deja en votre possession.">?</span></label>
+        <label>Apport en nature (FRW) <span class="tip" onclick="showTip(this,'Valeur des biens apportes au projet (terrain, batiment, materiel...) deja en votre possession.')">?</span></label>
         <input type="number" id="pr-apport-nature" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
-        <label data-fr="% Apport / Cout total" data-en="% Contribution / Total cost">% Apport / Cout total</label>
+        <label>% Apport / Cout total</label>
         <input type="text" id="pr-apport-pct" readonly style="font-weight:700;font-size:13px;"/>
         <div class="hint">Minimum 20% requis par les banques</div>
       </div>
     </div>
     <div class="field">
-      <label data-fr="Garanties proposees" data-en="Proposed Guarantees">Garanties proposees <span class="tip" data-tip="Listez les suretés que vous pouvez offrir: hypotheque, nantissement, caution, depot de garantie... La banque applique generalement une decote de 20-50% sur la valeur marchande.">?</span></label>
+      <label>Garanties proposees <span class="tip" onclick="showTip(this,'Listez les suretés que vous pouvez offrir: hypotheque, nantissement, caution, depot de garantie... La banque applique generalement une decote de 20-50% sur la valeur marchande.')">?</span></label>
       <textarea id="pr-garanties" rows="2" placeholder="Ex: Hypotheque sur maison (valeur 80 000 000 FRW), Caution solidaire d un associe..."></textarea>
     </div>
     <div class="row2">
       <div class="field">
-        <label data-fr="Valeur marchande totale des garanties (FRW)" data-en="Total Market Value of Guarantees (FRW)">Valeur marchande totale des garanties (FRW)</label>
+        <label>Valeur marchande totale des garanties (FRW)</label>
         <input type="number" id="pr-gar-val" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
-        <label data-fr="Decote appliquee (%)" data-en="Applied Haircut (%)">Decote appliquee (%) <span class="tip" data-tip="Pourcentage de reduction applique par la banque. Generalement 20-50%. La valeur retenue = valeur marchande x (1 - decote/100). Reference indicative.">?</span></label>
+        <label>Decote appliquee (%) <span class="tip" onclick="showTip(this,'Pourcentage de reduction applique par la banque. Generalement 20-50%. La valeur retenue = valeur marchande x (1 - decote/100). Reference indicative.')">?</span></label>
         <input type="number" id="pr-gar-decote" value="30" min="0" max="80" oninput="recalcAllDebounced()"/>
         <div class="hint">Valeur retenue = <span id="gar-retenue" class="co">0 FRW</span></div>
       </div>
     </div>
   </div>
-  <button class="btn-p" onclick="goTo(3)" data-fr="Continuer &#8594; Description du Projet" data-en="Continue &#8594; Project Description">Continuer &#8594; Description du Projet</button>
-  <button class="btn-s" onclick="goTo(1)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-p" onclick="goTo(3)">Continuer &#8594; Description du Projet</button>
+  <button class="btn-s" onclick="goTo(1)">&#8592; Retour</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -764,28 +760,28 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128221;</div>
       <div>
         <div class="sec-title" data-step="3">Etape 3 — Description du Projet</div>
-        <div class="sec-sub" data-fr="Contexte, justification, objectifs et planification" data-en="Context, justification, objectives and planning">Contexte, justification, objectifs et planification</div>
+        <div class="sec-sub">Contexte, justification, objectifs et planification</div>
       </div>
     </div>
-    <div class="field"><label data-fr="Contexte et problematique *" data-en="Context and Problem *">Contexte et problematique *</label>
+    <div class="field"><label>Contexte et problematique *</label>
       <textarea id="pj-contexte" rows="3" placeholder="Decrivez le contexte economique et social dans lequel s'inscrit ce projet. Quel probleme ou besoin identifie-t-il?"></textarea></div>
-    <div class="field"><label data-fr="Justification du projet *" data-en="Project Justification *">Justification du projet *</label>
+    <div class="field"><label>Justification du projet *</label>
       <textarea id="pj-justif" rows="3" placeholder="Pourquoi ce projet est-il pertinent et necessaire? Quelle opportunite exploite-t-il?"></textarea></div>
-    <div class="field"><label data-fr="Objectif general *" data-en="General Objective *">Objectif general *</label>
+    <div class="field"><label>Objectif general *</label>
       <textarea id="pj-obj" rows="2" placeholder="Ex: Creer une epicerie moderne qui approvisionne 500 menages du quartier Kimironko en produits alimentaires de qualite."></textarea></div>
-    <div class="field"><label data-fr="Objectifs specifiques" data-en="Specific Objectives">Objectifs specifiques</label>
+    <div class="field"><label>Objectifs specifiques</label>
       <textarea id="pj-obj-sp" rows="3" placeholder="Ex:&#10;1. Atteindre un CA mensuel de 5 000 000 FRW en 6 mois&#10;2. Creer 5 emplois directs&#10;3. Diversifier l'offre avec 200 references produits"></textarea></div>
-    <div class="field"><label data-fr="Description detaillee des activites" data-en="Detailed Activity Description">Description detaillee des activites</label>
+    <div class="field"><label>Description detaillee des activites</label>
       <textarea id="pj-activites" rows="3" placeholder="Decrivez les activites principales: achat des stocks, vente au detail, livraison, gestion..."></textarea></div>
-    <div class="field"><label data-fr="Chronologie et etapes cles" data-en="Timeline and Key Milestones">Chronologie et etapes cles</label>
+    <div class="field"><label>Chronologie et etapes cles</label>
       <textarea id="pj-chrono" rows="3" placeholder="Ex:&#10;Mois 1-2: Amenagement local + approvisionnement&#10;Mois 3: Ouverture officielle&#10;Mois 6: Premier bilan + ajustements&#10;Annee 2: Extension gamme produits"></textarea></div>
-    <div class="field"><label data-fr="Technologie et methodes de production" data-en="Technology and Production Methods">Technologie et methodes de production</label>
+    <div class="field"><label>Technologie et methodes de production</label>
       <textarea id="pj-tech" rows="2" placeholder="Decrivez les equipements, technologies ou methodes utilises..."></textarea></div>
-    <div class="field"><label data-fr="Faisabilite et durabilite du projet" data-en="Project Feasibility and Sustainability">Faisabilite et durabilite du projet</label>
+    <div class="field"><label>Faisabilite et durabilite du projet</label>
       <textarea id="pj-faisab" rows="2" placeholder="Comment ce projet est-il viable a long terme? Quels mecanismes assurent sa perennite?"></textarea></div>
   </div>
-  <button class="btn-p" onclick="goTo(4)" data-fr="Continuer &#8594; Etude de Marche" data-en="Continue &#8594; Market Study">Continuer &#8594; Etude de Marche</button>
-  <button class="btn-s" onclick="goTo(2)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-p" onclick="goTo(4)">Continuer &#8594; Etude de Marche</button>
+  <button class="btn-s" onclick="goTo(2)">&#8592; Retour</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -797,13 +793,13 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128202;</div>
       <div>
         <div class="sec-title" data-step="4">Etape 4 — Etude de Marche</div>
-        <div class="sec-sub" data-fr="Produits, clients, prix, concurrence et strategies" data-en="Products, clients, prices, competition and strategies">Produits, clients, prix, concurrence et strategies</div>
+        <div class="sec-sub">Produits, clients, prix, concurrence et strategies</div>
       </div>
     </div>
     <div class="row2">
-      <div class="field"><label data-fr="Marche cible *" data-en="Target Market *">Marche cible *</label>
+      <div class="field"><label>Marche cible *</label>
         <textarea id="mk-cible" rows="2" placeholder="Ex: Menages du quartier Kimironko, petits commerces de proximite, hotels 2 etoiles..."></textarea></div>
-      <div class="field"><label data-fr="Taille estimee du marche" data-en="Estimated Market Size">Taille estimee du marche</label>
+      <div class="field"><label>Taille estimee du marche</label>
         <textarea id="mk-taille" rows="2" placeholder="Ex: 5 000 menages dans un rayon de 2 km, pouvoir d'achat moyen de 50 000 FRW/mois..."></textarea></div>
     </div>
 
@@ -864,22 +860,22 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     <button class="btn-add" onclick="addConcRow()" data-addkey="conc">+ Ajouter un concurrent</button>
 
     <div class="row2" style="margin-top:10px">
-      <div class="field"><label data-fr="Clients actuels (contractes)" data-en="Current Clients (contracted)">Clients actuels (contractes)</label>
+      <div class="field"><label>Clients actuels (contractes)</label>
         <textarea id="mk-clients-act" rows="2" placeholder="Ex: Aucun pour l'instant / 2 restaurants sous contrat..."></textarea></div>
-      <div class="field"><label data-fr="Clients potentiels" data-en="Potential Clients">Clients potentiels</label>
+      <div class="field"><label>Clients potentiels</label>
         <textarea id="mk-clients-pot" rows="2" placeholder="Ex: Menages, epiceries, hotels, ecoles, ONG..."></textarea></div>
     </div>
     <div class="row2">
-      <div class="field"><label data-fr="Strategie de distribution" data-en="Distribution Strategy">Strategie de distribution</label>
+      <div class="field"><label>Strategie de distribution</label>
         <textarea id="mk-distrib" rows="2" placeholder="Ex: Vente en boutique, livraison a domicile, vente en gros..."></textarea></div>
-      <div class="field"><label data-fr="Strategie marketing" data-en="Marketing Strategy">Strategie marketing</label>
+      <div class="field"><label>Strategie marketing</label>
         <textarea id="mk-marketing" rows="2" placeholder="Ex: Reseaux sociaux, bouche a oreille, promotions..."></textarea></div>
     </div>
-    <div class="field"><label data-fr="Avantages concurrentiels" data-en="Competitive Advantages">Avantages concurrentiels</label>
+    <div class="field"><label>Avantages concurrentiels</label>
       <textarea id="mk-avantages" rows="2" placeholder="Ex: Prix competitifs, proximite, qualite superieure, service apres-vente..."></textarea></div>
   </div>
   <button class="btn-p" onclick="goTo(5)">Continuer &#8594; Plan d'Investissement</button>
-  <button class="btn-s" onclick="goTo(3)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-s" onclick="goTo(3)">&#8592; Retour</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -893,7 +889,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128184;</div>
       <div>
         <div class="sec-title" data-step="5">Etape 5 — Plan d'Investissement Initial</div>
-        <div class="sec-sub" data-fr="Tous les montants en FRW" data-en="All amounts in FRW">Tous les montants en FRW — conversion USD et Pi automatique</div>
+        <div class="sec-sub">Tous les montants en FRW — conversion USD et Pi automatique</div>
       </div>
     </div>
 
@@ -946,21 +942,21 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
     <div class="row2">
       <div class="field">
-        <label data-fr="Stocks moyens (FRW)" data-en="Average Inventory (FRW)">Stocks moyens (FRW) <span class="tip" data-tip="Valeur moyenne des stocks que vous devez maintenir pour fonctionner. Ex: 30 jours de stock = Achats mensuels / 30 x jours de stock.">?</span></label>
+        <label>Stocks moyens (FRW) <span class="tip" onclick="showTip(this,'Valeur moyenne des stocks que vous devez maintenir pour fonctionner. Ex: 30 jours de stock = Achats mensuels / 30 x jours de stock.')">?</span></label>
         <input type="number" id="bfr-stocks" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
-        <label data-fr="Creances clients (FRW)" data-en="Trade Receivables (FRW)">Creances clients (FRW) <span class="tip" data-tip="Montant que vos clients vous doivent en moyenne. Si paiement comptant, mettre 0. Si credit 30j: CA mensuel / 30 x jours credit.">?</span></label>
+        <label>Creances clients (FRW) <span class="tip" onclick="showTip(this,'Montant que vos clients vous doivent en moyenne. Si paiement comptant, mettre 0. Si credit 30j: CA mensuel / 30 x jours credit.')">?</span></label>
         <input type="number" id="bfr-creances" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
     </div>
     <div class="row2">
       <div class="field">
-        <label data-fr="Tresorerie minimale (FRW)" data-en="Minimum Cash (FRW)">Tresorerie minimale (FRW) <span class="tip" data-tip="Encaisse minimum a maintenir pour les depenses courantes imprevues. Generalement 1-2 mois de charges fixes.">?</span></label>
+        <label>Tresorerie minimale (FRW) <span class="tip" onclick="showTip(this,'Encaisse minimum a maintenir pour les depenses courantes imprevues. Generalement 1-2 mois de charges fixes.')">?</span></label>
         <input type="number" id="bfr-treso" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
-        <label data-fr="Dettes fournisseurs (FRW)" data-en="Trade Payables (FRW)">Dettes fournisseurs (FRW) <span class="tip" data-tip="Ce que vos fournisseurs vous permettent de differer. Credit fournisseur. Reduit le BFR.">?</span></label>
+        <label>Dettes fournisseurs (FRW) <span class="tip" onclick="showTip(this,'Ce que vos fournisseurs vous permettent de differer. Credit fournisseur. Reduit le BFR.')">?</span></label>
         <input type="number" id="bfr-dettes" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
       </div>
     </div>
@@ -974,119 +970,179 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
   </div>
 
-  <button class="btn-p" onclick="goTo(6)" data-fr="Continuer &#8594; Plan de Financement" data-en="Continue &#8594; Financing Plan">Continuer &#8594; Plan de Financement</button>
-  <button class="btn-s" onclick="goTo(4)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-p" onclick="goTo(6)">Continuer &#8594; Plan de Financement</button>
+  <button class="btn-s" onclick="goTo(4)">&#8592; Retour</button>
 </div>
 
-<!-- ════════════════════════════════════════
-     PANEL 6: FINANCEMENT + CREDIT
-═════════════════════════════════════════ -->
+<!-- ════ PANEL 6: FINANCEMENT ════ -->
 <div class="panel" id="panel-6">
+
+  <!-- RÉSUMÉ COÛT TOTAL -->
   <div class="sec">
     <div class="sec-hdr">
-      <div class="sec-icon">&#127970;</div>
+      <div class="sec-icon">&#128200;</div>
       <div>
-        <div class="sec-title" data-step="6">Etape 6 — Plan de Financement</div>
-        <div class="sec-sub" data-fr="Structure du financement" data-en="Financing structure">Structure du financement — le total doit egaliser le cout du projet</div>
+        <div class="sec-title" data-step="6" data-fr="Etape 6 — Plan de Financement" data-en="Step 6 — Financing Plan">Etape 6 — Plan de Financement</div>
+        <div class="sec-sub" data-fr="Structure du financement — le total doit egaliser le cout du projet" data-en="Financing structure — total must equal project cost">Structure du financement — le total doit egaliser le cout du projet</div>
       </div>
     </div>
+
+    <!-- Tableau plan de financement -->
     <div class="tbl-wrap">
-      <table class="xtbl">
+      <table class="xtbl" id="fin-main-table">
         <thead>
           <tr>
-            <th style="text-align:left;min-width:180px">Source de financement</th>
-            <th style="min-width:140px">Montant (FRW)</th>
-            <th style="min-width:90px">% du total</th>
-            <th style="min-width:90px">USD</th>
-            <th style="min-width:80px">Pi</th>
+            <th style="text-align:left;min-width:220px" data-fr="Source de financement" data-en="Financing Source">Source de financement</th>
+            <th style="min-width:160px" data-fr="Montant (FRW)" data-en="Amount (FRW)">Montant (FRW)</th>
+            <th style="min-width:80px">%</th>
+            <th style="min-width:110px">USD</th>
+            <th style="min-width:90px">Pi</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Apport en especes (promoteur)</td><td><input type="number" id="fin-cash" placeholder="0" min="0" oninput="recalcAllDebounced()"/></td><td id="fin-cash-pct" class="cb">0%</td><td id="fin-cash-usd" class="co">$0</td><td id="fin-cash-pi">0 Pi</td></tr>
-          <tr><td>Apport en nature (promoteur)</td><td><input type="number" id="fin-nature" placeholder="0" min="0" oninput="recalcAllDebounced()"/></td><td id="fin-nature-pct" class="cb">0%</td><td id="fin-nature-usd" class="co">$0</td><td id="fin-nature-pi">0 Pi</td></tr>
-          <tr><td>Credit bancaire demande</td><td><input type="number" id="fin-credit" placeholder="0" min="0" oninput="recalcAllDebounced()"/></td><td id="fin-credit-pct" class="cb">0%</td><td id="fin-credit-usd" class="co">$0</td><td id="fin-credit-pi">0 Pi</td></tr>
-          <tr><td>Subvention / Don</td><td><input type="number" id="fin-subv" placeholder="0" min="0" oninput="recalcAllDebounced()"/></td><td id="fin-subv-pct" class="cb">0%</td><td id="fin-subv-usd" class="co">$0</td><td id="fin-subv-pi">0 Pi</td></tr>
-          <tr><td>Investisseur prive</td><td><input type="number" id="fin-inv" placeholder="0" min="0" oninput="recalcAllDebounced()"/></td><td id="fin-inv-pct" class="cb">0%</td><td id="fin-inv-usd" class="co">$0</td><td id="fin-inv-pi">0 Pi</td></tr>
-          <tr><td>Autres sources</td><td><input type="number" id="fin-autres" placeholder="0" min="0" oninput="recalcAllDebounced()"/></td><td id="fin-autres-pct" class="cb">0%</td><td id="fin-autres-usd" class="co">$0</td><td id="fin-autres-pi">0 Pi</td></tr>
-        </tbody>
-        <tfoot>
           <tr class="tot-row">
-            <td>TOTAL FINANCEMENT</td>
-            <td id="fin-tot-frw">0 FRW</td>
-            <td id="fin-tot-pct">0%</td>
-            <td id="fin-tot-usd">$0</td>
-            <td id="fin-tot-pi">0 Pi</td>
+            <td data-fr="COUT TOTAL DU PROJET (base de calcul)" data-en="TOTAL PROJECT COST (calculation base)">COUT TOTAL DU PROJET (base de calcul)</td>
+            <td id="fin-cout-display" class="co" style="font-weight:900">0 FRW</td>
+            <td class="co" style="font-weight:900">100%</td>
+            <td id="fin-cout-usd" class="co">$0</td>
+            <td id="fin-cout-pi" class="co">0 Pi</td>
           </tr>
-        </tfoot>
+          <tr style="background:rgba(5,150,105,0.06)">
+            <td>
+              <strong data-fr="Apport propre du promoteur" data-en="Promoter own contribution">Apport propre du promoteur</strong>
+              <div style="font-size:10px;color:var(--muted)" data-fr="Especes + nature (minimum 20% exige)" data-en="Cash + in-kind (minimum 20% required)">Especes + nature (minimum 20% exige)</div>
+            </td>
+            <td>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="number" id="fin-cash" placeholder="0" min="0" oninput="recalcFin()" style="flex:1;min-width:80px"/>
+                <span style="font-size:10px;color:var(--muted)" data-fr="especes" data-en="cash">especes</span>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;margin-top:4px">
+                <input type="number" id="fin-nature" placeholder="0" min="0" oninput="recalcFin()" style="flex:1;min-width:80px"/>
+                <span style="font-size:10px;color:var(--muted)" data-fr="en nature" data-en="in-kind">en nature</span>
+              </div>
+            </td>
+            <td id="fin-fp-pct-cell">
+              <span id="fin-fp-pct" style="font-weight:700">0%</span>
+              <div id="fin-fp-alert" style="font-size:9px;display:none"></div>
+            </td>
+            <td id="fin-fp-usd" class="cg">$0</td>
+            <td id="fin-fp-pi" class="cg">0 Pi</td>
+          </tr>
+          <tr>
+            <td>
+              <strong data-fr="Credit bancaire demande" data-en="Bank loan requested">Credit bancaire demande</strong>
+              <div style="font-size:10px;color:var(--muted)" data-fr="Voir conditions ci-dessous" data-en="See terms below">Voir conditions ci-dessous</div>
+            </td>
+            <td><input type="number" id="fin-credit" placeholder="0" min="0" oninput="recalcFin()"/></td>
+            <td id="fin-credit-pct" class="cb">0%</td>
+            <td id="fin-credit-usd" class="co">$0</td>
+            <td id="fin-credit-pi" class="co">0 Pi</td>
+          </tr>
+          <tr>
+            <td data-fr="Subvention / Don" data-en="Grant / Donation">Subvention / Don</td>
+            <td><input type="number" id="fin-subv" placeholder="0" min="0" oninput="recalcFin()"/></td>
+            <td id="fin-subv-pct" class="cb">0%</td>
+            <td id="fin-subv-usd" class="co">$0</td>
+            <td id="fin-subv-pi" class="co">0 Pi</td>
+          </tr>
+          <tr>
+            <td data-fr="Investisseur prive" data-en="Private investor">Investisseur prive</td>
+            <td><input type="number" id="fin-inv" placeholder="0" min="0" oninput="recalcFin()"/></td>
+            <td id="fin-inv-pct" class="cb">0%</td>
+            <td id="fin-inv-usd" class="co">$0</td>
+            <td id="fin-inv-pi" class="co">0 Pi</td>
+          </tr>
+          <tr>
+            <td data-fr="Autres sources" data-en="Other sources">Autres sources</td>
+            <td><input type="number" id="fin-autres" placeholder="0" min="0" oninput="recalcFin()"/></td>
+            <td id="fin-autres-pct" class="cb">0%</td>
+            <td id="fin-autres-usd" class="co">$0</td>
+            <td id="fin-autres-pi" class="co">0 Pi</td>
+          </tr>
+          <tr class="subtot">
+            <td style="font-weight:700" data-fr="TOTAL FINANCEMENT MOBILISE" data-en="TOTAL FINANCING RAISED">TOTAL FINANCEMENT MOBILISE</td>
+            <td id="fin-tot-frw" class="co" style="font-weight:700">0 FRW</td>
+            <td id="fin-tot-pct" class="co" style="font-weight:700">0%</td>
+            <td id="fin-tot-usd" class="co">$0</td>
+            <td id="fin-tot-pi" class="co">0 Pi</td>
+          </tr>
+          <tr id="fin-ecart-row">
+            <td data-fr="Ecart (financement - cout)" data-en="Gap (financing - cost)">Ecart (financement - cout)</td>
+            <td id="fin-ecart" style="font-weight:700">0 FRW</td>
+            <td colspan="3" id="fin-ecart-msg"></td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
-    <!-- Validation financement -->
-    <div id="fin-validation" class="note-info" style="margin-top:8px;">
-      Renseignez les sources de financement ci-dessus.
+    <!-- Ratios fonds propres -->
+    <div class="row3" style="margin-top:8px">
+      <div class="tbox">
+        <span class="lbl" data-fr="Cout total projet" data-en="Total project cost">Cout total projet</span>
+        <span class="val" id="fin-cout-total2">0 FRW</span>
+      </div>
+      <div class="tbox">
+        <span class="lbl" data-fr="Fonds propres" data-en="Equity">Fonds propres</span>
+        <span class="val" id="fin-fp-pct2">0%</span>
+      </div>
+      <div class="tbox">
+        <span class="lbl" data-fr="Ratio dette / Fonds propres" data-en="Debt / Equity ratio">Ratio dette / FP</span>
+        <span class="val" id="fin-ratio-dette2">—</span>
+      </div>
     </div>
 
-    <!-- Ratio fonds propres -->
-    <div class="row3" style="margin-top:8px;">
-      <div class="tbox">
-        <span class="lbl">Cout total projet</span>
-        <span class="val" id="fin-cout-total">0 FRW</span>
-      </div>
-      <div class="tbox">
-        <span class="lbl">Fonds propres</span>
-        <span class="val" id="fin-fp-pct">0%</span>
-      </div>
-      <div class="tbox">
-        <span class="lbl">Ratio dette/FP</span>
-        <span class="val" id="fin-ratio-dette">-</span>
-      </div>
+    <!-- Validation message -->
+    <div id="fin-validation" class="note-info" style="margin-top:8px">
+      <span data-fr="Renseignez les sources de financement ci-dessus." data-en="Fill in the financing sources above.">Renseignez les sources de financement ci-dessus.</span>
     </div>
   </div>
 
-  <!-- Conditions du credit -->
+  <!-- CONDITIONS DU CREDIT -->
   <div class="sec" id="credit-section">
     <div class="sec-hdr">
       <div class="sec-icon">&#127970;</div>
       <div>
-        <div class="sec-title">Conditions du Credit Bancaire</div>
-        <div class="sec-sub">Parametres du pret — tableau d'amortissement genere automatiquement</div>
+        <div class="sec-title" data-fr="Conditions du Credit Bancaire" data-en="Bank Loan Terms">Conditions du Credit Bancaire</div>
+        <div class="sec-sub" data-fr="Calcul automatique du tableau d'amortissement" data-en="Automatic amortization schedule calculation">Calcul automatique du tableau d'amortissement</div>
       </div>
     </div>
     <div class="row3">
       <div class="field">
-        <label data-fr="Montant du credit (FRW)" data-en="Loan Amount (FRW)">Montant du credit (FRW) <span class="tip" data-tip="Montant total du pret demande. Doit correspondre au credit dans le plan de financement.">?</span></label>
-        <input type="number" id="cr-montant" placeholder="0" min="0" oninput="recalcAllDebounced()"/>
+        <label data-fr="Montant du credit (FRW)" data-en="Loan Amount (FRW)">Montant du credit (FRW) <span data-tip="Doit correspondre au credit dans le plan de financement.">?</span></label>
+        <input type="number" id="cr-montant" placeholder="0" min="0" oninput="recalcAllDebounced()" style="color:var(--gold);font-weight:700"/>
+        <div class="hint" data-fr="Synchronise automatiquement avec le plan de financement" data-en="Automatically synced with financing plan">Synchronise avec le plan de financement</div>
       </div>
       <div class="field">
-        <label data-fr="Taux d'interet annuel (%)" data-en="Annual Interest Rate (%)">Taux d'interet annuel (%) <span class="tip" data-tip="Taux annuel propose par la banque. Au Rwanda, generalement 16-22%. Verifiez avec votre institution.">?</span></label>
+        <label data-fr="Taux d'interet annuel (%)" data-en="Annual Interest Rate (%)">Taux d'interet annuel (%) <span data-tip="Rwanda: generalement 16-22% selon la banque. Reference indicative.">?</span></label>
         <input type="number" id="cr-taux" placeholder="18" value="18" min="0" max="60" step="0.25" oninput="recalcAllDebounced()"/>
-        <div class="hint">Reference indicative — le taux reel depend de l'institution et du risque</div>
+        <div class="hint" data-fr="Reference indicative — varie selon l'institution et le risque" data-en="Indicative reference — varies by institution and risk">Reference indicative — varie selon l'institution</div>
       </div>
       <div class="field">
         <label data-fr="Duree de remboursement (ans)" data-en="Repayment Term (years)">Duree de remboursement (ans)</label>
         <select id="cr-duree" onchange="recalcAllDebounced()">
-          <option value="1">1 an</option>
-          <option value="2">2 ans</option>
-          <option value="3" selected>3 ans</option>
-          <option value="4">4 ans</option>
-          <option value="5">5 ans</option>
-          <option value="7">7 ans</option>
-          <option value="10">10 ans</option>
+          <option value="1">1 an / 1 year</option>
+          <option value="2">2 ans / years</option>
+          <option value="3" selected>3 ans / years</option>
+          <option value="4">4 ans / years</option>
+          <option value="5">5 ans / years</option>
+          <option value="7">7 ans / years</option>
+          <option value="10">10 ans / years</option>
         </select>
       </div>
     </div>
     <div class="row3">
       <div class="field">
-        <label data-fr="Periode de grace (mois)" data-en="Grace Period (months)">Periode de grace (mois) <span class="tip" data-tip="Periode pendant laquelle vous ne remboursez que les interets. Le principal est differe. Utile si le projet met du temps a generer des revenus.">?</span></label>
-        <input type="number" id="cr-grace" placeholder="0" value="0" min="0" max="24" oninput="recalcAllDebounced()"/>
+        <label data-fr="Periode de grace (mois)" data-en="Grace Period (months)">Periode de grace (mois) <span data-tip="Pendant la grace, seuls les interets sont payes. Le capital est differe.">?</span></label>
+        <input type="number" id="cr-grace" value="0" min="0" max="24" oninput="recalcAllDebounced()"/>
       </div>
       <div class="field">
         <label data-fr="Frequence de remboursement" data-en="Repayment Frequency">Frequence de remboursement</label>
         <select id="cr-freq" onchange="recalcAllDebounced()">
-          <option value="12">Mensuelle</option>
-          <option value="4">Trimestrielle</option>
-          <option value="2">Semestrielle</option>
-          <option value="1">Annuelle</option>
+          <option value="12" data-fr="Mensuelle" data-en="Monthly">Mensuelle</option>
+          <option value="4" data-fr="Trimestrielle" data-en="Quarterly">Trimestrielle</option>
+          <option value="2" data-fr="Semestrielle" data-en="Semi-annual">Semestrielle</option>
+          <option value="1" data-fr="Annuelle" data-en="Annual">Annuelle</option>
         </select>
       </div>
       <div class="field">
@@ -1095,34 +1151,34 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       </div>
     </div>
 
-    <!-- Résumé credit -->
+    <!-- Summary credit -->
     <div class="tbl-wrap" style="margin-top:10px">
-      <table class="xtbl" id="credit-summary">
+      <table class="xtbl">
         <thead>
           <tr>
-            <th style="text-align:left">Indicateur</th>
-            <th>Valeur</th>
-            <th>Reference indicative</th>
+            <th style="text-align:left" data-fr="Indicateur" data-en="Indicator">Indicateur</th>
+            <th data-fr="Valeur" data-en="Value">Valeur</th>
+            <th data-fr="Reference indicative" data-en="Indicative reference">Reference indicative</th>
           </tr>
         </thead>
         <tbody id="credit-summary-body"></tbody>
       </table>
     </div>
 
-    <!-- Tableau d'amortissement -->
-    <div style="font-size:11px;font-weight:700;color:#93C5FD;margin:12px 0 6px;">
-      Tableau d'Amortissement du Credit
+    <!-- Tableau amortissement -->
+    <div style="font-size:11px;font-weight:700;color:#93C5FD;margin:12px 0 6px" data-fr="Tableau d'Amortissement du Credit (calcul automatique)" data-en="Loan Amortization Schedule (automatic calculation)">
+      Tableau d'Amortissement du Credit (calcul automatique)
     </div>
     <div class="tbl-wrap">
       <table class="amort-tbl">
         <thead>
           <tr>
-            <th style="text-align:left">Periode</th>
-            <th>Capital debut</th>
-            <th>Amortissement</th>
-            <th>Interets</th>
-            <th>Annuite</th>
-            <th>Capital fin</th>
+            <th style="text-align:left" data-fr="Periode" data-en="Period">Periode</th>
+            <th data-fr="Capital debut" data-en="Opening balance">Capital debut</th>
+            <th data-fr="Amortissement" data-en="Principal">Amortissement</th>
+            <th data-fr="Interets" data-en="Interest">Interets</th>
+            <th data-fr="Annuite" data-en="Payment">Annuite</th>
+            <th data-fr="Capital fin" data-en="Closing balance">Capital fin</th>
           </tr>
         </thead>
         <tbody id="amort-body"></tbody>
@@ -1131,7 +1187,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
             <td>TOTAL</td>
             <td></td>
             <td id="amort-tot-cap">0 FRW</td>
-            <td id="amort-tot-int">0 FRW</td>
+            <td id="amort-tot-int" class="cr">0 FRW</td>
             <td id="amort-tot-ann">0 FRW</td>
             <td></td>
           </tr>
@@ -1140,8 +1196,8 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
   </div>
 
-  <button class="btn-p" onclick="goTo(7)" data-fr="Continuer &#8594; Previsions d'Exploitation" data-en="Continue &#8594; Operating Forecasts">Continuer &#8594; Previsions d'Exploitation</button>
-  <button class="btn-s" onclick="goTo(5)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-p" data-fr="Continuer &#8594; Previsions d'Exploitation" data-en="Continue &#8594; Operating Forecasts" onclick="goTo(7)">Continuer &#8594; Previsions d'Exploitation</button>
+  <button class="btn-s" data-fr="&#8592; Retour" data-en="&#8592; Back" onclick="goTo(5)">&#8592; Retour</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -1221,7 +1277,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128200;</div>
       <div>
         <div class="sec-title">Compte de Resultat Previsionnel</div>
-        <div class="sec-sub" data-fr="Calcul automatique" data-en="Automatic calculation">Calcul automatique — toutes les cellules sont recalculees en temps reel</div>
+        <div class="sec-sub">Calcul automatique — toutes les cellules sont recalculees en temps reel</div>
       </div>
     </div>
     <div class="tbl-wrap">
@@ -1280,8 +1336,8 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
   </div>
 
-  <button class="btn-p" onclick="goTo(8)" data-fr="Continuer &#8594; Analyse Financiere" data-en="Continue &#8594; Financial Analysis">Continuer &#8594; Analyse Financiere</button>
-  <button class="btn-s" onclick="goTo(6)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-p" onclick="goTo(8)">Continuer &#8594; Analyse Financiere</button>
+  <button class="btn-s" onclick="goTo(6)">&#8592; Retour</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -1294,7 +1350,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128200;</div>
       <div>
         <div class="sec-title" data-step="8">Indicateurs Financiers Cles</div>
-        <div class="sec-sub" data-fr="Formule, valeur, reference indicative et diagnostic" data-en="Formula, value, indicative reference and diagnosis">Formule, valeur, reference indicative et diagnostic pour chaque ratio</div>
+        <div class="sec-sub">Formule, valeur, reference indicative et diagnostic pour chaque ratio</div>
       </div>
     </div>
     <div class="kpi-grid" id="kpi-grid"></div>
@@ -1309,7 +1365,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128181;</div>
       <div>
         <div class="sec-title">RCSD — Ratio de Couverture du Service de la Dette</div>
-        <div class="sec-sub" data-fr="DSCR = Flux de tresorerie" data-en="DSCR = Cash flow">DSCR = Flux de tresorerie disponible pour la dette / Service de la dette</div>
+        <div class="sec-sub">DSCR = Flux de tresorerie disponible pour la dette / Service de la dette</div>
       </div>
     </div>
     <div class="tbl-wrap">
@@ -1334,7 +1390,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#127919;</div>
       <div>
         <div class="sec-title">Seuil de Rentabilite (SR) — Point Mort</div>
-        <div class="sec-sub" data-fr="CA minimum pour couvrir" data-en="Minimum revenue to cover">CA minimum pour couvrir toutes les charges</div>
+        <div class="sec-sub">CA minimum pour couvrir toutes les charges</div>
       </div>
     </div>
     <div class="tbl-wrap">
@@ -1355,12 +1411,12 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128200;</div>
       <div>
         <div class="sec-title">Analyse de Sensibilite</div>
-        <div class="sec-sub" data-fr="3 scenarios:" data-en="3 scenarios:">3 scenarios: pessimiste, central et optimiste</div>
+        <div class="sec-sub">3 scenarios: pessimiste, central et optimiste</div>
       </div>
     </div>
     <div class="row3" style="margin-bottom:10px">
       <div class="field">
-        <label data-fr="Variation prix/volume (scenario pess.) %" data-en="Price/volume change (pessimistic) %">Variation prix/volume (scenario pess.) %</label>
+        <label>Variation prix/volume (scenario pess.) %</label>
         <input type="number" id="sens-pess" value="-20" min="-80" max="0" oninput="buildSensitivity()"/>
       </div>
       <div class="field">
@@ -1368,7 +1424,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
         <input type="number" id="sens-base" value="0" readonly style="color:var(--muted)"/>
       </div>
       <div class="field">
-        <label data-fr="Variation prix/volume (scenario opt.) %" data-en="Price/volume change (optimistic) %">Variation prix/volume (scenario opt.) %</label>
+        <label>Variation prix/volume (scenario opt.) %</label>
         <input type="number" id="sens-opt" value="20" min="0" max="100" oninput="buildSensitivity()"/>
       </div>
     </div>
@@ -1407,8 +1463,8 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     </div>
   </div>
 
-  <button class="btn-p" onclick="goTo(9)" data-fr="Continuer &#8594; Risques et Impact" data-en="Continue &#8594; Risks and Impact">Continuer &#8594; Risques et Impact</button>
-  <button class="btn-s" onclick="goTo(7)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-p" onclick="goTo(9)">Continuer &#8594; Risques et Impact</button>
+  <button class="btn-s" onclick="goTo(7)">&#8592; Retour</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -1416,78 +1472,41 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
 ═════════════════════════════════════════ -->
 <div class="panel" id="panel-9">
   <!-- Risques -->
-  <div class="sec">
-    <div class="sec-hdr">
-      <div class="sec-icon">&#9888;</div>
-      <div>
-        <div class="sec-title" data-step="9">Matrice des Risques</div>
-        <div class="sec-sub" data-fr="Identification, probabilite" data-en="Identification, probability">Identification, probabilite, impact et mesures d'attenuation</div>
-      </div>
-    </div>
-    <div class="tbl-wrap">
-      <table class="xtbl">
-        <thead>
-          <tr>
-            <th style="text-align:left;min-width:120px">Risque</th>
-            <th style="min-width:80px">Probabilite</th>
-            <th style="min-width:70px">Impact</th>
-            <th style="min-width:70px">Niveau</th>
-            <th style="min-width:130px">Mesures d'attenuation</th>
-            <th style="min-width:80px">Responsable</th>
-            <th style="min-width:40px"></th>
-          </tr>
-        </thead>
-        <tbody id="risk-body"></tbody>
-      </table>
-    </div>
-    <button class="btn-add" onclick="addRiskRow()" data-addkey="risk">+ Ajouter un risque</button>
-    <div class="note-info" style="margin-top:6px">
-      Probabilite: Faible / Moyenne / Elevee &nbsp;|&nbsp; Impact: Faible / Moyen / Eleve &nbsp;|&nbsp; Niveau: L (Vert) / M (Orange) / H (Rouge)
-    </div>
-  </div>
-
-  <!-- Garanties -->
-  <div class="sec">
-    <div class="sec-hdr">
-      <div class="sec-icon">&#127968;</div>
-      <div>
-        <div class="sec-title">Evaluation des Garanties</div>
-        <div class="sec-sub" data-fr="Valeur marchande, decote" data-en="Market value, haircut">Valeur marchande, decote et valeur retenue</div>
-      </div>
-    </div>
-    <div class="tbl-wrap">
-      <table class="xtbl" id="gar-table">
-        <thead>
-          <tr>
-            <th style="text-align:left;min-width:130px">Type de garantie</th>
-            <th style="min-width:100px">Description</th>
-            <th style="min-width:110px">Valeur marchande (FRW)</th>
-            <th style="min-width:80px">Decote (%)</th>
-            <th style="min-width:120px">Valeur retenue (FRW)</th>
-            <th style="min-width:40px"></th>
-          </tr>
-        </thead>
-        <tbody id="gar-body"></tbody>
-        <tfoot>
-          <tr class="tot-row">
-            <td colspan="2">TOTAL GARANTIES</td>
-            <td id="gar-tot-march">0 FRW</td>
-            <td></td>
-            <td id="gar-tot-ret">0 FRW</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+    <div class="sec">
+    <div class="sec-hdr"><div class="sec-icon">&#127968;</div><div>
+      <div class="sec-title" data-fr="Evaluation des Garanties" data-en="Guarantee Assessment">Evaluation des Garanties</div>
+      <div class="sec-sub" data-fr="Valeur estimative, valeur d'expertise, decote et valeur retenue" data-en="Estimated value, expert valuation, haircut and retained value">Valeur estimative, valeur d'expertise, decote et valeur retenue</div>
+    </div></div>
+    <div class="tbl-wrap"><table class="xtbl">
+      <thead><tr>
+        <th style="text-align:left;min-width:140px" data-fr="Objet en garantie" data-en="Guarantee Object">Objet en garantie</th>
+        <th style="min-width:60px" data-fr="Qte" data-en="Qty">Qte</th>
+        <th style="min-width:130px" data-fr="Valeur unit. estimative (FRW)" data-en="Est. Unit Value (FRW)">Valeur unit. estimative (FRW)</th>
+        <th style="min-width:130px" data-fr="Total estimatif (FRW)" data-en="Total Estimate (FRW)">Total estimatif (FRW)</th>
+        <th style="min-width:130px" data-fr="Valeur d'expertise (FRW)" data-en="Expert Valuation (FRW)">Valeur d'expertise (FRW)</th>
+        <th style="min-width:70px" data-fr="Decote (%)" data-en="Haircut (%)">Decote (%)</th>
+        <th style="min-width:130px" data-fr="Valeur retenue (FRW)" data-en="Retained Value (FRW)">Valeur retenue (FRW)</th>
+        <th></th>
+      </tr></thead>
+      <tbody id="gar-body"></tbody>
+      <tfoot><tr class="tot-row">
+        <td colspan="3" data-fr="TOTAL GARANTIES" data-en="TOTAL GUARANTEES">TOTAL GARANTIES</td>
+        <td id="gar-tot-estim" class="co">0 FRW</td>
+        <td id="gar-tot-expert" class="co">0 FRW</td>
+        <td></td>
+        <td id="gar-tot-ret" class="cg">0 FRW</td>
+        <td></td>
+      </tr></tfoot>
+    </table></div>
     <button class="btn-add" onclick="addGarRow()" data-addkey="gar">+ Ajouter une garantie</button>
-    <div class="tbox" style="margin-top:8px">
-      <span class="lbl">Ratio de couverture des garanties</span>
-      <span class="val" id="gar-ratio">-</span>
+    <div class="row3" style="margin-top:10px">
+      <div class="tbox"><span class="lbl" data-fr="Credit demande" data-en="Loan requested">Credit demande</span><span class="val cb" id="gar-credit-ref">0 FRW</span></div>
+      <div class="tbox"><span class="lbl" data-fr="Valeur retenue totale" data-en="Total retained value">Valeur retenue totale</span><span class="val cg" id="gar-tot-ret2">0 FRW</span></div>
+      <div class="tbox"><span class="lbl" data-fr="Ratio couverture" data-en="Coverage ratio">Ratio couverture</span><span class="val" id="gar-ratio">—</span></div>
     </div>
-    <div class="note-warn" style="margin-top:6px">
-      &#9432; La banque n'accepte generalement pas 100% de la valeur marchande. Une decote de 20-50% est courante selon le type de bien. Ces chiffres sont indicatifs.
-    </div>
+    <div class="note-warn" style="margin-top:8px" data-fr="Reference indicative : decote 20-50% selon le type de bien. Valeur estimative = estimation proprietaire. Valeur d'expertise = evaluation par expert agree (obligatoire pour hypotheque)." data-en="Indicative reference: 20-50% haircut depending on asset type. Estimated value = owner estimate. Expert valuation = certified appraiser (required for mortgage).">Reference indicative : decote 20-50% selon le type de bien.</div>
   </div>
+</div>
 
   <!-- Impact socio-economique -->
   <div class="sec">
@@ -1495,29 +1514,29 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#127760;</div>
       <div>
         <div class="sec-title">Impact Socio-Economique</div>
-        <div class="sec-sub" data-fr="Emplois, beneficiaires" data-en="Jobs, beneficiaries">Emplois, beneficiaires et indicateurs de developpement</div>
+        <div class="sec-sub">Emplois, beneficiaires et indicateurs de developpement</div>
       </div>
     </div>
     <div class="row3">
-      <div class="field"><label data-fr="Emplois directs crees" data-en="Direct Jobs Created">Emplois directs crees</label><input type="number" id="imp-emp-dir" placeholder="0" min="0" oninput="recalcImpact()"/></div>
-      <div class="field"><label data-fr="Emplois indirects" data-en="Indirect Jobs">Emplois indirects</label><input type="number" id="imp-emp-ind" placeholder="0" min="0" oninput="recalcImpact()"/></div>
-      <div class="field"><label data-fr="Beneficiaires directs" data-en="Direct Beneficiaries">Beneficiaires directs</label><input type="number" id="imp-benef" placeholder="0" min="0" oninput="recalcImpact()"/></div>
+      <div class="field"><label>Emplois directs crees</label><input type="number" id="imp-emp-dir" placeholder="0" min="0" oninput="recalcImpact()"/></div>
+      <div class="field"><label>Emplois indirects</label><input type="number" id="imp-emp-ind" placeholder="0" min="0" oninput="recalcImpact()"/></div>
+      <div class="field"><label>Beneficiaires directs</label><input type="number" id="imp-benef" placeholder="0" min="0" oninput="recalcImpact()"/></div>
     </div>
     <div class="row3">
-      <div class="field"><label data-fr="Dont femmes (%)" data-en="Of which women (%)">Dont femmes (%)</label><input type="number" id="imp-femmes" placeholder="50" min="0" max="100" oninput="recalcImpact()"/></div>
-      <div class="field"><label data-fr="Dont jeunes (%)" data-en="Of which youth (%)">Dont jeunes (%)</label><input type="number" id="imp-jeunes" placeholder="40" min="0" max="100" oninput="recalcImpact()"/></div>
-      <div class="field"><label data-fr="Menages concernes" data-en="Households Concerned">Menages concernes</label><input type="number" id="imp-menages" placeholder="0" min="0"/></div>
+      <div class="field"><label>Dont femmes (%)</label><input type="number" id="imp-femmes" placeholder="50" min="0" max="100" oninput="recalcImpact()"/></div>
+      <div class="field"><label>Dont jeunes (%)</label><input type="number" id="imp-jeunes" placeholder="40" min="0" max="100" oninput="recalcImpact()"/></div>
+      <div class="field"><label>Menages concernes</label><input type="number" id="imp-menages" placeholder="0" min="0"/></div>
     </div>
     <div class="row2">
-      <div class="field"><label data-fr="Impact social attendu" data-en="Expected Social Impact">Impact social attendu</label>
+      <div class="field"><label>Impact social attendu</label>
         <textarea id="imp-social" rows="2" placeholder="Ex: Amelioration acces alimentation, reduction chomage local..."></textarea></div>
-      <div class="field"><label data-fr="Impact economique attendu" data-en="Expected Economic Impact">Impact economique attendu</label>
+      <div class="field"><label>Impact economique attendu</label>
         <textarea id="imp-eco" rows="2" placeholder="Ex: Augmentation revenus menages, dynamisation economie locale..."></textarea></div>
     </div>
     <div class="row2">
-      <div class="field"><label data-fr="Impact environnemental" data-en="Environmental Impact">Impact environnemental</label>
+      <div class="field"><label>Impact environnemental</label>
         <textarea id="imp-env" rows="2" placeholder="Ex: Reduction emballages plastique, gestion dechets..."></textarea></div>
-      <div class="field"><label data-fr="Strategie de durabilite" data-en="Sustainability Strategy">Strategie de durabilite</label>
+      <div class="field"><label>Strategie de durabilite</label>
         <textarea id="imp-durab" rows="2" placeholder="Ex: Reinvestissement benefices, partenariats locaux, formation..."></textarea></div>
     </div>
 
@@ -1525,8 +1544,8 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
     <div id="impact-indicators" style="margin-top:10px;"></div>
   </div>
 
-  <button class="btn-p" onclick="buildReport(); goTo(10)" data-fr="Generer le Rapport &#8594;" data-en="Generate Report &#8594;">Generer le Rapport &#8594;</button>
-  <button class="btn-s" onclick="goTo(8)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  <button class="btn-p" onclick="buildReport(); goTo(10)">Generer le Rapport &#8594;</button>
+  <button class="btn-s" onclick="goTo(8)">&#8592; Retour</button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -1542,7 +1561,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#11088;</div>
       <div>
         <div class="sec-title" data-step="10">Score Global du Projet</div>
-        <div class="sec-sub" data-fr="Evaluation multi-criteres" data-en="Multi-criteria assessment">Evaluation multi-criteres adaptee au type de financement</div>
+        <div class="sec-sub">Evaluation multi-criteres adaptee au type de financement</div>
       </div>
     </div>
     <div id="score-grid"></div>
@@ -1554,7 +1573,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <div class="sec-icon">&#128196;</div>
       <div>
         <div class="sec-title">Rapport Professionnel Complet — Deep Study</div>
-        <div class="sec-sub" data-fr="Document bankable" data-en="Bankable document">Document bankable pret pour soumission aux institutions financieres</div>
+        <div class="sec-sub">Document bankable pret pour soumission aux institutions financieres</div>
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
@@ -1601,7 +1620,7 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
       <label for="chk2">Je confirme que les informations saisies sont exactes et je prends la responsabilite de leur utilisation</label>
     </div>
     <button class="btn-pay" onclick="pay()">&#128176; Payer 3 Pi — Rapport Deep Study Complet</button>
-    <button class="btn-s" onclick="goTo(9)" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+    <button class="btn-s" onclick="goTo(9)">&#8592; Retour</button>
   </div>
 </div>
 
@@ -1613,12 +1632,12 @@ body.reporting .form-wrap,body.reporting .save-banner,body.reporting #success-pa
   <div class="st">Rapport Commande!</div>
   <div class="ss">Votre rapport SmartBiz professionnel sera livre dans les 7 jours ouvrables.</div>
   <div class="txid-box" id="txid-box">TXID: --</div>
-  <button class="btn-p" onclick="location.href='index.html'" style="max-width:300px;margin:0 auto;display:block" data-fr="&#8592; Retour a VitaNova" data-en="&#8592; Back to VitaNova">&#8592; Retour a VitaNova</button>
+  <button class="btn-p" onclick="location.href='index.html'" style="max-width:300px;margin:0 auto;display:block">&#8592; Retour a VitaNova</button>
 </div>
 
 <!-- ── REPORT ── -->
 <div class="report-panel" id="report-panel">
-  <div class="rpt-bar"><button onclick="window.print()">&#128424; Imprimer / PDF</button><button onclick="closeReport()" style="background:#374151;margin-left:8px" data-fr="&#8592; Fermer" data-en="&#8592; Close">&#8592; Fermer</button></div>
+  <div class="rpt-bar"><button onclick="window.print()">&#128424; Print / PDF</button><button onclick="closeReport()" style="background:#374151;margin-left:8px">&#8592; Close</button></div>
   <div class="rpt" id="rpt-content"></div>
 </div>
 
@@ -1743,8 +1762,9 @@ function updateMode(){
   else setMode("A");
 }
 
+
 // ══════════════════════════════════════════
-// LANGUAGE SYSTEM — FR / EN
+// LANGUAGE SYSTEM — FR / EN complet
 // ══════════════════════════════════════════
 const TR = {
   fr:{
@@ -1752,7 +1772,8 @@ const TR = {
           "Financement","Exploitation","Analyse","Risques","Rapport"],
     modeA:'&#127970; Mode A &mdash; Financement Remboursable<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Banque &bull; Institution financiere &bull; Investisseur</span>',
     modeB:'&#127760; Mode B &mdash; Financement Non Remboursable<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Bailleur &bull; ONG &bull; Subvention &bull; Programme public</span>',
-    heroSub:"Assistant intelligent pour consultants en investissement. Saisissez les donnees du projet — SmartBiz produit automatiquement l'etude financiere complete.",
+    heroTitle:'Moteur de Montage de Projets <em>Professionnel</em>',
+    heroSub:"Assistant intelligent pour consultants en investissement. Saisissez les donnees — SmartBiz produit l'etude financiere complete automatiquement.",
     steps:["Etape 1 — Identification du Projet","Etape 2 — Informations sur le Promoteur",
       "Etape 3 — Description du Projet","Etape 4 — Etude de Marche",
       "Etape 5 — Plan d'Investissement Initial","Etape 6 — Plan de Financement",
@@ -1760,7 +1781,7 @@ const TR = {
       "Etape 9 — Risques et Impact","Etape 10 — Rapport Final"],
     btn:{save:"&#128190; Sauvegarder",restore:"&#8635; Restaurer",
          ai:"&#129302; Generer l'analyse IA",print:"&#128424; Imprimer le Rapport",
-         pay:"&#128176; Payer 3 Pi — Rapport Deep Study"},
+         pay:"&#128176; Payer 3 Pi — Rapport Deep Study",demo:"&#128221; Charger un exemple"},
     add:{patr:"+ Ajouter un bien",rev:"+ Ajouter une source de revenu",
          prod:"+ Ajouter un produit / service",conc:"+ Ajouter un concurrent",
          inv:"+ Ajouter un poste d'investissement",chvar:"+ Ajouter une charge variable",
@@ -1768,17 +1789,16 @@ const TR = {
     ph:{"p-nom":"Ex: Epicerie Moderne Kigali","p-ville":"Ex: Kigali — Nyarugenge",
         "pr-nom":"Ex: UWASE Marie-Claire","pr-tel":"+250 788 000 000","pr-email":"nom@email.com",
         "pr-addr":"KG 123 St, Kigali","pr-expdesc":"Decrivez votre experience professionnelle dans ce secteur...",
-        "pj-contexte":"Quel probleme ce projet resout-il? Contexte economique et social?",
+        "pj-contexte":"Quel probleme ce projet resout-il? Contexte economique?",
         "pj-justif":"Pourquoi ce projet est-il pertinent et necessaire?",
-        "pj-obj":"Ex: Creer une epicerie approvisionnant 500 menages du quartier...",
-        "mk-cible":"Ex: Menages du quartier, petits commerces de proximite...",
-        "mk-avantages":"Ex: Prix competitifs, proximite, qualite superieure, service personnalise..."}
+        "pj-obj":"Ex: Creer une epicerie approvisionnant 500 menages du quartier..."}
   },
   en:{
     prog:["Identification","Promoter","Description","Market","Investment",
           "Financing","Operations","Analysis","Risks","Report"],
     modeA:'&#127970; Mode A &mdash; Repayable Financing<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Bank &bull; Financial institution &bull; Investor</span>',
     modeB:'&#127760; Mode B &mdash; Non-repayable Financing<br/><span style="font-size:10px;font-weight:400;opacity:0.8;">Donor &bull; NGO &bull; Grant &bull; Public program</span>',
+    heroTitle:'Professional Project <em>Finance Engine</em>',
     heroSub:"Intelligent assistant for investment consultants. Enter project data — SmartBiz automatically produces the complete financial study.",
     steps:["Step 1 — Project Identification","Step 2 — Promoter Information",
       "Step 3 — Project Description","Step 4 — Market Study",
@@ -1787,7 +1807,7 @@ const TR = {
       "Step 9 — Risks and Impact","Step 10 — Final Report"],
     btn:{save:"&#128190; Save",restore:"&#8635; Restore",
          ai:"&#129302; Generate AI analysis",print:"&#128424; Print Report",
-         pay:"&#128176; Pay 3 Pi — Full Deep Study Report"},
+         pay:"&#128176; Pay 3 Pi — Full Deep Study Report",demo:"&#128221; Load example"},
     add:{patr:"+ Add an asset",rev:"+ Add an income source",
          prod:"+ Add a product / service",conc:"+ Add a competitor",
          inv:"+ Add an investment item",chvar:"+ Add a variable cost",
@@ -1795,13 +1815,74 @@ const TR = {
     ph:{"p-nom":"Ex: Modern Grocery Store Kigali","p-ville":"Ex: Kigali — Nyarugenge",
         "pr-nom":"Ex: UWASE Marie-Claire","pr-tel":"+250 788 000 000","pr-email":"name@email.com",
         "pr-addr":"KG 123 St, Kigali","pr-expdesc":"Describe your professional experience in this sector...",
-        "pj-contexte":"What problem does this project solve? Economic and social context?",
+        "pj-contexte":"What problem does this project solve? Economic context?",
         "pj-justif":"Why is this project relevant and necessary?",
-        "pj-obj":"Ex: Create a grocery store serving 500 neighborhood households...",
-        "mk-cible":"Ex: Kimironko households, small nearby shops...",
-        "mk-avantages":"Ex: Competitive prices, proximity, superior quality, personalized service..."}
+        "pj-obj":"Ex: Create a grocery store serving 500 neighborhood households..."}
   }
 };
+
+// Full translation dictionary (FR->EN) for text-node walker
+const DICT_FR_EN = {
+  "Moteur de Montage de Projets":"Project Finance Engine",
+  "Sources de Revenus Existants":"Existing Income Sources",
+  "Patrimoine du Promoteur":"Promoter Assets",
+  "Apport Personnel au Projet":"Personal Contribution",
+  "Renseignements Generaux du Promoteur":"General Promoter Information",
+  "Identification du Projet":"Project Identification",
+  "Description du Projet":"Project Description",
+  "Etude de Marche":"Market Study",
+  "Plan d'Investissement Initial":"Initial Investment Plan",
+  "Besoin en Fonds de Roulement":"Working Capital Requirement",
+  "Plan de Financement":"Financing Plan",
+  "Conditions du Credit Bancaire":"Bank Loan Terms",
+  "Previsions d'Exploitation":"Operating Forecasts",
+  "Compte de Resultat Previsionnel":"Projected Income Statement",
+  "Plan de Tresorerie Previsionnel":"Projected Cash Flow",
+  "Bilan Previsionnel":"Projected Balance Sheet",
+  "Charges Variables":"Variable Costs",
+  "Charges Fixes":"Fixed Costs",
+  "Analyse Financiere":"Financial Analysis",
+  "Indicateurs Financiers Cles":"Key Financial Indicators",
+  "Analyse de Sensibilite":"Sensitivity Analysis",
+  "Risques et Impact":"Risks and Impact",
+  "Matrice des Risques":"Risk Matrix",
+  "Evaluation des Garanties":"Guarantee Assessment",
+  "Impact Socio-Economique":"Socio-Economic Impact",
+  "Rapport Final":"Final Report",
+  "Score Global du Projet":"Overall Project Score",
+  "Rapport Professionnel Complet":"Full Professional Report",
+  "Chiffre d'Affaires":"Revenue",
+  "Marge Brute":"Gross Margin",
+  "Resultat Net":"Net Result",
+  "Fonds de roulement":"Working Capital",
+  "Emplois directs":"Direct Jobs",
+  "Emplois indirects":"Indirect Jobs",
+  "Beneficiaires":"Beneficiaries",
+  "Apport propre":"Own Contribution",
+  "Credit demande":"Loan Requested",
+  "Financement demande":"Financing Requested",
+  "Cout total":"Total Cost",
+  "Retour":"Back",
+  "Sauvegarder":"Save",
+  "Restaurer":"Restore",
+  "Nouveau":"New",
+  "Fermer":"Close",
+  "Generer le Rapport":"Generate Report",
+  "Charger un exemple":"Load example",
+  "Retour a VitaNova":"Back to VitaNova",
+  "Professionnel":"Professional",
+  "Promoteur":"Promoter",
+  "Identification":"Identification",
+  "Description":"Description",
+  "Marche":"Market",
+  "Investissement":"Investment",
+  "Financement":"Financing",
+  "Exploitation":"Operations",
+  "Analyse":"Analysis",
+  "Risques":"Risks",
+  "Rapport":"Report",
+};
+
 function setLang(l){
   lang=l;
   document.getElementById("lbtn-fr").classList.toggle("active",l==="fr");
@@ -1809,96 +1890,9 @@ function setLang(l){
   applyLang();
 }
 
-// Full dictionary FR -> EN for DOM text translation
-const FULL_DICT = {
-  'Accueil': 'Home',
-  'Retour': 'Back',
-  'Continuer': 'Continue',
-  'Sauvegarder': 'Save',
-  'Restaurer': 'Restore',
-  'Nouveau': 'New',
-  'Fermer': 'Close',
-  'Identification du Projet': 'Project Identification',
-  'Informations sur le Promoteur': 'Promoter Information',
-  'Description du Projet': 'Project Description',
-  'Etude de Marche': 'Market Study',
-  "Plan d'Investissement Initial": 'Initial Investment Plan',
-  'Plan de Financement': 'Financing Plan',
-  "Previsions d'Exploitation": 'Operating Forecasts',
-  'Analyse Financiere': 'Financial Analysis',
-  'Risques et Impact': 'Risks and Impact',
-  'Rapport Final': 'Final Report',
-  'Nom du projet': 'Project Name',
-  "Secteur d'activite": 'Business Sector',
-  'Nature du projet': 'Project Nature',
-  'Type de financement': 'Financing Type',
-  'Devise principale': 'Main Currency',
-  'Date de demarrage prevue': 'Expected Start Date',
-  'Duree du projet': 'Project Duration',
-  "Taux d'imposition": 'Tax Rate',
-  'Taux de croissance': 'Growth Rate',
-  'Nom complet': 'Full Name',
-  'Date de naissance': 'Date of Birth',
-  'Telephone': 'Phone',
-  'Adresse complete': 'Full Address',
-  'Nationalite': 'Nationality',
-  'Statut juridique': 'Legal Status',
-  "Annees d'experience": 'Years of Experience',
-  'Formation / Diplomes': 'Education / Degrees',
-  'Apport en especes': 'Cash Contribution',
-  'Apport en nature': 'In-kind Contribution',
-  'Garanties proposees': 'Proposed Guarantees',
-  'Decote appliquee': 'Applied Haircut',
-  'Valeur marchande': 'Market Value',
-  'Charger un exemple': 'Load example',
-  'Generer le Rapport': 'Generate Report',
-  "Generer l'analyse IA": 'Generate AI analysis',
-  'Imprimer le Rapport': 'Print Report',
-  'Imprimer / PDF': 'Print / PDF',
-  'Retour a VitaNova': 'Back to VitaNova',
-  'Payer 3 Pi': 'Pay 3 Pi',
-  "Chiffre d'Affaires": 'Revenue',
-  'Charges Variables': 'Variable Costs',
-  'Charges Fixes': 'Fixed Costs',
-  'Marge Brute': 'Gross Margin',
-  'Resultat Net': 'Net Result',
-  'Benefice Net': 'Net Profit',
-  'TOTAL ACTIF': 'TOTAL ASSETS',
-  'TOTAL PASSIF': 'TOTAL LIABILITIES',
-  'Apport propre': 'Own Contribution',
-  'Credit demande': 'Loan Requested',
-  'Fonds de roulement': 'Working Capital',
-  'Emplois directs': 'Direct Jobs',
-  'Emplois indirects': 'Indirect Jobs',
-  'Beneficiaires': 'Beneficiaries',
-  'Categorie': 'Category',
-  'Description': 'Description',
-  'Quantite': 'Quantity',
-  'Valeur totale': 'Total Value',
-  'Valeur unitaire': 'Unit Value',
-  'Valeur USD': 'USD Value',
-  'Valeur Pi': 'Pi Value',
-  'Source de revenu': 'Income Source',
-  'Montant mensuel': 'Monthly Amount',
-  'Montant annuel': 'Annual Amount',
-  'Prix de vente': 'Selling Price',
-  "Prix d'achat": 'Purchase Price',
-  'CA mensuel': 'Monthly Revenue',
-  'CA annuel': 'Annual Revenue',
-  'Poste': 'Item',
-  'Points forts': 'Strengths',
-  'Points faibles': 'Weaknesses',
-  'Nos avantages': 'Our Advantages',
-  'Localisation': 'Location',
-  "Mesures d'attenuation": 'Mitigation Measures',
-  'Responsable': 'Responsible',
-  'Type de garantie': 'Guarantee Type',
-  'Valeur retenue': 'Retained Value',
-};
-
 function applyLang(){
-  const T = TR[lang]||TR.fr;
-  const isEN = lang === "en";
+  const T=TR[lang]||TR.fr;
+  const isEN=(lang==="en");
 
   // 1. Progress tabs
   for(let i=1;i<=10;i++){
@@ -1908,22 +1902,24 @@ function applyLang(){
   // 2. Mode buttons
   const mA=document.getElementById("mode-a"),mB=document.getElementById("mode-b");
   if(mA) mA.innerHTML=T.modeA; if(mB) mB.innerHTML=T.modeB;
-  // 3. Hero subtitle
+  // 3. Hero title and subtitle
+  const ht=document.querySelector(".hero h1"); if(ht) ht.innerHTML=T.heroTitle;
   const hs=document.getElementById("hero-sub"); if(hs) hs.textContent=T.heroSub;
-  // 4. Step titles (sec-title with data-step)
+  // 4. Step titles (data-step)
   document.querySelectorAll(".sec-title[data-step]").forEach(function(el){
     const s=parseInt(el.getAttribute("data-step"))-1;
     if(T.steps[s]) el.textContent=T.steps[s];
   });
-  // 5. Named buttons by class/id
+  // 5. Named buttons
   const sv=document.querySelector(".save-btn"); if(sv) sv.innerHTML=T.btn.save;
   document.querySelectorAll(".restore-btn").forEach(function(b){
-    if(b.getAttribute("onclick")==="restoreProject()") b.innerHTML=T.btn.restore;
+    if((b.getAttribute("onclick")||"").includes("restoreProject")) b.innerHTML=T.btn.restore;
+    else if((b.getAttribute("onclick")||"").includes("loadDemo")) b.innerHTML=T.btn.demo;
   });
   const ai=document.getElementById("btn-ai"); if(ai) ai.innerHTML=T.btn.ai;
   document.querySelectorAll(".btn-report").forEach(function(b){ b.innerHTML=T.btn.print; });
   document.querySelectorAll(".btn-pay").forEach(function(b){ b.innerHTML=T.btn.pay; });
-  // 6. Add-row buttons (data-addkey)
+  // 6. Add-row buttons
   document.querySelectorAll("[data-addkey]").forEach(function(b){
     const k=b.getAttribute("data-addkey"); if(T.add[k]) b.innerHTML=T.add[k];
   });
@@ -1936,8 +1932,9 @@ function applyLang(){
   document.querySelectorAll("#p-secteur option[data-fr]").forEach(function(opt){
     opt.textContent=isEN?(opt.getAttribute("data-en")||opt.getAttribute("data-fr")):opt.getAttribute("data-fr");
   });
-  // 9. data-fr / data-en elements (buttons, labels, divs, spans, th, td, p)
+  // 9. ALL elements with data-fr / data-en
   document.querySelectorAll("[data-fr]").forEach(function(el){
+    if(el.hasAttribute("data-step")) return; // handled above
     const val=isEN?(el.getAttribute("data-en")||el.getAttribute("data-fr")):el.getAttribute("data-fr");
     if(!val) return;
     const tag=el.tagName;
@@ -1945,39 +1942,24 @@ function applyLang(){
     else if(tag==="OPTION") el.textContent=val;
     else el.innerHTML=val;
   });
-  // 10. FULL TEXT NODE TRANSLATION — walks entire form DOM
-  // Only translate visible text in form panels, not script/style content
-  function translateNode(node){
-    if(node.nodeType===3){ // text node
-      const orig=(node._origFR||node.nodeValue||"").trim();
-      if(!orig||orig.length<2) return;
-      if(!node._origFR) node._origFR=node.nodeValue;
+  // 10. Text-node dictionary translation for remaining elements
+  function walkTranslate(node){
+    if(node.nodeType===3){
+      const orig=node._fr||(node._fr=node.nodeValue);
+      if(!orig.trim()||orig.trim().length<3) return;
       if(isEN){
-        // Try exact match
-        let found=false;
-        for(const [fr,en] of Object.entries(FULL_DICT)){
-          if(node._origFR.includes(fr)){
-            node.nodeValue=node._origFR.split(fr).join(en);
-            found=true;
-          }
-        }
+        let txt=orig;
+        Object.entries(DICT_FR_EN).forEach(function(e){ txt=txt.split(e[0]).join(e[1]); });
+        node.nodeValue=txt;
       } else {
-        // Restore French
-        if(node._origFR) node.nodeValue=node._origFR;
+        node.nodeValue=orig;
       }
-    } else if(node.childNodes&&node.tagName!=="SCRIPT"&&node.tagName!=="STYLE"){
-      node.childNodes.forEach(translateNode);
+    } else if(node.childNodes&&node.tagName!=="SCRIPT"&&node.tagName!=="STYLE"&&node.tagName!=="INPUT"&&node.tagName!=="TEXTAREA"){
+      node.childNodes.forEach(walkTranslate);
     }
   }
-  // Apply to each form panel
-  document.querySelectorAll(".panel,.hero,.save-banner,.success-panel").forEach(translateNode);
-  // Apply to table headers in results panels
-  document.querySelectorAll("th[data-fr],td[data-fr]").forEach(function(el){
-    const val=isEN?(el.getAttribute("data-en")||el.getAttribute("data-fr")):el.getAttribute("data-fr");
-    if(val) el.innerHTML=val;
-  });
+  document.querySelectorAll(".panel,.hero,.topbar,.save-banner,.success-panel").forEach(walkTranslate);
 }
-
 
 
 
@@ -2079,25 +2061,18 @@ document.addEventListener("click", ()=>{ document.getElementById("tooltip-box").
 
 // PATRIMOINE
 function initDefaultRows(){
-  addPatrRow("Maison principale","1","80000000","10");
-  addPatrRow("Vehicule Toyota","1","25000000","5");
-  addRevRow("Salaire mensuel","500000");
-  addProdRow("Produit 1 (Ex: Riz 25kg)","Sac","3500","2800","500");
-  addProdRow("Produit 2 (Ex: Sucre 50kg)","Sac","7200","5800","200");
-  addConcRow("Concurrent A","Proximite","Prix bas","Qualite variable","Meilleure qualite");
-  addInvRow("Amenagement local","1","2000000","10");
-  addInvRow("Mobilier et equipements","1","1500000","5");
-  addInvRow("Stock initial","1","3000000","1");
-  addChvarRow("Achats marchandises","65","");
-  addChvarRow("Emballages et consommables","3","");
-  addChfixRow("Loyer local","200000");
-  addChfixRow("Salaires personnel","350000");
-  addChfixRow("Electricite et eau","50000");
-  addChfixRow("Internet et telephone","20000");
-  addChfixRow("Transport","30000");
-  addRiskRow("Risque de marche","Moyenne","Moyen","M","Diversification clientele, etude de marche","Promoteur");
-  addRiskRow("Risque de credit fournisseur","Faible","Faible","L","Negociation conditions de paiement","Promoteur");
-  addGarRow("Hypotheque immobiliere","Maison principale","80000000","30");
+  // Safe init — only add rows if the target tbody exists
+  function safe(fn){ try{ fn(); }catch(e){ /* skip if DOM not ready */ } }
+  safe(function(){ addPatrRow("Maison principale","1","80000000","10"); });
+  safe(function(){ addPatrRow("Vehicule","1","25000000","5"); });
+  safe(function(){ addRevRow("Salaire mensuel","500000"); });
+  safe(function(){ addProdRow("Produit 1","Unite","0","0","0"); });
+  safe(function(){ addConcRow("","","","",""); });
+  safe(function(){ addInvRow("","1","0","5"); });
+  safe(function(){ addChvarRow("","",""); });
+  safe(function(){ addChfixRow("",""); });
+  safe(function(){ addRiskRow("","Moyenne","Moyen","M","",""); });
+  safe(function(){ addGarRow("","","","1","","30"); });
 }
 
 function addPatrRow(desc="",qte="1",vunit="",duree=""){
@@ -2113,7 +2088,7 @@ function addPatrRow(desc="",qte="1",vunit="",duree=""){
     <td id="pu2-${id}" class="neu">$0</td>
     <td id="pp-${id}" class="neu">0 Pi</td>
     <td><button class="btn-del" onclick="delRow('patr-row-${id}',calcPatrTot)">x</button></td>`;
-  document.getElementById("patr-body").appendChild(tr);
+  var _tb=document.getElementById("patr-body"); if(_tb){ _tb.appendChild(tr); }
   if(vunit) calcPatrRow(id);
 }
 function calcPatrRow(id){
@@ -2147,7 +2122,7 @@ function addRevRow(desc="",montant=""){
     <td id="ra-${id}" class="co">0 FRW</td>
     <td id="ru-${id}" class="neu">$0</td>
     <td><button class="btn-del" onclick="delRow('rev-row-${id}',calcRevTot)">x</button></td>`;
-  document.getElementById("rev-body").appendChild(tr);
+  var _tb=document.getElementById("rev-body"); if(_tb){ _tb.appendChild(tr); }
   if(montant) calcRevTot();
 }
 function calcRevTot(){
@@ -2177,7 +2152,7 @@ function addProdRow(nom="",unite="",pvente="",pachat="",qte=""){
     <td id="pcam-${id}" class="co">0 FRW</td>
     <td id="pcaa-${id}" class="co">0 FRW</td>
     <td><button class="btn-del" onclick="delRow('prod-row-${id}',calcProdTot)">x</button></td>`;
-  document.getElementById("prod-body").appendChild(tr);
+  var _tb=document.getElementById("prod-body"); if(_tb){ _tb.appendChild(tr); }
   if(pvente&&qte) calcProdRow(id);
 }
 function calcProdRow(id){
@@ -2217,7 +2192,7 @@ function addConcRow(nom="",loc="",fort="",faible="",avantage=""){
     <td><input type="text" id="cw-${id}" value="${faible}" placeholder="Points faibles"/></td>
     <td><input type="text" id="ca-${id}" value="${avantage}" placeholder="Nos avantages"/></td>
     <td><button class="btn-del" onclick="delRow('conc-row-${id}',()=>{})">x</button></td>`;
-  document.getElementById("conc-body").appendChild(tr);
+  var _tb=document.getElementById("conc-body"); if(_tb){ _tb.appendChild(tr); }
 }
 
 // INVESTISSEMENTS
@@ -2236,7 +2211,7 @@ function addInvRow(desc="",qte="1",prix="",dureeA="5"){
     <td><input type="number" id="ia-${id}" value="${dureeA||5}" min="1" max="50" oninput="calcInvRow(${id})"/></td>
     <td id="iamt-${id}" class="neu">0 FRW</td>
     <td><button class="btn-del" onclick="delRow('inv-row-${id}',calcInvTot)">x</button></td>`;
-  document.getElementById("inv-body").appendChild(tr);
+  var _tb=document.getElementById("inv-body"); if(_tb){ _tb.appendChild(tr); }
   if(prix) calcInvRow(id);
 }
 function calcInvRow(id){
@@ -2278,7 +2253,7 @@ function addChvarRow(poste="",pct="",montant=""){
     <td><input type="number" id="cvm-${id}" value="${montant}" placeholder="ou montant fixe" min="0" oninput="recalcAllDebounced()"/> FRW</td>
     <td><input type="text" id="cvs-${id}" placeholder="Source/Hypothese"/></td>
     <td><button class="btn-del" onclick="delRow('chvar-row-${id}',recalcAll)">x</button></td>`;
-  document.getElementById("chvar-body").appendChild(tr);
+  var _tb=document.getElementById("chvar-body"); if(_tb){ _tb.appendChild(tr); }
 }
 function getChvarMBase(caM){
   let tot=0;
@@ -2303,7 +2278,7 @@ function addChfixRow(poste="",montant=""){
     <td id="cfa-${id}" class="co">0 FRW</td>
     <td><input type="text" id="cfs-${id}" placeholder="Source/Hypothese"/></td>
     <td><button class="btn-del" onclick="delRow('chfix-row-${id}',calcChfixTot)">x</button></td>`;
-  document.getElementById("chfix-body").appendChild(tr);
+  var _tb=document.getElementById("chfix-body"); if(_tb){ _tb.appendChild(tr); }
   if(montant) calcChfixTot();
 }
 function calcChfixTot(){
@@ -2340,7 +2315,7 @@ function addRiskRow(risque="",prob="Moyenne",impact="Moyen",niveau="M",mesures="
     <td><input type="text" id="rmes-${id}" value="${mesures}" placeholder="Mesures d'attenuation"/></td>
     <td><input type="text" id="rr-${id}" value="${resp}" placeholder="Responsable"/></td>
     <td><button class="btn-del" onclick="delRow('risk-row-${id}',()=>{})">x</button></td>`;
-  document.getElementById("risk-body").appendChild(tr);
+  var _tb=document.getElementById("risk-body"); if(_tb){ _tb.appendChild(tr); }
 }
 function calcRiskLevel(id){
   const prob=document.getElementById("rp-"+id)?.value||"";
@@ -2375,23 +2350,7 @@ function calcGarRow(id){
   setText("gr-"+id, fmtFRW(retenue));
   calcGarTot();
 }
-function calcGarTot(){
-  let totM=0, totR=0;
-  for(let i=1;i<=garCount;i++){
-    const e=document.getElementById("gm-"+i);
-    if(e){ totM+=v("gm-"+i); const dec=v("gde-"+i)||0; totR+=v("gm-"+i)*(1-dec/100); }
-  }
-  setText("gar-tot-march", fmtFRW(totM));
-  setText("gar-tot-ret", fmtFRW(totR));
-  const credit=v("fin-credit")||getInvTot()*0.8;
-  const ratio=totR>0&&credit>0?(totR/credit*100):0;
-  const ratioEl=document.getElementById("gar-ratio");
-  if(ratioEl){
-    ratioEl.textContent=fmtPct(ratio)+" (valeur retenue / credit demande)";
-    ratioEl.className="val "+(ratio>=100?"cg":ratio>=70?"co":"cr");
-  }
-  return {totM, totR};
-}
+// old calcGarTot replaced
 
 // Helper
 function delRow(id, cb){ document.getElementById(id)?.remove(); cb(); }
@@ -3593,9 +3552,11 @@ function setText(id,val){ const el=document.getElementById(id); if(el) el.textCo
 function setVal(id,val){ const el=document.getElementById(id); if(el) el.value=val; }
 let tout=0;
 
-// ══════════════════════════════════════════
-// SECTOR SYSTEM — 50 sectors with dynamic fields
-// ══════════════════════════════════════════
+// ── DEBOUNCE ──
+var _dbt=null;
+function recalcAllDebounced(){ clearTimeout(_dbt); _dbt=setTimeout(function(){ recalcAll(); },350); }
+
+// ══ SECTOR SYSTEM ══
 const SECTORS = {
   "epicerie": {
     fr: "Épicerie / Alimentation générale",
@@ -3999,76 +3960,34 @@ const SECTORS = {
   },
 };
 
+
 function updateSector(){
   const sect=(document.getElementById("p-secteur")||{}).value||"";
-  const box=document.getElementById("sector-vars");
-  const content=document.getElementById("sector-vars-content");
-  const title=document.getElementById("sector-vars-title");
-  const hint=document.getElementById("sector-hint");
+  const box=document.getElementById("sector-vars"),content=document.getElementById("sector-vars-content"),title=document.getElementById("sector-vars-title"),hint=document.getElementById("sector-hint");
   if(!box) return;
   if(!sect){ box.style.display="none"; return; }
-  const data=SECTORS[sect];
-  if(!data){ box.style.display="none"; return; }
+  const data=SECTORS[sect]; if(!data){ box.style.display="none"; return; }
   const lbl=lang==="en"?data.en:data.fr;
   if(title) title.textContent=(lang==="en"?"Sector-specific variables — ":"Variables specifiques — ")+lbl;
-  // Build sector variables
   content.innerHTML=data.vars.map(function(sv){
-    return '<div class="field"><label>'+sv.label+' <span class="tip" data-tip="'+sv.tip.replace(/"/g,"&quot;")+'">?</span></label>'+
-      '<input type="text" id="'+sv.id+'" value="'+sv.default+'" onblur="recalcAll()"/></div>';
+    return '<div class="field"><label>'+sv.label+' <span data-tip="'+sv.tip.replace(/"/g,"&quot;")+'">?</span></label><input type="text" id="'+sv.id+'" value="'+sv.default+'" onblur="recalcAll()"/></div>';
   }).join("");
-  // Show typical charges hint
   if(hint){
-    hint.innerHTML="<strong>"+(lang==="en"?"Typical fixed costs for this sector:":"Charges fixes typiques pour ce secteur:")+"</strong> "+
-      data.chfix.join(", ")+"<br/><strong>"+(lang==="en"?"Typical variable costs:":"Charges variables typiques:")+"</strong> "+
-      data.chvar.join(", ")+".";
+    hint.innerHTML="<strong>"+(lang==="en"?"Typical charges for this sector:":"Charges typiques pour ce secteur:")+"</strong><br/>"+
+      "<em>"+(lang==="en"?"Fixed:":"Fixes:")+"</em> "+data.chfix.join(", ")+" | "+
+      "<em>"+(lang==="en"?"Variable:":"Variables:")+"</em> "+data.chvar.join(", ");
     hint.style.display="block";
   }
   box.style.display="block";
-  // Pre-fill typical costs if lists are empty
   prefillSectorCosts(data);
 }
-
 function prefillSectorCosts(data){
-  // Only prefill if chfix and chvar lists are empty
-  const chfixBody=document.getElementById("chfix-body");
-  const chvarBody=document.getElementById("chvar-body");
-  if(chfixBody&&chfixBody.children.length===0){
-    data.chfix.forEach(function(label){ addChfixRow(label,""); });
-  }
-  if(chvarBody&&chvarBody.children.length===0){
-    data.chvar.forEach(function(label){ addChvarRow(label,"",""); });
-  }
+  const chfixBody=document.getElementById("chfix-body"),chvarBody=document.getElementById("chvar-body");
+  if(chfixBody&&chfixBody.children.length===0) data.chfix.forEach(function(l){ addChfixRow(l,""); });
+  if(chvarBody&&chvarBody.children.length===0) data.chvar.forEach(function(l){ addChvarRow(l,"",""); });
 }
 
-function getSectorCA(){
-  // Calculate CA from sector variables when available
-  const sect=(document.getElementById("p-secteur")||{}).value||"";
-  const data=SECTORS[sect]; if(!data) return 0;
-  const g=data.group;
-  // Special CA calculations per group
-  if(g==="transport"){
-    if(sect==="moto-bodaboda"){
-      const nb=parseFloat(document.getElementById("sv-nb-motos")?.value||0)||0;
-      const courses=parseFloat(document.getElementById("sv-courses-jour")?.value||0)||0;
-      const prix=parseFloat(document.getElementById("sv-prix-course")?.value||0)||0;
-      const jours=parseFloat(document.getElementById("sv-jours")?.value||26)||26;
-      return nb*courses*prix*jours;
-    }
-    if(sect==="pondeuses"){
-      const nb=parseFloat(document.getElementById("sv-nb-poules")?.value||0)||0;
-      const oeufs=parseFloat(document.getElementById("sv-oeufs-jour")?.value||0.85)||0.85;
-      const prix=parseFloat(document.getElementById("sv-prix-oeuf")?.value||0)||0;
-      return nb*oeufs*prix*30;
-    }
-  }
-  return 0;
-}
-
-
-// ── DEBOUNCE ──
-var _dbt=null;
-function recalcAllDebounced(){ clearTimeout(_dbt); _dbt=setTimeout(function(){ recalcAll(); },350); }
-
+// ══ FINANCE ENGINE OVERRIDE ══
 
 // ════════════════════════════════════════════════════════════
 // FINANCE CORE v2.1 — moteur de calcul corrigé (remplace les anciennes versions)
@@ -4878,6 +4797,161 @@ function buildReport(){
   sec(16,L("GLOSSAIRE","GLOSSARY"))+'<table>'+th([L("Abréviation","Abbreviation"),L("Signification","Meaning"),L("Définition","Definition")])+GLOSSARY.map(g=>'<tr><td>'+g[0]+'</td><td style="text-align:left">'+g[1]+'</td><td style="text-align:left">'+(lang==="en"?g[3]:g[2])+'</td></tr>').join("")+'</table>'+
   '<p style="margin-top:12px;font-size:10px;color:#6B7280;border-top:1px solid #E5E7EB;padding-top:8px;">'+L("Ce rapport est un outil d'aide à la décision généré par VitaNova SmartBiz. Les conversions USD et Pi sont des estimations indicatives (Pi : hypothèse utilisateur, non un taux de marché). Pour toute validation officielle, consulter un expert-comptable ou un conseiller financier agréé.","This report is a decision-support tool generated by VitaNova SmartBiz. USD and Pi conversions are indicative estimates (Pi: user assumption, not a market rate). For any official validation, consult a licensed accountant or financial advisor.")+'<br/>'+L("Généré le ","Generated on ")+now+' | BNR: 1 USD = '+BNR_RATE.toLocaleString()+' FRW | 1 Pi = $'+gcvVal().toLocaleString()+'</p>';
 }
+
+
+// ══ GUARANTEE TABLE (new 7-column) ══
+var garCount2=0;
+function addGarRow(type,desc,vEstim,qte,vExpert,decote){
+  garCount2++;
+  const id=garCount2;
+  const tr=document.createElement("tr"); tr.id="gar-row-"+id;
+  tr.innerHTML=
+    '<td><input type="text" id="gt-'+id+'" value="'+(type||'')+'" placeholder="Ex: Maison, Terrain, Vehicule..."/></td>'+
+    '<td><input type="number" id="gq-'+id+'" value="'+(qte||1)+'" min="0" step="0.01" oninput="calcGarRow('+id+')"/></td>'+
+    '<td><input type="number" id="gu-'+id+'" value="'+(vEstim||'')+'" placeholder="0" min="0" oninput="calcGarRow('+id+')"/></td>'+
+    '<td id="gt2-'+id+'" class="co">0 FRW</td>'+
+    '<td><input type="number" id="ge-'+id+'" value="'+(vExpert||'')+'" placeholder="0" min="0" oninput="calcGarRow('+id+')"/></td>'+
+    '<td><input type="number" id="gd-'+id+'" value="'+(decote||30)+'" min="0" max="100" oninput="calcGarRow('+id+')"/>%</td>'+
+    '<td id="gr-'+id+'" class="cg">0 FRW</td>'+
+    '<td><button class="btn-del" onclick="delGarRow('+id+')">x</button></td>';
+  const body=document.getElementById("gar-body"); if(body){ body.appendChild(tr); calcGarRow(id); }
+
+}
+function delGarRow(id){ document.getElementById("gar-row-"+id)?.remove(); calcGarTot(); }
+function calcGarRow(id){
+  const q=parseFloat(document.getElementById("gq-"+id)?.value||1)||1;
+  const u=parseFloat(document.getElementById("gu-"+id)?.value||0)||0;
+  const tot=q*u;
+  const expert=parseFloat(document.getElementById("ge-"+id)?.value||0)||0;
+  const decote=parseFloat(document.getElementById("gd-"+id)?.value||30)||30;
+  const base=expert>0?expert:tot;
+  const retenue=base*(1-decote/100);
+  const t=document.getElementById("gt2-"+id); if(t) t.textContent=fmtFRW(tot);
+  const r=document.getElementById("gr-"+id); if(r) r.textContent=fmtFRW(retenue);
+  calcGarTot();
+}
+function calcGarTot(){
+  let totEstim=0,totExpert=0,totRet=0;
+  for(let i=1;i<=garCount2;i++){
+    const e=document.getElementById("gt-"+i); if(!e) continue;
+    const q=parseFloat(document.getElementById("gq-"+i)?.value||1)||1;
+    const u=parseFloat(document.getElementById("gu-"+i)?.value||0)||0;
+    const tot=q*u; totEstim+=tot;
+    const expert=parseFloat(document.getElementById("ge-"+i)?.value||0)||0;
+    totExpert+=expert;
+    const decote=parseFloat(document.getElementById("gd-"+i)?.value||30)||30;
+    const base=expert>0?expert:tot;
+    totRet+=base*(1-decote/100);
+  }
+  setText("gar-tot-estim",fmtFRW(totEstim));
+  setText("gar-tot-expert",fmtFRW(totExpert));
+  setText("gar-tot-ret",fmtFRW(totRet));
+  setText("gar-tot-ret2",fmtFRW(totRet));
+  const credit=v("fin-credit")||v("cr-montant")||0;
+  setText("gar-credit-ref",fmtFRW(credit));
+  const ratio=credit>0?totRet/credit*100:0;
+  const el=document.getElementById("gar-ratio");
+  if(el){
+    el.textContent=ratio.toFixed(1)+"%";
+    el.className="val "+(ratio>=150?"cg":ratio>=100?"co":"cr");
+  }
+  return {totEstim,totExpert,totRet};
+}
+
+// ══ IMPACT SOCIAL — AUTO ══
+function buildImpactAuto(){
+  const empDir=v("imp-emp-dir"),empInd=v("imp-emp-ind"),benef=v("imp-benef");
+  const cout=getCoutTotal();
+  const ind=document.getElementById("impact-indicators"); if(!ind) return;
+  const lf=lang==="fr";
+  ind.innerHTML='<div class="row3">'+
+    '<div class="tbox"><span class="lbl">'+(lf?"Total emplois crees":"Total jobs created")+'</span><span class="val cg">'+(empDir+empInd)+'</span></div>'+
+    '<div class="tbox"><span class="lbl">'+(lf?"Dont emplois directs":"Of which direct jobs")+'</span><span class="val cg">'+empDir+'</span></div>'+
+    '<div class="tbox"><span class="lbl">'+(lf?"Dont emplois indirects":"Of which indirect jobs")+'</span><span class="val co">'+empInd+'</span></div>'+
+    '</div><div class="row3" style="margin-top:8px">'+
+    '<div class="tbox"><span class="lbl">'+(lf?"Beneficiaires directs":"Direct beneficiaries")+'</span><span class="val cb">'+benef+'</span></div>'+
+    '<div class="tbox"><span class="lbl">'+(lf?"Cout par emploi direct":"Cost per direct job")+'</span><span class="val co">'+(empDir>0?fmtFRW(cout/empDir):"N/A")+'</span></div>'+
+    '<div class="tbox"><span class="lbl">'+(lf?"Cout par beneficiaire":"Cost per beneficiary")+'</span><span class="val co">'+(benef>0?fmtFRW(cout/benef):"N/A")+'</span></div>'+
+    '</div>';
+}
+// Override old recalcImpact
+function recalcImpact(){ buildImpactAuto(); }
+
+// ══ FIN RECALCFIN OVERRIDE ══
+function recalcFin(){
+  const cout=getCoutTotal();
+  const fp=(v("fin-cash")||0)+(v("fin-nature")||0);
+  const credit=v("fin-credit")||0;
+  const subv=v("fin-subv")||0;
+  const inv2=v("fin-inv")||0;
+  const autres=v("fin-autres")||0;
+  const total=fp+credit+subv+inv2+autres;
+  const pct=function(m){ return cout>0?fmtPct(m/cout*100):"0%"; };
+
+  // Sync cr-montant with fin-credit
+  const crEl=document.getElementById("cr-montant"); if(crEl&&!crEl._userEdited) crEl.value=credit||"";
+
+  // Update table cells
+  setText("fin-cout-display",fmtFRW(cout));
+  setText("fin-cout-usd",fmtUSD(cout));
+  setText("fin-cout-pi",fmtPi(cout));
+  const fpPct=cout>0?fp/cout*100:0;
+  const fpEl=document.getElementById("fin-fp-pct"); if(fpEl){ fpEl.textContent=fpPct.toFixed(1)+"%"; fpEl.style.color=fpPct>=20?"#6EE7B7":"#FCA5A5"; }
+  const fpAlert=document.getElementById("fin-fp-alert");
+  if(fpAlert){
+    if(fpPct<20&&cout>0){ fpAlert.textContent=(lang==="fr"?"⚠ Min 20% requis":"⚠ Min 20% required"); fpAlert.style.display="block"; fpAlert.style.color="#FCA5A5"; }
+    else fpAlert.style.display="none";
+  }
+  setText("fin-fp-usd",fmtUSD(fp));
+  setText("fin-fp-pi",fmtPi(fp));
+  setText("fin-credit-pct",pct(credit));
+  setText("fin-credit-usd",fmtUSD(credit));
+  setText("fin-credit-pi",fmtPi(credit));
+  setText("fin-subv-pct",pct(subv));
+  setText("fin-subv-usd",fmtUSD(subv));
+  setText("fin-subv-pi",fmtPi(subv));
+  setText("fin-inv-pct",pct(inv2));
+  setText("fin-inv-usd",fmtUSD(inv2));
+  setText("fin-inv-pi",fmtPi(inv2));
+  setText("fin-autres-pct",pct(autres));
+  setText("fin-autres-usd",fmtUSD(autres));
+  setText("fin-autres-pi",fmtPi(autres));
+  setText("fin-tot-frw",fmtFRW(total));
+  setText("fin-tot-pct",pct(total));
+  setText("fin-tot-usd",fmtUSD(total));
+  setText("fin-tot-pi",fmtPi(total));
+  setText("fin-cout-total2",fmtFRW(cout));
+  const fpPct2El=document.getElementById("fin-fp-pct2"); if(fpPct2El){ fpPct2El.textContent=fpPct.toFixed(1)+"%"; fpPct2El.style.color=fpPct>=20?"#6EE7B7":"#FCA5A5"; }
+  const detteRatio=fp>0?credit/fp:null;
+  const drEl=document.getElementById("fin-ratio-dette2"); if(drEl){ drEl.textContent=detteRatio===null?"—":detteRatio.toFixed(2); drEl.style.color=detteRatio!==null&&detteRatio<=4?"#6EE7B7":"#FCA5A5"; }
+
+  // Ecart
+  const diff=total-cout;
+  const ecEl=document.getElementById("fin-ecart"); if(ecEl){ ecEl.textContent=fmtFRW(Math.abs(diff)); ecEl.style.color=Math.abs(diff)<1?"#6EE7B7":diff<0?"#FCA5A5":"#FDBA74"; }
+  const ecMsg=document.getElementById("fin-ecart-msg");
+  if(ecMsg){
+    const lf=lang==="fr";
+    if(Math.abs(diff)<1) ecMsg.innerHTML='<span class="cg">&#10003; '+(lf?"Financement equilibre":"Balanced financing")+'</span>';
+    else if(diff<0) ecMsg.innerHTML='<span class="cr">&#9888; '+(lf?"Deficit de ":"Gap of ")+fmtFRW(-diff)+'</span>';
+    else ecMsg.innerHTML='<span class="co">&#9888; '+(lf?"Excedent de ":"Surplus of ")+fmtFRW(diff)+'</span>';
+  }
+
+  // Validation note
+  const val=document.getElementById("fin-validation");
+  if(val){
+    const lf=lang==="fr";
+    if(cout===0) { val.className="note-info"; val.textContent=lf?"Renseignez d'abord le plan d'investissement.":"Fill in the investment plan first."; }
+    else if(Math.abs(diff)<1) { val.className="note-ok"; val.innerHTML=lf?"&#10003; <strong>Financement equilibre.</strong> Le total des sources = Cout total du projet.":"&#10003; <strong>Financing balanced.</strong> Total sources = Total project cost."; }
+    else if(diff<0) { val.className="note-err"; val.innerHTML=lf?"&#9888; <strong>Deficit de financement:</strong> Il manque "+fmtFRW(-diff)+". Ajustez les sources.":"&#9888; <strong>Funding gap:</strong> "+fmtFRW(-diff)+" missing. Adjust sources."; }
+    else { val.className="note-warn"; val.innerHTML=lf?"&#9888; <strong>Excedent de financement:</strong> "+fmtFRW(diff)+" en surplus.":"&#9888; <strong>Funding surplus:</strong> "+fmtFRW(diff)+" excess."; }
+  }
+  updateApportPct();
+}
+// Patch cr-montant to not auto-overwrite when user edits
+document.addEventListener("DOMContentLoaded",function(){
+  const crEl=document.getElementById("cr-montant");
+  if(crEl) crEl.addEventListener("input",function(){ this._userEdited=true; });
+});
 
 </script>
 </body>
