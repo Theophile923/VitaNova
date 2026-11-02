@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BuildSmart — VitaNova</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --blue:#1A3C6E;--blue2:#2563EB;--green:#006B3C;--green2:#059669;
+  --gold:#B8860B;--gold2:#D97706;--dark:#0A0E1A;--card:#111827;
+  --card2:#1F2937;--border:#374151;--text:#F9FAFB;--muted:#9CA3AF;
+  --red:#DC2626;--orange:#EA580C;--teal:#0D9488;--purple:#7C3AED;
+  --brown:#92400E;
+}
+body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--text);min-height:100vh;font-size:13px;}
+
+/* TOPBAR */
+.topbar{background:#0F172A;border-bottom:2px solid var(--orange);padding:0 16px;height:54px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.t-left{display:flex;align-items:center;gap:12px;}
+.back{background:rgba(234,88,12,0.15);border:1px solid var(--orange);color:#FDBA74;
+  padding:6px 12px;border-radius:6px;font-size:11px;text-decoration:none;font-weight:600;}
+.t-brand{font-size:15px;font-weight:900;color:#fff;}
+.t-brand span{color:#FB923C;}
+.t-right{display:flex;align-items:center;gap:8px;}
+.lbtn{padding:5px 10px;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;
+  border:1px solid var(--border);background:transparent;color:var(--muted);}
+.lbtn.active{border-color:var(--orange);background:rgba(234,88,12,0.15);color:#FDBA74;}
+.user-pill{display:none;background:rgba(234,88,12,0.12);border:1px solid var(--orange);
+  color:#FDBA74;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.save-btn{background:rgba(234,88,12,0.15);border:1px solid var(--orange);color:#FDBA74;
+  padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0F172A 0%,#1C1206 50%,#0F172A 100%);
+  padding:24px 16px 18px;text-align:center;border-bottom:1px solid var(--border);}
+.hero-badge{display:inline-block;background:rgba(234,88,12,0.12);border:1px solid rgba(234,88,12,0.3);
+  color:#FB923C;padding:4px 14px;border-radius:20px;font-size:10px;font-weight:700;
+  letter-spacing:1.5px;margin-bottom:10px;}
+.hero h1{font-size:22px;font-weight:900;margin-bottom:4px;color:#fff;}
+.hero h1 em{color:#FB923C;font-style:normal;}
+.hero p{font-size:11px;color:var(--muted);max-width:500px;margin:0 auto 12px;}
+.rate-bar{background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:8px;padding:8px 14px;max-width:520px;margin:0 auto;
+  font-size:11px;color:#FCD34D;text-align:center;}
+
+/* MODULE TABS */
+.mod-tabs{display:flex;gap:6px;padding:14px 16px 0;overflow-x:auto;background:#0F172A;
+  border-bottom:1px solid var(--border);}
+.mod-tab{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px 8px 0 0;
+  font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--border);
+  background:var(--card);color:var(--muted);white-space:nowrap;transition:all 0.2s;border-bottom:none;}
+.mod-tab.active{background:var(--card2);color:#FB923C;border-color:var(--orange);}
+.mod-tab .icon{font-size:14px;}
+
+/* SAVE BANNER */
+.save-banner{background:rgba(234,88,12,0.08);border:1px solid rgba(234,88,12,0.2);
+  border-radius:8px;padding:8px 12px;margin:10px 16px 0;display:none;
+  justify-content:space-between;align-items:center;font-size:11px;color:#FDBA74;}
+.restore-btn{background:rgba(234,88,12,0.2);border:1px solid var(--orange);
+  color:#FDBA74;padding:4px 10px;border-radius:5px;font-size:11px;cursor:pointer;font-weight:700;}
+
+/* CONTENT */
+.content{padding:14px 16px;max-width:760px;margin:0 auto;}
+.module{display:none;}
+.module.active{display:block;}
+
+/* SECTIONS */
+.sec{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.sec-icon{width:30px;height:30px;border-radius:8px;background:var(--orange);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.sec-title{font-size:13px;font-weight:800;color:#fff;}
+.sec-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* FIELDS */
+.field{margin-bottom:10px;}
+.field label{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);
+  margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.tip{background:rgba(234,88,12,0.2);color:#FDBA74;border-radius:50%;width:14px;height:14px;
+  font-size:9px;display:inline-flex;align-items:center;justify-content:center;
+  cursor:help;border:1px solid rgba(234,88,12,0.4);font-weight:900;}
+.field input,.field select,.field textarea{
+  width:100%;background:#0D1117;border:1px solid var(--border);border-radius:7px;
+  padding:8px 10px;color:var(--text);font-size:12px;outline:none;transition:border-color 0.2s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);}
+.field select option{background:#0D1117;}
+.hint{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4;}
+.row2{display:flex;gap:10px;} .row2 .field{flex:1;}
+.row3{display:flex;gap:8px;} .row3 .field{flex:1;}
+.row4{display:flex;gap:8px;} .row4 .field{flex:1;}
+
+/* EXCEL TABLES */
+.tbl-wrap{overflow-x:auto;margin-bottom:10px;border-radius:8px;border:1px solid var(--border);}
+.xtbl{width:100%;border-collapse:collapse;min-width:500px;}
+.xtbl th{background:#1C1206;color:#FDBA74;padding:7px 9px;font-size:10px;
+  text-align:right;font-weight:700;border-bottom:2px solid var(--orange);white-space:nowrap;}
+.xtbl th:first-child{text-align:left;}
+.xtbl td{padding:6px 9px;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:right;}
+.xtbl td:first-child{text-align:left;}
+.xtbl tr:hover td{background:rgba(234,88,12,0.04);}
+.xtbl .cat-row td{background:rgba(234,88,12,0.1);color:#FB923C;font-weight:700;
+  font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}
+.xtbl .subtot td{background:rgba(5,150,105,0.06);font-weight:700;color:#6EE7B7;}
+.xtbl .tot-row td{background:rgba(217,119,6,0.1);font-weight:900;color:var(--gold2);
+  font-size:12px;border-top:2px solid var(--gold2);}
+.xtbl input{background:rgba(234,88,12,0.06);border:none;border-bottom:1px solid rgba(234,88,12,0.3);
+  color:var(--text);font-size:11px;width:100%;padding:2px 4px;outline:none;text-align:right;min-width:80px;}
+.xtbl input:focus{border-bottom-color:var(--orange);}
+.xtbl .neg{color:#FCA5A5;} .xtbl .pos{color:#6EE7B7;} .xtbl .co{color:var(--gold2);} .xtbl .cb{color:#93C5FD;}
+
+/* DYNAMIC ROWS */
+.btn-add{background:rgba(234,88,12,0.06);border:1px dashed rgba(234,88,12,0.4);
+  color:#FDBA74;padding:8px;border-radius:7px;font-size:11px;font-weight:700;
+  cursor:pointer;width:100%;margin-bottom:6px;}
+.btn-del{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);
+  color:var(--red);padding:6px 9px;border-radius:6px;font-size:11px;cursor:pointer;}
+
+/* TOTAL BOXES */
+.tbox{background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.25);
+  border-radius:7px;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:6px;}
+.tbox .lbl{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;}
+.tbox .val{font-weight:900;color:var(--gold2);font-size:13px;}
+
+/* NOTES */
+.note-info{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);
+  border-radius:7px;padding:8px 11px;font-size:11px;color:#93C5FD;margin-bottom:10px;line-height:1.5;}
+.note-ok{background:rgba(5,150,105,0.06);border:1px solid rgba(5,150,105,0.2);
+  border-radius:7px;padding:8px 11px;font-size:11px;color:#6EE7B7;margin-bottom:10px;line-height:1.5;}
+.note-warn{background:rgba(234,88,12,0.06);border:1px solid rgba(234,88,12,0.2);
+  border-radius:7px;padding:8px 11px;font-size:11px;color:#FDBA74;margin-bottom:10px;line-height:1.5;}
+.note-err{background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);
+  border-radius:7px;padding:8px 11px;font-size:11px;color:#FCA5A5;margin-bottom:10px;line-height:1.5;}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px;}
+.kpi-card{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center;}
+.kpi-val{font-size:20px;font-weight:900;margin-bottom:2px;}
+.kpi-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;line-height:1.3;}
+.cg{color:#6EE7B7;}.co{color:var(--gold2);}.cr{color:#FCA5A5;}.cb{color:#93C5FD;}.cp{color:#C4B5FD;}
+
+/* PHASE CARDS */
+.phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.phase-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;}
+.phase-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.phase-name{font-size:11px;font-weight:700;color:#FB923C;}
+.phase-pct{font-size:10px;color:var(--muted);}
+.phase-bar{background:#374151;border-radius:4px;height:6px;}
+.phase-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--orange),#FB923C);}
+.phase-val{font-size:12px;font-weight:700;color:var(--gold2);margin-top:4px;}
+
+/* ROOM CARDS */
+.room-grid{display:flex;flex-direction:column;gap:6px;}
+.room-row{background:#0D1117;border:1px solid var(--border);border-radius:7px;padding:10px;}
+.room-top{display:flex;gap:8px;align-items:flex-end;}
+.room-top .field{flex:1;margin-bottom:0;}
+.room-top .field.w90{flex:0 0 90px;}
+.room-top .field.w80{flex:0 0 80px;}
+.room-calc{font-size:10px;color:var(--gold2);margin-top:4px;font-weight:600;}
+
+/* SMART HOUSE */
+.smart-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.smart-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.smart-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.smart-icon{font-size:18px;}
+.smart-name{font-size:11px;font-weight:700;color:#C4B5FD;}
+.smart-toggle{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.toggle{position:relative;width:36px;height:20px;}
+.toggle input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#374151;border-radius:20px;transition:.3s;}
+.slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+input:checked+.slider{background:var(--purple);}
+input:checked+.slider:before{transform:translateX(16px);}
+.smart-cost{font-size:11px;color:var(--gold2);font-weight:700;}
+
+/* EXPERTISE */
+.expertise-score{text-align:center;padding:20px;background:var(--card2);border-radius:10px;margin-bottom:12px;}
+.exp-grade{font-size:48px;font-weight:900;margin-bottom:4px;}
+.exp-label{font-size:14px;font-weight:700;margin-bottom:4px;}
+.exp-sub{font-size:11px;color:var(--muted);}
+.grade-A{color:#6EE7B7;} .grade-B{color:#93C5FD;} .grade-C{color:var(--gold2);} .grade-D{color:#FDBA74;} .grade-E{color:#FCA5A5;}
+
+/* AMORT TABLE */
+.amort-tbl{width:100%;border-collapse:collapse;}
+.amort-tbl th{background:#1C1206;color:#FDBA74;padding:6px 8px;font-size:10px;text-align:right;font-weight:700;border-bottom:2px solid var(--orange);}
+.amort-tbl th:first-child{text-align:left;}
+.amort-tbl td{padding:5px 8px;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:right;}
+.amort-tbl td:first-child{text-align:left;color:var(--muted);}
+.amort-tbl .tot-row td{background:rgba(217,119,6,0.1);font-weight:700;color:var(--gold2);}
+
+/* BUTTONS */
+.btn-p{background:linear-gradient(135deg,#C2410C,#EA580C);color:#fff;border:none;
+  padding:12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;}
+.btn-s{background:rgba(234,88,12,0.08);border:1px solid var(--border);color:#FDBA74;
+  padding:10px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;width:100%;margin-top:6px;}
+.btn-pay{background:linear-gradient(135deg,#B45309,#D97706);color:#fff;border:none;
+  padding:13px;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;width:100%;margin-top:8px;}
+.btn-report{background:linear-gradient(135deg,#065F46,#059669);color:#fff;border:none;
+  padding:11px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;width:100%;margin-top:6px;}
+.chk-row{display:flex;align-items:flex-start;gap:8px;padding:7px 0;}
+.chk-row input{width:14px;height:14px;flex-shrink:0;margin-top:2px;cursor:pointer;}
+.chk-row label{font-size:11px;color:var(--muted);cursor:pointer;line-height:1.5;}
+
+/* REPORT */
+body.reporting .topbar,body.reporting .hero,body.reporting .mod-tabs,
+body.reporting .content,body.reporting .save-banner{display:none!important;}
+.report-panel{display:none;}
+.report-panel.active{display:block;background:#E5E7EB;padding-bottom:40px;}
+.rpt-bar{position:sticky;top:0;display:flex;gap:8px;justify-content:center;padding:8px;
+  background:#0F172A;border-bottom:2px solid var(--orange);z-index:300;}
+.rpt-bar button{padding:8px 16px;border-radius:6px;border:1px solid var(--orange);
+  background:#C2410C;color:#fff;font-weight:700;cursor:pointer;font-size:12px;}
+.rpt{background:#fff;color:#111;padding:24px;max-width:760px;margin:0 auto;font-family:"Times New Roman",serif;}
+.rpt h1{font-size:20px;font-weight:900;text-align:center;color:#92400E;margin-bottom:4px;}
+.rpt h2{font-size:14px;font-weight:700;color:#92400E;border-bottom:2px solid #92400E;padding-bottom:4px;margin:16px 0 8px;}
+.rpt h3{font-size:12px;font-weight:700;color:#333;margin:10px 0 5px;}
+.rpt p,.rpt li{font-size:11px;line-height:1.7;color:#333;}
+.rpt table{width:100%;border-collapse:collapse;margin:8px 0 14px;font-size:11px;}
+.rpt table th{background:#92400E;color:#fff;padding:6px 8px;font-weight:700;text-align:right;}
+.rpt table th:first-child{text-align:left;}
+.rpt table td{padding:5px 8px;border-bottom:1px solid #E5E7EB;text-align:right;}
+.rpt table td:first-child{text-align:left;}
+.rpt table .tot-row td{background:#FEF3C7;font-weight:700;border-top:2px solid #B45309;}
+.rpt table .cat-row td{background:#FFF7ED;color:#92400E;font-weight:700;}
+.rpt .cover{text-align:center;padding:30px 0;border-bottom:2px solid #92400E;margin-bottom:20px;}
+.rpt .cover .logo{font-size:26px;font-weight:900;color:#92400E;}
+.rpt .cover .sub{font-size:13px;color:#6B7280;margin:4px 0;}
+.rpt .kpi-row{display:flex;gap:8px;margin:10px 0;}
+.rpt .kpi-box{flex:1;border:1px solid #E5E7EB;border-radius:6px;padding:8px;text-align:center;}
+.rpt .kpi-box .kv{font-size:16px;font-weight:900;color:#92400E;}
+.rpt .kpi-box .kl{font-size:9px;color:#6B7280;text-transform:uppercase;}
+@media print{.rpt-bar{display:none!important;} body.reporting{background:#fff;} .report-panel.active{background:#fff;padding:0;}}
+
+/* SUCCESS */
+.success-panel{display:none;text-align:center;padding:40px 20px;}
+.si{font-size:52px;margin-bottom:12px;}
+.st{font-size:18px;font-weight:900;color:#FB923C;margin-bottom:6px;}
+.ss{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;}
+.txid-box{background:var(--card);border:1px solid var(--orange);border-radius:7px;padding:9px;
+  font-size:10px;font-family:monospace;color:#FDBA74;word-break:break-all;margin-bottom:12px;}
+
+/* TOOLTIP */
+.tooltip-box{display:none;position:fixed;background:#1C1206;border:1px solid var(--orange);
+  border-radius:8px;padding:10px 14px;font-size:11px;color:#FDBA74;max-width:260px;
+  z-index:500;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  padding:9px 18px;border-radius:7px;font-size:12px;font-weight:600;
+  display:none;z-index:999;color:#fff;background:var(--orange);max-width:300px;text-align:center;}
+#toast.ok{background:#059669;} #toast.err{background:var(--red);}
+</style>
+</head>
+<body>
+
+<div class="tooltip-box" id="tooltip-box"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="t-left">
+    <a class="back" href="index.html">&#8592; <span data-fr="Accueil" data-en="Home">Accueil</span></a>
+    <div class="t-brand"><span>Build</span>Smart</div>
+  </div>
+  <div class="t-right">
+    <button class="save-btn" onclick="saveProject()">&#128190; <span data-fr="Sauvegarder" data-en="Save">Sauvegarder</span></button>
+    <div class="lang-wrap" style="display:flex;gap:4px;">
+      <button class="lbtn active" id="lbtn-fr" onclick="setLang('fr')">FR</button>
+      <button class="lbtn" id="lbtn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <div class="user-pill" id="user-pill">&#10003; <span id="uname">--</span></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">DOMAIN 4 &mdash; BUILDSMART</div>
+  <h1 id="hero-title">Assistant <em>Construction Intelligent</em></h1>
+  <p id="hero-sub">Devis, materiaux, plans, Smart House et expertise — tout en un. Rwanda · Kenya · USA</p>
+  <div class="rate-bar" id="rate-bar">&#9203; Chargement des taux...</div>
+</div>
+
+<!-- MODULE TABS -->
+<div class="mod-tabs">
+  <div class="mod-tab active" onclick="showModule('devis')" id="tab-devis">
+    <span class="icon">&#128203;</span>
+    <span data-fr="Devis & Estimation" data-en="Quote & Estimate">Devis & Estimation</span>
+  </div>
+  <div class="mod-tab" onclick="showModule('materiaux')" id="tab-materiaux">
+    <span class="icon">&#129521;</span>
+    <span data-fr="Materiaux" data-en="Materials">Materiaux</span>
+  </div>
+  <div class="mod-tab" onclick="showModule('plans')" id="tab-plans">
+    <span class="icon">&#128207;</span>
+    <span data-fr="Plans & Surfaces" data-en="Plans & Areas">Plans & Surfaces</span>
+  </div>
+  <div class="mod-tab" onclick="showModule('financement')" id="tab-financement">
+    <span class="icon">&#127970;</span>
+    <span data-fr="Financement" data-en="Financing">Financement</span>
+  </div>
+  <div class="mod-tab" onclick="showModule('smarthome')" id="tab-smarthome">
+    <span class="icon">&#129302;</span>
+    <span data-fr="Smart House" data-en="Smart House">Smart House</span>
+  </div>
+  <div class="mod-tab" onclick="showModule('expertise')" id="tab-expertise">
+    <span class="icon">&#128269;</span>
+    <span data-fr="Expertise" data-en="Expertise">Expertise</span>
+  </div>
+  <div class="mod-tab" onclick="showModule('rapport')" id="tab-rapport">
+    <span class="icon">&#128196;</span>
+    <span data-fr="Rapport" data-en="Report">Rapport</span>
+  </div>
+</div>
+
+<!-- SAVE BANNER -->
+<div class="save-banner" id="save-banner">
+  <span>&#128190; <span data-fr="Projet sauvegarde." data-en="Project saved.">Projet sauvegarde.</span> <span id="save-time" style="color:var(--muted);"></span></span>
+  <div style="display:flex;gap:6px">
+    <button class="restore-btn" onclick="restoreProject()" data-fr="Restaurer" data-en="Restore">Restaurer</button>
+    <button class="restore-btn" onclick="newProject()" data-fr="Nouveau" data-en="New">Nouveau</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══ MODULE 1: DEVIS & ESTIMATION ══ -->
+<div class="module active" id="mod-devis">
+
+  <!-- Identification -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#128203;</div>
+      <div>
+        <div class="sec-title" data-fr="Identification du Projet de Construction" data-en="Construction Project Identification">Identification du Projet de Construction</div>
+        <div class="sec-sub" data-fr="Informations generales sur le projet" data-en="General project information">Informations generales sur le projet</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label data-fr="Nom du projet *" data-en="Project Name *">Nom du projet *</label>
+        <input type="text" id="b-nom" placeholder="Ex: Villa UWASE — Kigali Nyarutarama"/>
+      </div>
+      <div class="field">
+        <label data-fr="Reference" data-en="Reference">Reference</label>
+        <input type="text" id="b-ref" placeholder="Ex: BS-2026-001"/>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label data-fr="Type de projet *" data-en="Project Type *">Type de projet *</label>
+        <select id="b-type" onchange="updateProjectType()">
+          <option value="maison" data-fr="Maison individuelle" data-en="Individual house">Maison individuelle</option>
+          <option value="villa" data-fr="Villa / Residence de luxe" data-en="Villa / Luxury residence">Villa / Residence de luxe</option>
+          <option value="immeuble" data-fr="Immeuble / Batiment" data-en="Building / Apartment block">Immeuble / Batiment</option>
+          <option value="hotel" data-fr="Hotel / Auberge" data-en="Hotel / Guesthouse">Hotel / Auberge</option>
+          <option value="commercial" data-fr="Batiment commercial" data-en="Commercial building">Batiment commercial</option>
+          <option value="renovation" data-fr="Renovation / Extension" data-en="Renovation / Extension">Renovation / Extension</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-fr="Standing *" data-en="Standard *">Standing *</label>
+        <select id="b-standing" onchange="recalcAll()">
+          <option value="eco" data-fr="Economique (200-350 k FRW/m2)" data-en="Economy (200-350k FRW/m2)">Economique</option>
+          <option value="std" selected data-fr="Standard (350-550 k FRW/m2)" data-en="Standard (350-550k FRW/m2)">Standard</option>
+          <option value="haut" data-fr="Haut standing (550-900 k FRW/m2)" data-en="High-end (550-900k FRW/m2)">Haut standing</option>
+          <option value="luxe" data-fr="Luxe (900k+ FRW/m2)" data-en="Luxury (900k+ FRW/m2)">Luxe</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-fr="Pays" data-en="Country">Pays</label>
+        <select id="b-pays">
+          <option value="RW">Rwanda (RW)</option>
+          <option value="KE">Kenya</option>
+          <option value="US">USA</option>
+          <option value="OTHER" data-fr="Autre" data-en="Other">Autre</option>
+        </select>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label data-fr="Localisation *" data-en="Location *">Localisation *</label>
+        <input type="text" id="b-lieu" placeholder="Ex: Kigali — Nyarutarama"/>
+      </div>
+      <div class="field">
+        <label data-fr="Date de debut prevue" data-en="Expected Start Date">Date de debut</label>
+        <input type="date" id="b-start"/>
+      </div>
+      <div class="field">
+        <label data-fr="Duree prevue (mois)" data-en="Expected Duration (months)">Duree (mois)</label>
+        <input type="number" id="b-duree" value="12" min="1" max="120" oninput="recalcAll()"/>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label data-fr="Surface totale (m2) *" data-en="Total Area (m2) *">Surface totale (m2) *
+          <span class="tip" onclick="showTip(this,'Surface habitable totale. Sera recalculee automatiquement si vous renseignez les pieces dans Plans & Surfaces.')">?</span>
+        </label>
+        <input type="number" id="b-surface" value="150" min="10" oninput="recalcAll()" style="color:var(--gold2);font-weight:700;"/>
+        <div class="hint" id="surface-hint" data-fr="Saisie manuelle — sera recalculee depuis les pieces (onglet Plans)" data-en="Manual entry — recalculated from rooms (Plans tab)">Saisie manuelle — sera recalculee depuis les pieces</div>
+      </div>
+      <div class="field">
+        <label data-fr="Nombre de niveaux" data-en="Number of floors">Niveaux / Etages</label>
+        <input type="number" id="b-niveaux" value="1" min="1" max="20" oninput="recalcAll()"/>
+      </div>
+      <div class="field">
+        <label data-fr="Cout unitaire (FRW/m2)" data-en="Unit cost (FRW/m2)">Cout (FRW/m2)
+          <span class="tip" onclick="showTip(this,'Cout de construction par m2. Ajuste automatiquement selon le standing. Vous pouvez modifier.')">?</span>
+        </label>
+        <input type="number" id="b-cout-m2" value="400000" min="50000" oninput="recalcAll()" style="color:var(--gold2);"/>
+      </div>
+    </div>
+    <div class="field">
+      <label data-fr="Description du projet" data-en="Project Description">Description</label>
+      <textarea id="b-desc" rows="2" placeholder="Decrivez brievement le projet de construction..."></textarea>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" id="kpi-devis"></div>
+
+  <!-- Phases de construction -->
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#128204;</div>
+      <div>
+        <div class="sec-title" data-fr="Devis par Phase de Construction" data-en="Quote by Construction Phase">Devis par Phase de Construction</div>
+        <div class="sec-sub" data-fr="Couts calcules automatiquement selon surface et standing — modifiables" data-en="Costs calculated automatically by area and standard — editable">Couts calcules automatiquement — modifiables</div>
+      </div>
+    </div>
+    <div class="note-info" data-fr="&#9432; Les pourcentages et montants sont calcules automatiquement. Vous pouvez modifier chaque montant selon votre devis reel." data-en="&#9432; Percentages and amounts are calculated automatically. You can edit each amount according to your actual quote.">
+      &#9432; Montants calcules automatiquement selon surface et standing. Modifiables.
+    </div>
+    <div class="tbl-wrap">
+      <table class="xtbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:200px" data-fr="Phase de construction" data-en="Construction phase">Phase de construction</th>
+            <th style="min-width:70px" data-fr="% du total" data-en="% of total">% total</th>
+            <th style="min-width:130px" data-fr="Montant (FRW)" data-en="Amount (FRW)">Montant (FRW)</th>
+            <th style="min-width:90px">USD</th>
+            <th style="min-width:80px">Pi</th>
+          </tr>
+        </thead>
+        <tbody id="phases-body"></tbody>
+        <tfoot>
+          <tr class="tot-row">
+            <td data-fr="COUT TOTAL CONSTRUCTION" data-en="TOTAL CONSTRUCTION COST">COUT TOTAL CONSTRUCTION</td>
+            <td id="phases-pct-tot">100%</td>
+            <td id="phases-tot-frw">0 FRW</td>
+            <td id="phases-tot-usd">$0</td>
+            <td id="phases-tot-pi">0 Pi</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Autres couts -->
+    <div style="font-size:11px;font-weight:700;color:#FDBA74;margin:12px 0 6px" data-fr="Autres Couts du Projet" data-en="Other Project Costs">Autres Couts du Projet</div>
+    <div class="tbl-wrap">
+      <table class="xtbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:180px" data-fr="Poste" data-en="Item">Poste</th>
+            <th style="min-width:130px" data-fr="Montant (FRW)" data-en="Amount (FRW)">Montant (FRW)</th>
+            <th style="min-width:90px">USD</th>
+            <th style="min-width:80px">Pi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td data-fr="Etudes et plans d'architecte" data-en="Architect fees and plans">Etudes et plans d'architecte</td>
+            <td><input type="number" id="oc-archi" placeholder="0" min="0" oninput="recalcAll()"/></td>
+            <td id="oc-archi-u" class="co">$0</td><td id="oc-archi-p" class="cb">0 Pi</td></tr>
+          <tr><td data-fr="Permis de construire et taxes" data-en="Building permit and taxes">Permis de construire et taxes</td>
+            <td><input type="number" id="oc-permis" placeholder="0" min="0" oninput="recalcAll()"/></td>
+            <td id="oc-permis-u" class="co">$0</td><td id="oc-permis-p" class="cb">0 Pi</td></tr>
+          <tr><td data-fr="Raccordements (eau, electricite, egouts)" data-en="Connections (water, electricity, sewage)">Raccordements (eau, electricite, egouts)</td>
+            <td><input type="number" id="oc-raccord" placeholder="0" min="0" oninput="recalcAll()"/></td>
+            <td id="oc-raccord-u" class="co">$0</td><td id="oc-raccord-p" class="cb">0 Pi</td></tr>
+          <tr><td data-fr="Amenagement exterieur (cloture, jardin)" data-en="External works (fence, garden)">Amenagement exterieur (cloture, jardin)</td>
+            <td><input type="number" id="oc-ext" placeholder="0" min="0" oninput="recalcAll()"/></td>
+            <td id="oc-ext-u" class="co">$0</td><td id="oc-ext-p" class="cb">0 Pi</td></tr>
+          <tr><td data-fr="Imprevu / Reserve (recommande 10%)" data-en="Contingency / Reserve (recommended 10%)">Imprevu / Reserve (recommande 10%)
+            <span class="tip" onclick="showTip(this,'Toujours prevoir une reserve de 10% minimum pour les imprevu de chantier.')">?</span>
+          </td>
+            <td><input type="number" id="oc-reserve" placeholder="0" min="0" oninput="recalcAll()"/></td>
+            <td id="oc-reserve-u" class="co">$0</td><td id="oc-reserve-p" class="cb">0 Pi</td></tr>
+        </tbody>
+        <tfoot>
+          <tr class="tot-row">
+            <td data-fr="COUT TOTAL DU PROJET" data-en="TOTAL PROJECT COST">COUT TOTAL DU PROJET</td>
+            <td id="cout-total-frw">0 FRW</td>
+            <td id="cout-total-usd">$0</td>
+            <td id="cout-total-pi">0 Pi</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Suivi avancement -->
+    <div style="font-size:11px;font-weight:700;color:#FDBA74;margin:12px 0 6px" data-fr="Suivi d'Avancement du Chantier" data-en="Site Progress Tracking">Suivi d'Avancement du Chantier</div>
+    <div class="phase-grid" id="avancement-grid"></div>
+  </div>
+
+  <button class="btn-p" onclick="showModule('materiaux')" data-fr="Continuer &#8594; Calcul des Materiaux" data-en="Continue &#8594; Materials Calculation">Continuer &#8594; Calcul des Materiaux</button>
+</div>
+
+<!-- ══ MODULE 2: MATERIAUX ══ -->
+<div class="module" id="mod-materiaux">
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#129521;</div>
+      <div>
+        <div class="sec-title" data-fr="Calcul des Materiaux de Construction" data-en="Construction Materials Calculation">Calcul des Materiaux de Construction</div>
+        <div class="sec-sub" data-fr="Quantites calculees automatiquement selon surface et type de projet — modifiables" data-en="Quantities automatically calculated by area and project type — editable">Quantites calculees automatiquement — modifiables</div>
+      </div>
+    </div>
+    <div class="note-ok" id="mat-note">
+      &#9432; <span data-fr="Quantites estimees selon les normes de construction Rwanda. Modifiez selon votre projet reel." data-en="Quantities estimated per Rwanda construction standards. Edit as needed for your actual project.">Quantites estimees selon les normes Rwanda. Modifiables.</span>
+    </div>
+    <div class="tbl-wrap">
+      <table class="xtbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:160px" data-fr="Materiau" data-en="Material">Materiau</th>
+            <th style="min-width:100px" data-fr="Quantite calculee" data-en="Calculated qty">Qte calculee</th>
+            <th style="min-width:60px" data-fr="Unite" data-en="Unit">Unite</th>
+            <th style="min-width:100px" data-fr="Prix unitaire (FRW)" data-en="Unit Price (FRW)">Prix unit. (FRW)</th>
+            <th style="min-width:130px" data-fr="Total (FRW)" data-en="Total (FRW)">Total (FRW)</th>
+            <th style="min-width:90px">USD</th>
+            <th style="min-width:80px" data-fr="Source" data-en="Source">Source</th>
+          </tr>
+        </thead>
+        <tbody id="mat-body"></tbody>
+        <tfoot>
+          <tr class="tot-row">
+            <td colspan="4" data-fr="TOTAL MATERIAUX" data-en="TOTAL MATERIALS">TOTAL MATERIAUX</td>
+            <td id="mat-tot-frw">0 FRW</td>
+            <td id="mat-tot-usd">$0</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <button class="btn-add" onclick="addMatRow()" data-fr="+ Ajouter un materiau" data-en="+ Add a material">+ Ajouter un materiau</button>
+    <div class="tbox">
+      <span class="lbl" data-fr="TOTAL MATERIAUX / COUT CONSTRUCTION" data-en="MATERIALS / CONSTRUCTION COST">MATERIAUX / COUT CONSTRUCTION</span>
+      <span class="val" id="mat-ratio">0%</span>
+    </div>
+  </div>
+  <button class="btn-p" onclick="showModule('plans')" data-fr="Continuer &#8594; Plans & Surfaces" data-en="Continue &#8594; Plans & Areas">Continuer &#8594; Plans & Surfaces</button>
+  <button class="btn-s" onclick="showModule('devis')" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+</div>
+
+<!-- ══ MODULE 3: PLANS & SURFACES ══ -->
+<div class="module" id="mod-plans">
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#128207;</div>
+      <div>
+        <div class="sec-title" data-fr="Description des Pieces et Surfaces" data-en="Room Description and Areas">Description des Pieces et Surfaces</div>
+        <div class="sec-sub" data-fr="Decrivez chaque piece — la surface totale sera calculee automatiquement" data-en="Describe each room — total area calculated automatically">Surface totale calculee automatiquement</div>
+      </div>
+    </div>
+    <div class="note-info" data-fr="&#9432; Saisissez chaque piece avec ses dimensions. La surface est calculee automatiquement (L x l). Le total sera repris dans le devis." data-en="&#9432; Enter each room with dimensions. Area calculated automatically (L x W). Total feeds into the quote.">
+      &#9432; Saisissez longueur x largeur — surface calculee automatiquement. Total repris dans le devis.
+    </div>
+    <div class="tbl-wrap">
+      <table class="xtbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:140px" data-fr="Piece / Espace" data-en="Room / Space">Piece / Espace</th>
+            <th style="min-width:80px" data-fr="Longueur (m)" data-en="Length (m)">Long. (m)</th>
+            <th style="min-width:80px" data-fr="Largeur (m)" data-en="Width (m)">Larg. (m)</th>
+            <th style="min-width:80px" data-fr="Hauteur (m)" data-en="Height (m)">Haut. (m)</th>
+            <th style="min-width:90px" data-fr="Surface (m2)" data-en="Area (m2)">Surface (m2)</th>
+            <th style="min-width:90px" data-fr="Type" data-en="Type">Type</th>
+            <th style="min-width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="rooms-body"></tbody>
+        <tfoot>
+          <tr class="tot-row">
+            <td colspan="4" data-fr="SURFACE TOTALE (hors murs)" data-en="TOTAL AREA (excluding walls)">SURFACE TOTALE (hors murs)</td>
+            <td id="rooms-tot-m2">0 m2</td>
+            <td id="rooms-tot-info"></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <button class="btn-add" onclick="addRoomRow()" data-fr="+ Ajouter une piece" data-en="+ Add a room">+ Ajouter une piece</button>
+
+    <!-- Summary pieces -->
+    <div id="rooms-summary" style="margin-top:10px"></div>
+
+    <div class="tbox" style="margin-top:8px">
+      <span class="lbl" data-fr="Surface totale calculee" data-en="Calculated total area">Surface totale calculee</span>
+      <span class="val" id="rooms-tot-display">0 m2</span>
+    </div>
+    <div class="note-warn" style="margin-top:6px" data-fr="&#9432; Cette surface sera automatiquement appliquee dans le devis. Pensez a ajouter 15-20% pour les murs, couloirs et escaliers." data-en="&#9432; This area will be automatically applied to the quote. Remember to add 15-20% for walls, corridors and stairs.">
+      &#9432; Ajoutez 15-20% pour murs, couloirs et escaliers. La surface sera appliquee au devis.
+    </div>
+    <button class="btn-p" onclick="applySurfaceToDevis()" style="margin-top:8px" data-fr="&#10003; Appliquer cette surface au devis" data-en="&#10003; Apply this area to the quote">&#10003; Appliquer cette surface au devis</button>
+  </div>
+  <button class="btn-p" onclick="showModule('financement')" data-fr="Continuer &#8594; Financement" data-en="Continue &#8594; Financing">Continuer &#8594; Financement</button>
+  <button class="btn-s" onclick="showModule('materiaux')" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+</div>
+
+<!-- ══ MODULE 4: FINANCEMENT ══ -->
+<div class="module" id="mod-financement">
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#127970;</div>
+      <div>
+        <div class="sec-title" data-fr="Plan de Financement du Projet" data-en="Project Financing Plan">Plan de Financement du Projet</div>
+        <div class="sec-sub" data-fr="Structure du financement — le total doit egaliser le cout du projet" data-en="Financing structure — total must equal project cost">Total doit egaliser le cout du projet</div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="xtbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:200px" data-fr="Source" data-en="Source">Source</th>
+            <th style="min-width:160px" data-fr="Montant (FRW)" data-en="Amount (FRW)">Montant (FRW)</th>
+            <th style="min-width:70px">%</th>
+            <th style="min-width:100px">USD</th>
+            <th style="min-width:90px">Pi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tot-row">
+            <td data-fr="COUT TOTAL DU PROJET" data-en="TOTAL PROJECT COST">COUT TOTAL DU PROJET</td>
+            <td id="fn-cout" class="co" style="font-weight:900">0 FRW</td>
+            <td class="co" style="font-weight:900">100%</td>
+            <td id="fn-cout-u">$0</td><td id="fn-cout-p">0 Pi</td>
+          </tr>
+          <tr style="background:rgba(5,150,105,0.05)">
+            <td>
+              <strong data-fr="Apport propre du proprietaire" data-en="Owner own contribution">Apport propre</strong>
+              <div style="display:flex;gap:4px;margin-top:4px">
+                <input type="number" id="fn-cash" placeholder="0 FRW (especes)" min="0" oninput="recalcFin()" style="flex:1"/>
+                <input type="number" id="fn-nature" placeholder="0 FRW (nature)" min="0" oninput="recalcFin()" style="flex:1"/>
+              </div>
+              <div class="hint" data-fr="Especes + apports en nature (terrain, materiaux...)" data-en="Cash + in-kind (land, materials...)">Especes + nature (terrain, materiaux...)</div>
+            </td>
+            <td id="fn-fp-tot" class="cg" style="font-weight:700">0 FRW</td>
+            <td><span id="fn-fp-pct" style="font-weight:700">0%</span><div id="fn-fp-alert" style="font-size:9px;color:#FCA5A5;display:none"></div></td>
+            <td id="fn-fp-u" class="cg">$0</td><td id="fn-fp-p" class="cg">0 Pi</td>
+          </tr>
+          <tr>
+            <td data-fr="Credit bancaire / Pret habitat" data-en="Bank loan / Home loan">Credit bancaire / Pret habitat</td>
+            <td><input type="number" id="fn-credit" placeholder="0" min="0" oninput="recalcFin()"/></td>
+            <td id="fn-credit-pct" class="cb">0%</td>
+            <td id="fn-credit-u" class="co">$0</td><td id="fn-credit-p" class="co">0 Pi</td>
+          </tr>
+          <tr>
+            <td data-fr="Subvention / Programme logement" data-en="Grant / Housing program">Subvention / Programme logement</td>
+            <td><input type="number" id="fn-subv" placeholder="0" min="0" oninput="recalcFin()"/></td>
+            <td id="fn-subv-pct" class="cb">0%</td>
+            <td id="fn-subv-u" class="co">$0</td><td id="fn-subv-p" class="co">0 Pi</td>
+          </tr>
+          <tr>
+            <td data-fr="Autres sources" data-en="Other sources">Autres sources</td>
+            <td><input type="number" id="fn-autres" placeholder="0" min="0" oninput="recalcFin()"/></td>
+            <td id="fn-autres-pct" class="cb">0%</td>
+            <td id="fn-autres-u" class="co">$0</td><td id="fn-autres-p" class="co">0 Pi</td>
+          </tr>
+          <tr class="subtot">
+            <td style="font-weight:700" data-fr="TOTAL FINANCEMENT MOBILISE" data-en="TOTAL FINANCING RAISED">TOTAL FINANCEMENT MOBILISE</td>
+            <td id="fn-tot" class="co" style="font-weight:700">0 FRW</td>
+            <td id="fn-tot-pct" class="co" style="font-weight:700">0%</td>
+            <td id="fn-tot-u">$0</td><td id="fn-tot-p">0 Pi</td>
+          </tr>
+          <tr>
+            <td data-fr="Ecart (financement - cout)" data-en="Gap (financing - cost)">Ecart</td>
+            <td id="fn-ecart" style="font-weight:700">0 FRW</td>
+            <td colspan="3" id="fn-ecart-msg"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="fn-validation" class="note-info"></div>
+
+    <!-- Ratios -->
+    <div class="row3" style="margin-top:8px">
+      <div class="tbox"><span class="lbl" data-fr="Fonds propres" data-en="Equity">Fonds propres</span><span class="val" id="fn-fp-pct2">0%</span></div>
+      <div class="tbox"><span class="lbl" data-fr="Ratio dette/FP" data-en="Debt/Equity">Ratio dette/FP</span><span class="val" id="fn-ratio">—</span></div>
+      <div class="tbox"><span class="lbl" data-fr="Cout/m2 total" data-en="Total cost/m2">Cout/m2 total</span><span class="val co" id="fn-cout-m2">—</span></div>
+    </div>
+  </div>
+
+  <!-- Credit terms -->
+  <div class="sec" id="fn-credit-sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#127970;</div>
+      <div>
+        <div class="sec-title" data-fr="Conditions du Credit / Pret Habitat" data-en="Loan / Mortgage Terms">Conditions du Credit / Pret Habitat</div>
+        <div class="sec-sub" data-fr="Tableau d'amortissement genere automatiquement" data-en="Amortization schedule generated automatically">Tableau d'amortissement genere automatiquement</div>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label data-fr="Montant du credit (FRW)" data-en="Loan Amount (FRW)">Montant credit (FRW)</label>
+        <input type="number" id="cr-montant" placeholder="0" min="0" oninput="recalcCredit()" style="color:var(--gold2)"/>
+      </div>
+      <div class="field">
+        <label data-fr="Taux annuel (%)" data-en="Annual Rate (%)">Taux annuel (%)
+          <span class="tip" onclick="showTip(this,'Rwanda: 16-22% generalement. Reference indicative — verifiez avec votre banque.')">?</span>
+        </label>
+        <input type="number" id="cr-taux" value="18" min="0" max="60" step="0.25" oninput="recalcCredit()"/>
+      </div>
+      <div class="field">
+        <label data-fr="Duree (ans)" data-en="Term (years)">Duree (ans)</label>
+        <select id="cr-duree" onchange="recalcCredit()">
+          <option value="5">5 ans</option>
+          <option value="10">10 ans</option>
+          <option value="15" selected>15 ans</option>
+          <option value="20">20 ans</option>
+          <option value="25">25 ans</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label data-fr="Periode de grace (mois)" data-en="Grace Period (months)">Grace (mois)</label>
+        <input type="number" id="cr-grace" value="0" min="0" max="24" oninput="recalcCredit()"/>
+      </div>
+      <div class="field">
+        <label data-fr="Frequence" data-en="Frequency">Frequence</label>
+        <select id="cr-freq" onchange="recalcCredit()">
+          <option value="12" data-fr="Mensuelle" data-en="Monthly">Mensuelle</option>
+          <option value="4" data-fr="Trimestrielle" data-en="Quarterly">Trimestrielle</option>
+          <option value="1" data-fr="Annuelle" data-en="Annual">Annuelle</option>
+        </select>
+      </div>
+    </div>
+    <div id="credit-summary-body" class="note-info" style="margin-top:6px"></div>
+    <div class="tbl-wrap" style="margin-top:10px">
+      <table class="amort-tbl">
+        <thead>
+          <tr>
+            <th style="text-align:left" data-fr="Periode" data-en="Period">Periode</th>
+            <th data-fr="Capital debut" data-en="Opening">Capital debut</th>
+            <th data-fr="Principal" data-en="Principal">Principal</th>
+            <th data-fr="Interets" data-en="Interest">Interets</th>
+            <th data-fr="Annuite" data-en="Payment">Annuite</th>
+            <th data-fr="Capital fin" data-en="Closing">Capital fin</th>
+          </tr>
+        </thead>
+        <tbody id="amort-body"></tbody>
+        <tfoot>
+          <tr class="tot-row">
+            <td>TOTAL</td><td></td>
+            <td id="amort-cap">0 FRW</td>
+            <td id="amort-int" class="cr">0 FRW</td>
+            <td id="amort-ann">0 FRW</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <button class="btn-p" onclick="showModule('smarthome')" data-fr="Continuer &#8594; Smart House" data-en="Continue &#8594; Smart House">Continuer &#8594; Smart House</button>
+  <button class="btn-s" onclick="showModule('plans')" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+</div>
+
+<!-- ══ MODULE 5: SMART HOUSE ══ -->
+<div class="module" id="mod-smarthome">
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#129302;</div>
+      <div>
+        <div class="sec-title" data-fr="Smart House — Domotique & Robotique" data-en="Smart House — Home Automation & Robotics">Smart House — Domotique & Robotique</div>
+        <div class="sec-sub" data-fr="Selectionnez les systemes intelligents — cout total calcule automatiquement" data-en="Select smart systems — total cost calculated automatically">Cout calcule automatiquement</div>
+      </div>
+    </div>
+    <div class="note-info" data-fr="&#9432; Les couts sont des estimations indicatives Rwanda 2026. Obtenez des devis aupres d'installateurs agrees." data-en="&#9432; Costs are indicative estimates Rwanda 2026. Get quotes from approved installers.">
+      &#9432; Estimations indicatives Rwanda 2026. Obtenez des devis aupres d'installateurs agrees.
+    </div>
+    <div class="smart-grid" id="smart-grid"></div>
+    <div class="tbox">
+      <span class="lbl" data-fr="COUT TOTAL SMART HOUSE" data-en="TOTAL SMART HOUSE COST">COUT TOTAL SMART HOUSE</span>
+      <span class="val" id="smart-total">0 FRW</span>
+    </div>
+    <div class="tbox" style="margin-top:6px">
+      <span class="lbl" data-fr="% du cout total de construction" data-en="% of total construction cost">% du cout de construction</span>
+      <span class="val cp" id="smart-pct">0%</span>
+    </div>
+  </div>
+  <button class="btn-p" onclick="showModule('expertise')" data-fr="Continuer &#8594; Expertise" data-en="Continue &#8594; Expertise">Continuer &#8594; Expertise</button>
+  <button class="btn-s" onclick="showModule('financement')" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+</div>
+
+<!-- ══ MODULE 6: EXPERTISE ══ -->
+<div class="module" id="mod-expertise">
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#128269;</div>
+      <div>
+        <div class="sec-title" data-fr="Expertise & Evaluation de Bien Immobilier" data-en="Property Expertise & Valuation">Expertise & Evaluation de Bien Immobilier</div>
+        <div class="sec-sub" data-fr="Pour maisons et batiments existants — rapport d'expertise genere automatiquement" data-en="For existing houses and buildings — expertise report generated automatically">Rapport d'expertise genere automatiquement</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label data-fr="Adresse du bien" data-en="Property Address">Adresse du bien</label>
+        <input type="text" id="ex-addr" placeholder="Ex: KG 123 St, Kigali — Nyarugenge"/>
+      </div>
+      <div class="field">
+        <label data-fr="Annee de construction" data-en="Year of Construction">Annee de construction</label>
+        <input type="number" id="ex-annee" placeholder="Ex: 2010" min="1900" max="2026"/>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label data-fr="Surface totale (m2)" data-en="Total Area (m2)">Surface (m2)</label>
+        <input type="number" id="ex-surface" placeholder="150" min="1" oninput="recalcExpertise()"/>
+      </div>
+      <div class="field">
+        <label data-fr="Nombre de pieces" data-en="Number of Rooms">Nombre de pieces</label>
+        <input type="number" id="ex-pieces" placeholder="5" min="1"/>
+      </div>
+      <div class="field">
+        <label data-fr="Nombre de niveaux" data-en="Number of Floors">Niveaux</label>
+        <input type="number" id="ex-niveaux" placeholder="1" min="1" max="20"/>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="field">
+        <label data-fr="Type de construction" data-en="Construction Type">Type</label>
+        <select id="ex-type">
+          <option value="dur" data-fr="Construction en dur (beton/brique)" data-en="Solid construction (concrete/brick)">Construction en dur</option>
+          <option value="mixte" data-fr="Construction mixte" data-en="Mixed construction">Mixte</option>
+          <option value="leger" data-fr="Construction legere" data-en="Light construction">Legere</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-fr="Zone / Quartier" data-en="Area / Neighborhood">Zone</label>
+        <select id="ex-zone">
+          <option value="prime" data-fr="Zone premium (Nyarutarama, Kiyovu...)" data-en="Premium area">Zone premium</option>
+          <option value="resid" data-fr="Zone residentielle" data-en="Residential area">Zone residentielle</option>
+          <option value="periph" data-fr="Peripherie / Zone semi-urbaine" data-en="Periphery / Semi-urban">Peripherie</option>
+          <option value="rural" data-fr="Zone rurale" data-en="Rural area">Zone rurale</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-fr="Etat general" data-en="General Condition">Etat general</label>
+        <select id="ex-etat" onchange="recalcExpertise()">
+          <option value="neuf" data-fr="Neuf / Excellent" data-en="New / Excellent">Neuf / Excellent</option>
+          <option value="bon" data-fr="Bon etat" data-en="Good condition" selected>Bon etat</option>
+          <option value="moyen" data-fr="Etat moyen — entretien necessaire" data-en="Average — maintenance needed">Etat moyen</option>
+          <option value="mauvais" data-fr="Mauvais etat — travaux importants" data-en="Poor condition — major works needed">Mauvais etat</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grille d'evaluation -->
+    <div style="font-size:11px;font-weight:700;color:#FDBA74;margin:12px 0 6px" data-fr="Grille d'Evaluation Detaillee" data-en="Detailed Assessment Grid">Grille d'Evaluation Detaillee</div>
+    <div class="tbl-wrap">
+      <table class="xtbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:160px" data-fr="Element" data-en="Element">Element</th>
+            <th style="min-width:90px" data-fr="Note (/20)" data-en="Score (/20)">Note (/20)</th>
+            <th style="min-width:200px" data-fr="Observations" data-en="Observations">Observations</th>
+          </tr>
+        </thead>
+        <tbody id="expertise-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Score global -->
+    <div class="expertise-score" id="expertise-score">
+      <div class="exp-grade" id="ex-grade">—</div>
+      <div class="exp-label" id="ex-label" data-fr="Entrez les donnees ci-dessus" data-en="Enter data above">Entrez les donnees ci-dessus</div>
+      <div class="exp-sub" id="ex-sub"></div>
+    </div>
+
+    <!-- Valeurs estimatives -->
+    <div style="font-size:11px;font-weight:700;color:#FDBA74;margin:12px 0 6px" data-fr="Valeurs Estimatives (indicatives)" data-en="Estimated Values (indicative)">Valeurs Estimatives (indicatives)</div>
+    <div class="tbl-wrap">
+      <table class="xtbl">
+        <thead>
+          <tr>
+            <th style="text-align:left" data-fr="Indicateur" data-en="Indicator">Indicateur</th>
+            <th data-fr="Valeur (FRW)" data-en="Value (FRW)">Valeur (FRW)</th>
+            <th data-fr="Valeur (USD)" data-en="Value (USD)">Valeur (USD)</th>
+            <th data-fr="Base de calcul" data-en="Calculation base">Base de calcul</th>
+          </tr>
+        </thead>
+        <tbody id="expertise-vals"></tbody>
+      </table>
+    </div>
+    <div class="note-warn" data-fr="&#9432; Ces estimations sont indicatives. Pour une expertise officielle reconnue par les banques et les tribunaux, faites appel a un expert immobilier agree." data-en="&#9432; These estimates are indicative. For an official appraisal recognized by banks and courts, use a certified real estate appraiser.">
+      &#9432; Estimations indicatives — pour expertise officielle, contactez un expert agree.
+    </div>
+  </div>
+  <button class="btn-p" onclick="showModule('rapport')" data-fr="Continuer &#8594; Rapport Final" data-en="Continue &#8594; Final Report">Continuer &#8594; Rapport Final</button>
+  <button class="btn-s" onclick="showModule('smarthome')" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+</div>
+
+<!-- ══ MODULE 7: RAPPORT ══ -->
+<div class="module" id="mod-rapport">
+  <div class="sec">
+    <div class="sec-hdr">
+      <div class="sec-icon">&#128196;</div>
+      <div>
+        <div class="sec-title" data-fr="Rapport BuildSmart Complet" data-en="Full BuildSmart Report">Rapport BuildSmart Complet</div>
+        <div class="sec-sub" data-fr="Document professionnel pret a imprimer ou partager" data-en="Professional document ready to print or share">Document professionnel pret a imprimer</div>
+      </div>
+    </div>
+    <div id="rapport-summary"></div>
+    <div class="note-warn" style="margin-top:10px" data-fr="&#9432; Ce rapport est un outil d'aide a la decision. Les estimations de couts et de valeurs sont indicatives. Consultez un architecte agree et un expert immobilier certifie pour validation officielle." data-en="&#9432; This report is a decision-support tool. Cost and value estimates are indicative. Consult a licensed architect and certified real estate expert for official validation.">
+      &#9432; Outil d'aide a la decision. Consultez un architecte agree pour validation officielle.
+    </div>
+    <div class="chk-row">
+      <input type="checkbox" id="chk1"/>
+      <label for="chk1" data-fr="Je comprends que ce rapport est un outil consultatif et non une expertise officielle" data-en="I understand this report is advisory and not an official expert appraisal">Je comprends que ce rapport est un outil consultatif</label>
+    </div>
+    <div class="chk-row">
+      <input type="checkbox" id="chk2"/>
+      <label for="chk2" data-fr="Je confirme l'exactitude des donnees saisies" data-en="I confirm the accuracy of the data entered">Je confirme l'exactitude des donnees saisies</label>
+    </div>
+    <button class="btn-report" onclick="printReport()" data-fr="&#128424; Imprimer / Exporter le Rapport" data-en="&#128424; Print / Export Report">&#128424; Imprimer / Exporter le Rapport</button>
+    <button class="btn-pay" onclick="pay()" data-fr="&#128176; Payer 5 Pi — Rapport Complet BuildSmart" data-en="&#128176; Pay 5 Pi — Full BuildSmart Report">&#128176; Payer 5 Pi — Rapport Complet BuildSmart</button>
+    <button class="btn-s" onclick="showModule('expertise')" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<!-- SUCCESS -->
+<div class="success-panel" id="success-panel">
+  <div class="si">&#127881;</div>
+  <div class="st" data-fr="Rapport BuildSmart commande!" data-en="BuildSmart Report ordered!">Rapport BuildSmart commande!</div>
+  <div class="ss" data-fr="Votre rapport professionnel sera livre dans les 7 jours ouvrables." data-en="Your professional report will be delivered within 7 business days.">Votre rapport sera livre dans les 7 jours ouvrables.</div>
+  <div class="txid-box" id="txid-box">TXID: --</div>
+  <button class="btn-p" onclick="location.href='index.html'" style="max-width:280px;margin:0 auto;display:block" data-fr="Retour a VitaNova" data-en="Back to VitaNova">Retour a VitaNova</button>
+</div>
+
+<!-- REPORT -->
+<div class="report-panel" id="report-panel">
+  <div class="rpt-bar">
+    <button onclick="window.print()" data-fr="Imprimer / PDF" data-en="Print / PDF">&#128424; Imprimer / PDF</button>
+    <button onclick="closeReport()" style="background:#374151" data-fr="Fermer" data-en="Close">&#8592; Fermer</button>
+  </div>
+  <div class="rpt" id="rpt-content"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+// BUILDSMART v1.0 — JavaScript Engine
+// ════════════════════════════════════════
+const GCV_DEFAULT = 314159;
+let BNR_RATE = 1350;
+let lang = "fr";
+let roomCount = 0, matCount = 0, smartCount = 0;
+let expertiseRows = [];
+
+// AUTH
+class AuthService {
+  constructor(){ this.user=null; }
+  onIncompletePaymentFound(p){ console.warn("Incomplete:",p.identifier); }
+  async login(scopes){
+    try{
+      await Pi.init({version:"2.0",sandbox:true});
+      const auth = await Pi.authenticate(scopes, this.onIncompletePaymentFound);
+      this.user = auth.user;
+      return {success:true, user:auth.user};
+    }catch(e){ return {success:false, error:e.message}; }
+  }
+}
+const piService = new AuthService();
+
+// ── INIT ──
+window.addEventListener("load", function(){
+  fetchBNR().then(function(){ initAll(); }).catch(function(){ initAll(); });
+  setTimeout(function(){
+    applyLang();
+    try{
+      piService.login(["username","payments"]).then(function(r){
+        if(r&&r.success){
+          document.getElementById("uname").textContent="@"+r.user.username;
+          document.getElementById("user-pill").style.display="flex";
+        }
+      }).catch(function(){});
+    }catch(e){}
+  },400);
+  checkSaved();
+});
+
+function initAll(){
+  buildPhases();
+  buildMaterials();
+  buildSmartHome();
+  buildExpertiseGrid();
+  initDefaultRooms();
+  recalcAll();
+  buildRapportSummary();
+}
+
+// ── BNR ──
+async function fetchBNR(){
+  try{
+    const r = await Promise.race([
+      fetch("https://api.exchangerate-api.com/v4/latest/USD"),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),5000))
+    ]);
+    const d = await r.json();
+    BNR_RATE = d.rates["RWF"]||1350;
+  }catch(e){ BNR_RATE=1350; }
+  const gcv = gcvVal();
+  const rb = document.getElementById("rate-bar");
+  if(rb) rb.innerHTML = "Taux BNR: <strong>1 USD = "+BNR_RATE.toLocaleString()+" FRW</strong> &nbsp;|&nbsp; GCV: <strong>1 Pi = $"+gcv.toLocaleString()+"</strong> &nbsp;|&nbsp; <strong>1 Pi = "+(gcv*BNR_RATE).toLocaleString()+" FRW</strong> &nbsp;|&nbsp; <span style='font-size:10px;opacity:0.7'>Pi = hypothese utilisateur</span>";
+}
+
+// ── HELPERS ──
+function gcvVal(){ return parseFloat(document.getElementById("p-gcv")?.value||GCV_DEFAULT)||GCV_DEFAULT; }
+function v(id){ return parseFloat(document.getElementById(id)?.value||0)||0; }
+function txt(id){ return document.getElementById(id)?.value||""; }
+function fmtFRW(n){ return (Math.round(n)||0).toLocaleString()+" FRW"; }
+function fmtUSD(f){ return "$"+(f/BNR_RATE).toLocaleString(undefined,{maximumFractionDigits:0}); }
+function fmtPi(f){ return ((f/BNR_RATE)/gcvVal()).toFixed(4)+" Pi"; }
+function fmtPct(v,d){ return (v||0).toFixed(d===undefined?1:d)+"%"; }
+function setText(id,val){ const e=document.getElementById(id); if(e) e.textContent=val; }
+function showTip(el,t){
+  const box=document.getElementById("tooltip-box"); if(!box) return;
+  box.textContent=t; box.style.display="block";
+  const r=el.getBoundingClientRect();
+  box.style.top=(r.bottom+8+window.scrollY)+"px";
+  box.style.left=Math.max(8,r.left-80+window.scrollX)+"px";
+  clearTimeout(box._t); box._t=setTimeout(function(){box.style.display="none";},5000);
+}
+document.addEventListener("click",function(e){
+  const box=document.getElementById("tooltip-box");
+  if(box&&!e.target.closest(".tip")) box.style.display="none";
+});
+
+// ── STANDING COSTS (FRW/m2) ──
+const STANDING = {
+  eco:  {min:200000, mid:275000, max:350000},
+  std:  {min:350000, mid:450000, max:550000},
+  haut: {min:550000, mid:725000, max:900000},
+  luxe: {min:900000, mid:1200000, max:1500000},
+};
+
+// ── PHASES ──
+const PHASES_DEF = [
+  {key:"terrassement", fr:"Terrassement & Fondations", en:"Earthworks & Foundations", pct:12},
+  {key:"grosoeuvre",   fr:"Gros Oeuvre (murs, colonnes, dalles)", en:"Shell (walls, columns, slabs)", pct:28},
+  {key:"toiture",      fr:"Toiture & Charpente", en:"Roofing & Framework", pct:12},
+  {key:"menuiserie",   fr:"Menuiserie (portes, fenetres)", en:"Carpentry (doors, windows)", pct:10},
+  {key:"electricite",  fr:"Electricite & Cablage", en:"Electricity & Wiring", pct:8},
+  {key:"plomberie",    fr:"Plomberie & Sanitaires", en:"Plumbing & Sanitary", pct:8},
+  {key:"enduit",       fr:"Enduit & Peinture", en:"Plastering & Painting", pct:10},
+  {key:"carrelage",    fr:"Carrelage & Revetements", en:"Tiling & Flooring", pct:7},
+  {key:"finitions",    fr:"Finitions & Divers", en:"Finishing & Miscellaneous", pct:5},
+];
+
+function buildPhases(){
+  const tbody=document.getElementById("phases-body"); if(!tbody) return;
+  tbody.innerHTML="";
+  PHASES_DEF.forEach(function(ph){
+    const tr=document.createElement("tr"); tr.id="ph-row-"+ph.key;
+    tr.innerHTML=
+      "<td>"+(lang==="en"?ph.en:ph.fr)+"</td>"+
+      "<td><input type='number' id='ph-pct-"+ph.key+"' value='"+ph.pct+"' min='0' max='100' step='0.5' oninput='recalcPhases()' style='text-align:right'/></td>"+
+      "<td><input type='number' id='ph-amt-"+ph.key+"' value='0' min='0' oninput='recalcPhasesFromAmt()' style='text-align:right;color:var(--gold2)'/></td>"+
+      "<td id='ph-u-"+ph.key+"' class='co'>$0</td>"+
+      "<td id='ph-p-"+ph.key+"' class='cb'>0 Pi</td>";
+    tbody.appendChild(tr);
+  });
+  buildAvancement();
+  recalcPhases();
+}
+
+function recalcPhases(){
+  const surf=v("b-surface")||150;
+  const standing=document.getElementById("b-standing")?.value||"std";
+  const coutM2=v("b-cout-m2")||(STANDING[standing]?.mid||450000);
+  const base=surf*coutM2;
+  let totPct=0, totAmt=0;
+  PHASES_DEF.forEach(function(ph){
+    const pct=v("ph-pct-"+ph.key);
+    const amt=base*pct/100;
+    totPct+=pct; totAmt+=amt;
+    const amtEl=document.getElementById("ph-amt-"+ph.key);
+    if(amtEl) amtEl.value=Math.round(amt);
+    setText("ph-u-"+ph.key, fmtUSD(amt));
+    setText("ph-p-"+ph.key, fmtPi(amt));
+  });
+  setText("phases-pct-tot", fmtPct(totPct,0));
+  setText("phases-tot-frw", fmtFRW(totAmt));
+  setText("phases-tot-usd", fmtUSD(totAmt));
+  setText("phases-tot-pi",  fmtPi(totAmt));
+  recalcOtherCosts(totAmt);
+}
+
+function recalcPhasesFromAmt(){
+  const base=getPhasesTot();
+  if(base<=0) return;
+  PHASES_DEF.forEach(function(ph){
+    const amt=v("ph-amt-"+ph.key);
+    const pctEl=document.getElementById("ph-pct-"+ph.key);
+    if(pctEl) pctEl.value=(amt/base*100).toFixed(1);
+    setText("ph-u-"+ph.key, fmtUSD(amt));
+    setText("ph-p-"+ph.key, fmtPi(amt));
+  });
+  recalcOtherCosts(base);
+}
+
+function getPhasesTot(){
+  let t=0;
+  PHASES_DEF.forEach(function(ph){ t+=v("ph-amt-"+ph.key); });
+  return t;
+}
+
+function recalcOtherCosts(phaseTot){
+  const OC=["archi","permis","raccord","ext","reserve"];
+  OC.forEach(function(id){
+    const amt=v("oc-"+id);
+    setText("oc-"+id+"-u", fmtUSD(amt));
+    setText("oc-"+id+"-p", fmtPi(amt));
+  });
+  const otherTot=OC.reduce(function(s,id){ return s+v("oc-"+id); },0);
+  const total=phaseTot+otherTot;
+  setText("cout-total-frw", fmtFRW(total));
+  setText("cout-total-usd", fmtUSD(total));
+  setText("cout-total-pi",  fmtPi(total));
+  buildKPIDevis(phaseTot, total);
+  buildMaterials();
+  recalcFin();
+  recalcSmartPct(total);
+  return total;
+}
+
+function getCoutTotal(){
+  return getPhasesTot() + ["archi","permis","raccord","ext","reserve"].reduce(function(s,id){ return s+v("oc-"+id); },0);
+}
+
+function buildKPIDevis(phaseTot, total){
+  const surf=v("b-surface")||1;
+  const grid=document.getElementById("kpi-devis"); if(!grid) return;
+  const lf=lang==="fr";
+  const items=[
+    {val:fmtFRW(total), lbl:lf?"Cout total projet":"Total project cost", cls:"co"},
+    {val:fmtFRW(Math.round(total/surf))+" /m2", lbl:lf?"Cout au m2":"Cost per m2", cls:"cb"},
+    {val:fmtUSD(total), lbl:"USD", cls:"cg"},
+    {val:fmtPi(total), lbl:"Pi", cls:"cp"},
+  ];
+  grid.innerHTML=items.map(function(k){
+    return "<div class='kpi-card'><div class='kpi-val "+k.cls+"'>"+k.val+"</div><div class='kpi-lbl'>"+k.lbl+"</div></div>";
+  }).join("");
+}
+
+// ── AVANCEMENT ──
+function buildAvancement(){
+  const grid=document.getElementById("avancement-grid"); if(!grid) return;
+  grid.innerHTML="";
+  PHASES_DEF.forEach(function(ph){
+    const div=document.createElement("div");
+    div.className="phase-card";
+    div.innerHTML=
+      "<div class='phase-hdr'><span class='phase-name'>"+(lang==="en"?ph.en:ph.fr)+"</span>"+
+      "<span class='phase-pct' id='av-pct-"+ph.key+"'>0%</span></div>"+
+      "<input type='range' id='av-"+ph.key+"' min='0' max='100' value='0' style='width:100%;margin:4px 0' oninput='updateAvancement()'>"+
+      "<div class='phase-bar'><div class='phase-fill' id='av-bar-"+ph.key+"' style='width:0%'></div></div>"+
+      "<div class='phase-val' id='av-val-"+ph.key+"'>0 FRW realise</div>";
+    grid.appendChild(div);
+  });
+}
+
+function updateAvancement(){
+  let totAmt=0, totReal=0;
+  PHASES_DEF.forEach(function(ph){
+    const pct=parseFloat(document.getElementById("av-"+ph.key)?.value||0);
+    const amt=v("ph-amt-"+ph.key)||0;
+    const real=amt*pct/100;
+    totAmt+=amt; totReal+=real;
+    setText("av-pct-"+ph.key, pct.toFixed(0)+"%");
+    const bar=document.getElementById("av-bar-"+ph.key);
+    if(bar) bar.style.width=pct+"%";
+    setText("av-val-"+ph.key, fmtFRW(real)+" "+ (lang==="fr"?"realise":"achieved"));
+  });
+}
+
+// ── MATERIAUX ──
+const MAT_DEF = [
+  {key:"ciment",   fr:"Ciment (sacs 50kg)",          en:"Cement (50kg bags)",         unit:"sacs",  factor:8,    prix:12000},
+  {key:"sable",    fr:"Sable (m3)",                   en:"Sand (m3)",                  unit:"m3",    factor:0.8,  prix:35000},
+  {key:"gravier",  fr:"Gravier / Gravel (m3)",        en:"Gravel (m3)",                unit:"m3",    factor:0.5,  prix:45000},
+  {key:"fer",      fr:"Fer a beton (kg)",             en:"Reinforcing steel (kg)",     unit:"kg",    factor:15,   prix:1200},
+  {key:"briques",  fr:"Briques / Blocs",              en:"Bricks / Blocks",            unit:"unites",factor:120,  prix:350},
+  {key:"bois",     fr:"Bois de charpente (m3)",       en:"Timber for roofing (m3)",    unit:"m3",    factor:0.05, prix:500000},
+  {key:"toles",    fr:"Toles ondulees (pieces)",      en:"Corrugated iron sheets",     unit:"pieces",factor:3,    prix:15000},
+  {key:"carrelage",fr:"Carrelage (m2)",               en:"Floor tiles (m2)",           unit:"m2",    factor:1.15, prix:25000},
+  {key:"peinture", fr:"Peinture (bidons 20L)",        en:"Paint (20L buckets)",        unit:"bidons",factor:0.15, prix:55000},
+  {key:"cable",    fr:"Cable electrique (rouleaux)",  en:"Electric cable (rolls)",     unit:"rouleaux",factor:0.2,prix:85000},
+  {key:"tuyaux",   fr:"Tuyaux PVC (metres)",          en:"PVC pipes (metres)",         unit:"m",     factor:3,    prix:3500},
+  {key:"portes",   fr:"Portes (unites)",              en:"Doors (units)",              unit:"unites",factor:0.04, prix:150000},
+  {key:"fenetres", fr:"Fenetres (unites)",            en:"Windows (units)",            unit:"unites",factor:0.06, prix:120000},
+];
+
+function buildMaterials(){
+  const tbody=document.getElementById("mat-body"); if(!tbody) return;
+  const surf=v("b-surface")||150;
+  tbody.innerHTML="";
+  let totAmt=0;
+  MAT_DEF.forEach(function(m){
+    const qte=Math.ceil(surf*m.factor);
+    const total=qte*m.prix;
+    totAmt+=total;
+    const tr=document.createElement("tr"); tr.id="mat-row-"+m.key;
+    tr.innerHTML=
+      "<td>"+(lang==="en"?m.en:m.fr)+"</td>"+
+      "<td style='text-align:right'><input type='number' id='mat-q-"+m.key+"' value='"+qte+"' min='0' oninput='recalcMat()' style='width:80px'/></td>"+
+      "<td style='text-align:left;color:var(--muted)'>"+m.unit+"</td>"+
+      "<td><input type='number' id='mat-p-"+m.key+"' value='"+m.prix+"' min='0' oninput='recalcMat()'/></td>"+
+      "<td id='mat-t-"+m.key+"' class='co'>"+fmtFRW(total)+"</td>"+
+      "<td id='mat-u-"+m.key+"' class='neu'>"+fmtUSD(total)+"</td>"+
+      "<td style='color:var(--muted);font-size:10px' data-fr='Estimatif' data-en='Estimate'>Estimatif</td>";
+    tbody.appendChild(tr);
+  });
+  setText("mat-tot-frw", fmtFRW(totAmt));
+  setText("mat-tot-usd", fmtUSD(totAmt));
+  const cout=getCoutTotal();
+  const ratio=cout>0?(totAmt/cout*100):0;
+  setText("mat-ratio", fmtPct(ratio,0)+" ("+fmtFRW(totAmt)+")");
+}
+
+function recalcMat(){
+  let tot=0;
+  MAT_DEF.forEach(function(m){
+    const q=v("mat-q-"+m.key), p=v("mat-p-"+m.key), t=q*p;
+    tot+=t;
+    setText("mat-t-"+m.key, fmtFRW(t));
+    setText("mat-u-"+m.key, fmtUSD(t));
+  });
+  let extraTot=0;
+  for(let i=1;i<=matCount;i++){
+    const e=document.getElementById("mat-extra-q-"+i); if(!e) continue;
+    extraTot+=v("mat-extra-q-"+i)*v("mat-extra-p-"+i);
+  }
+  tot+=extraTot;
+  setText("mat-tot-frw", fmtFRW(tot));
+  setText("mat-tot-usd", fmtUSD(tot));
+  const cout=getCoutTotal();
+  setText("mat-ratio", fmtPct(cout>0?tot/cout*100:0,0)+" ("+fmtFRW(tot)+")");
+}
+
+function addMatRow(){
+  matCount++;
+  var id=matCount;
+  var tr=document.createElement("tr"); tr.id="mat-extra-"+id;
+  var delBtn=document.createElement("button");
+  delBtn.className="btn-del"; delBtn.textContent="x";
+  delBtn.onclick=function(){ document.getElementById("mat-extra-"+id)?.remove(); recalcMat(); };
+  tr.innerHTML=
+    "<td><input type='text' id='mat-extra-n-"+id+"' placeholder='Nom du materiau'/></td>"+
+    "<td><input type='number' id='mat-extra-q-"+id+"' value='0' min='0' oninput='recalcMat()' style='width:80px'/></td>"+
+    "<td><input type='text' id='mat-extra-u-"+id+"' placeholder='unite' style='width:60px'/></td>"+
+    "<td><input type='number' id='mat-extra-p-"+id+"' value='0' min='0' oninput='recalcMat()'/></td>"+
+    "<td id='mat-extra-t-"+id+"' class='co'>0 FRW</td>"+
+    "<td id='mat-extra-tu-"+id+"'>$0</td>"+
+    "<td></td>";
+  var last=tr.querySelector("td:last-child");
+  if(last) last.appendChild(delBtn);
+  var tbody=document.getElementById("mat-body");
+  if(tbody) tbody.appendChild(tr);
+}
+// ── ROOMS ──
+const ROOM_TYPES = [
+  {fr:"Salon / Sejour", en:"Living room"},
+  {fr:"Chambre a coucher", en:"Bedroom"},
+  {fr:"Cuisine", en:"Kitchen"},
+  {fr:"Salle de bain", en:"Bathroom"},
+  {fr:"Toilettes / WC", en:"Toilet / WC"},
+  {fr:"Bureau", en:"Office"},
+  {fr:"Salle a manger", en:"Dining room"},
+  {fr:"Garage", en:"Garage"},
+  {fr:"Magasin / Depot", en:"Storage room"},
+  {fr:"Couloir / Hall", en:"Corridor / Hall"},
+  {fr:"Veranda / Terrasse", en:"Veranda / Terrace"},
+  {fr:"Autre", en:"Other"},
+];
+
+function initDefaultRooms(){
+  addRoomRow("Salon / Sejour", 6, 5, 2.8);
+  addRoomRow("Chambre principale", 4, 3.5, 2.8);
+  addRoomRow("Chambre 2", 3.5, 3, 2.8);
+  addRoomRow("Cuisine", 3, 2.5, 2.8);
+  addRoomRow("Salle de bain", 2, 1.8, 2.4);
+  addRoomRow("Toilettes / WC", 1.5, 1.2, 2.4);
+}
+
+function addRoomRow(nom, L, l, h){
+  roomCount++;
+  const id=roomCount;
+  const tr=document.createElement("tr"); tr.id="room-"+id;
+  const options=ROOM_TYPES.map(function(rt){
+    const n=lang==="en"?rt.en:rt.fr;
+    return "<option value='"+rt.fr+"'"+(rt.fr===(nom||"")||rt.en===(nom||"")?" selected":"")+">"+n+"</option>";
+  }).join("");
+  tr.innerHTML=
+    "<td><select id='rn-"+id+"' style='width:140px'>"+options+"</select><input type='text' id='rname-"+id+"' value='"+(nom&&!ROOM_TYPES.find(function(r){return r.fr===nom||r.en===nom;})?"":"")+"' placeholder='Nom personnalise' style='width:100%;margin-top:3px;font-size:10px'/></td>"+
+    "<td><input type='number' id='rl-"+id+"' value='"+(L||0)+"' min='0' step='0.1' oninput='calcRoom("+id+")'/></td>"+
+    "<td><input type='number' id='rw-"+id+"' value='"+(l||0)+"' min='0' step='0.1' oninput='calcRoom("+id+")'/></td>"+
+    "<td><input type='number' id='rh-"+id+"' value='"+(h||2.8)+"' min='0' step='0.1' oninput='calcRoom("+id+")'/></td>"+
+    "<td id='rs-"+id+"' class='cg' style='font-weight:700'>0 m2</td>"+
+    "<td><select id='rt-"+id+"' style='width:80px'><option value='habitable' data-fr='Habitable' data-en='Habitable'>Habitable</option><option value='service' data-fr='Service' data-en='Service'>Service</option><option value='annexe' data-fr='Annexe' data-en='Annex'>Annexe</option></select></td>"+
+    "<td><button class='btn-del' onclick='delRoom("+id+")'>x</button></td>";
+  const tbody=document.getElementById("rooms-body");
+  if(tbody) tbody.appendChild(tr);
+  calcRoom(id);
+}
+
+function calcRoom(id){
+  const L=v("rl-"+id), W=v("rw-"+id);
+  const surf=L*W;
+  const el=document.getElementById("rs-"+id);
+  if(el) el.textContent=(surf>0?surf.toFixed(2):"0")+" m2";
+  calcRoomsTot();
+}
+
+function delRoom(id){
+  document.getElementById("room-"+id)?.remove();
+  calcRoomsTot();
+}
+
+function calcRoomsTot(){
+  let tot=0, habitable=0, service=0;
+  for(let i=1;i<=roomCount;i++){
+    const e=document.getElementById("rl-"+i); if(!e) continue;
+    const surf=v("rl-"+i)*v("rw-"+i);
+    tot+=surf;
+    const type=document.getElementById("rt-"+i)?.value||"habitable";
+    if(type==="habitable") habitable+=surf;
+    else service+=surf;
+  }
+  setText("rooms-tot-m2", tot.toFixed(2)+" m2");
+  setText("rooms-tot-display", tot.toFixed(2)+" m2");
+  const lf=lang==="fr";
+  const sumEl=document.getElementById("rooms-summary");
+  if(sumEl) sumEl.innerHTML=
+    "<div class='row3'>"+
+    "<div class='tbox'><span class='lbl'>"+(lf?"Surface habitable":"Livable area")+"</span><span class='val cg'>"+habitable.toFixed(2)+" m2</span></div>"+
+    "<div class='tbox'><span class='lbl'>"+(lf?"Surface service":"Service area")+"</span><span class='val co'>"+service.toFixed(2)+" m2</span></div>"+
+    "<div class='tbox'><span class='lbl'>"+(lf?"Surface totale":"Total area")+"</span><span class='val cb'>"+tot.toFixed(2)+" m2</span></div>"+
+    "</div>";
+  const infoEl=document.getElementById("rooms-tot-info");
+  if(infoEl) infoEl.textContent=(lf?"dont ":"of which ")+habitable.toFixed(1)+" m2 "+lf?"habitables":"habitable";
+}
+
+function applySurfaceToDevis(){
+  let tot=0;
+  for(let i=1;i<=roomCount;i++){
+    const e=document.getElementById("rl-"+i); if(!e) continue;
+    tot+=v("rl-"+i)*v("rw-"+i);
+  }
+  if(tot>0){
+    const el=document.getElementById("b-surface");
+    if(el){ el.value=Math.ceil(tot*1.18); } // +18% for walls/corridors
+    const hint=document.getElementById("surface-hint");
+    if(hint) hint.textContent=(lang==="fr"?"Surface calculee depuis les pieces (+18% murs/couloirs)":"Area calculated from rooms (+18% walls/corridors)");
+    recalcAll();
+    showToast((lang==="fr"?"Surface appliquee au devis!":"Area applied to quote!"),"ok");
+    showModule("devis");
+  }
+}
+
+// ── SMART HOUSE ──
+const SMART_SYSTEMS = [
+  {key:"secu",     icon:"&#128274;", fr:"Securite & Surveillance",       en:"Security & CCTV",           cost:2500000, sub_fr:"Cameras CCTV, alarme, controle acces", sub_en:"CCTV cameras, alarm, access control"},
+  {key:"eclairage",icon:"&#128161;", fr:"Eclairage intelligent",          en:"Smart Lighting",            cost:1800000, sub_fr:"LED domotise, capteurs presence, minuterie", sub_en:"Smart LED, motion sensors, timer"},
+  {key:"clim",     icon:"&#10052;",  fr:"Climatisation & Ventilation",    en:"AC & Ventilation",          cost:3500000, sub_fr:"Clim centralisee, thermostats connectes", sub_en:"Central AC, smart thermostats"},
+  {key:"energie",  icon:"&#9728;",   fr:"Energie solaire & Stockage",     en:"Solar Energy & Storage",    cost:8000000, sub_fr:"Panneaux solaires 5kW + batteries", sub_en:"5kW solar panels + batteries"},
+  {key:"eau",      icon:"&#128167;", fr:"Gestion eau intelligente",       en:"Smart Water Management",    cost:1200000, sub_fr:"Pompe auto, reservoir, traitement eau", sub_en:"Auto pump, tank, water treatment"},
+  {key:"son",      icon:"&#127932;", fr:"Systeme audio & Cinema maison",  en:"Audio & Home Cinema",       cost:3000000, sub_fr:"Sonorisation multiroom, video projecteur", sub_en:"Multiroom audio, video projector"},
+  {key:"internet", icon:"&#128225;", fr:"Reseau & Internet (fibre)",      en:"Network & Internet (fiber)",cost:800000,  sub_fr:"Fibre optique, Wi-Fi 6, reseau structure", sub_en:"Fiber optic, Wi-Fi 6, structured network"},
+  {key:"cuisine",  icon:"&#127859;", fr:"Cuisine & Appareils connectes",  en:"Smart Kitchen Appliances",  cost:4000000, sub_fr:"Refrig. connecte, four, lave-vaisselle", sub_en:"Smart fridge, oven, dishwasher"},
+  {key:"jardin",   icon:"&#127807;", fr:"Arrosage automatique (jardin)",  en:"Automatic Garden Irrigation",cost:600000, sub_fr:"Programmateur, capteurs humidite sol", sub_en:"Programmer, soil moisture sensors"},
+  {key:"voiture",  icon:"&#128663;", fr:"Borne de recharge vehicule",     en:"EV Charging Station",       cost:1500000, sub_fr:"Borne charge rapide AC/DC", sub_en:"Fast AC/DC charging station"},
+];
+
+function buildSmartHome(){
+  const grid=document.getElementById("smart-grid"); if(!grid) return;
+  grid.innerHTML="";
+  SMART_SYSTEMS.forEach(function(sys){
+    const div=document.createElement("div");
+    div.className="smart-card";
+    div.innerHTML=
+      "<div class='smart-hdr'><span class='smart-icon'>"+sys.icon+"</span>"+
+      "<div><div class='smart-name'>"+(lang==="en"?sys.en:sys.fr)+"</div>"+
+      "<div style='font-size:10px;color:var(--muted)'>"+(lang==="en"?sys.sub_en:sys.sub_fr)+"</div></div></div>"+
+      "<div class='smart-toggle'>"+
+      "<label class='toggle'><input type='checkbox' id='sm-"+sys.key+"' onchange='recalcSmartTot()'><span class='slider'></span></label>"+
+      "<span class='smart-cost'>"+(lang==="en"?"Est: ":"Est: ")+fmtFRW(sys.cost)+"</span></div>"+
+      "<div style='font-size:10px;color:var(--muted);margin-top:4px'><label data-fr='Cout personnalise (FRW)' data-en='Custom cost (FRW)'>Cout (FRW):</label>"+
+      "<input type='number' id='sm-cost-"+sys.key+"' value='"+sys.cost+"' min='0' oninput='recalcSmartTot()' style='width:100%;margin-top:2px'/></div>";
+    grid.appendChild(div);
+  });
+}
+
+function recalcSmartTot(){
+  let tot=0;
+  SMART_SYSTEMS.forEach(function(sys){
+    const chk=document.getElementById("sm-"+sys.key);
+    if(chk&&chk.checked) tot+=v("sm-cost-"+sys.key)||sys.cost;
+  });
+  setText("smart-total", fmtFRW(tot)+" ("+fmtUSD(tot)+")");
+  recalcSmartPct(getCoutTotal());
+}
+
+function recalcSmartPct(cout){
+  let tot=0;
+  SMART_SYSTEMS.forEach(function(sys){
+    const chk=document.getElementById("sm-"+sys.key);
+    if(chk&&chk.checked) tot+=v("sm-cost-"+sys.key)||sys.cost;
+  });
+  setText("smart-pct", fmtPct(cout>0?tot/cout*100:0,1));
+}
+
+function getSmartTot(){
+  let t=0;
+  SMART_SYSTEMS.forEach(function(sys){
+    const chk=document.getElementById("sm-"+sys.key);
+    if(chk&&chk.checked) t+=v("sm-cost-"+sys.key)||sys.cost;
+  });
+  return t;
+}
+
+// ── FINANCEMENT ──
+function recalcFin(){
+  const cout=getCoutTotal();
+  const cash=v("fn-cash"), nature=v("fn-nature"), fp=cash+nature;
+  const credit=v("fn-credit"), subv=v("fn-subv"), autres=v("fn-autres");
+  const total=fp+credit+subv+autres;
+  const pct=function(m){ return cout>0?fmtPct(m/cout*100):"0%"; };
+  const fpPct=cout>0?fp/cout*100:0;
+
+  setText("fn-cout", fmtFRW(cout));
+  setText("fn-cout-u", fmtUSD(cout));
+  setText("fn-cout-p", fmtPi(cout));
+  setText("fn-fp-tot", fmtFRW(fp));
+  setText("fn-fp-u", fmtUSD(fp));
+  setText("fn-fp-p", fmtPi(fp));
+  const fpEl=document.getElementById("fn-fp-pct");
+  if(fpEl){ fpEl.textContent=fpPct.toFixed(1)+"%"; fpEl.style.color=fpPct>=20?"#6EE7B7":"#FCA5A5"; }
+  const fpAl=document.getElementById("fn-fp-alert");
+  if(fpAl){ fpAl.textContent=fpPct<20&&cout>0?(lang==="fr"?"⚠ Min 20% requis":"⚠ Min 20% required"):""; fpAl.style.display=fpPct<20&&cout>0?"block":"none"; }
+  const fpEl2=document.getElementById("fn-fp-pct2");
+  if(fpEl2){ fpEl2.textContent=fpPct.toFixed(1)+"%"; fpEl2.style.color=fpPct>=20?"#6EE7B7":"#FCA5A5"; }
+  setText("fn-credit-pct", pct(credit));
+  setText("fn-credit-u", fmtUSD(credit));
+  setText("fn-credit-p", fmtPi(credit));
+  setText("fn-subv-pct", pct(subv));
+  setText("fn-subv-u", fmtUSD(subv));
+  setText("fn-subv-p", fmtPi(subv));
+  setText("fn-autres-pct", pct(autres));
+  setText("fn-autres-u", fmtUSD(autres));
+  setText("fn-autres-p", fmtPi(autres));
+  setText("fn-tot", fmtFRW(total));
+  setText("fn-tot-pct", pct(total));
+  setText("fn-tot-u", fmtUSD(total));
+  setText("fn-tot-p", fmtPi(total));
+  const detRatio=fp>0?credit/fp:null;
+  const dr=document.getElementById("fn-ratio");
+  if(dr){ dr.textContent=detRatio===null?"—":detRatio.toFixed(2); dr.style.color=detRatio!==null&&detRatio<=4?"#6EE7B7":"#FCA5A5"; }
+  const surf=v("b-surface")||1;
+  setText("fn-cout-m2", fmtFRW(Math.round(cout/surf))+"/m2");
+  const diff=total-cout;
+  const ecEl=document.getElementById("fn-ecart");
+  if(ecEl){ ecEl.textContent=fmtFRW(Math.abs(diff)); ecEl.style.color=Math.abs(diff)<1?"#6EE7B7":diff<0?"#FCA5A5":"#FDBA74"; }
+  const ecMsg=document.getElementById("fn-ecart-msg");
+  if(ecMsg){
+    const lf=lang==="fr";
+    if(Math.abs(diff)<1) ecMsg.innerHTML="<span class='cg'>&#10003; "+(lf?"Equilibre":"Balanced")+"</span>";
+    else if(diff<0) ecMsg.innerHTML="<span class='cr'>&#9888; "+(lf?"Deficit: ":"Gap: ")+fmtFRW(-diff)+"</span>";
+    else ecMsg.innerHTML="<span class='co'>&#9888; "+(lf?"Excedent: ":"Surplus: ")+fmtFRW(diff)+"</span>";
+  }
+  const val=document.getElementById("fn-validation");
+  if(val){
+    const lf=lang==="fr";
+    if(cout===0){ val.className="note-info"; val.textContent=lf?"Renseignez d'abord le devis (onglet Devis).":"Fill in the quote first (Quote tab)."; }
+    else if(Math.abs(diff)<1){ val.className="note-ok"; val.innerHTML=lf?"&#10003; <strong>Financement equilibre.</strong> Sources = Cout total.":"&#10003; <strong>Financing balanced.</strong> Sources = Total cost."; }
+    else if(diff<0){ val.className="note-err"; val.innerHTML=lf?"&#9888; Deficit: "+fmtFRW(-diff)+". Ajustez les sources.":"&#9888; Gap: "+fmtFRW(-diff)+". Adjust sources."; }
+    else{ val.className="note-warn"; val.innerHTML=lf?"&#9888; Excedent: "+fmtFRW(diff)+".":"&#9888; Surplus: "+fmtFRW(diff)+"."; }
+  }
+  // Sync cr-montant
+  const crEl=document.getElementById("cr-montant");
+  if(crEl&&!crEl._userEdited) crEl.value=credit||"";
+  recalcCredit();
+}
+
+// ── CREDIT ──
+function recalcCredit(){
+  const montant=v("cr-montant")||v("fn-credit")||0;
+  if(!montant){
+    const sb=document.getElementById("credit-summary-body");
+    if(sb) sb.textContent=lang==="fr"?"Saisissez le montant du credit dans le plan de financement.":"Enter the loan amount in the financing plan.";
+    const ab=document.getElementById("amort-body"); if(ab) ab.innerHTML="";
+    return;
+  }
+  const taux=(v("cr-taux")||18)/100;
+  const dur=v("cr-duree")||15;
+  const freq=v("cr-freq")||12;
+  const grace=v("cr-grace")||0;
+  const tp=taux/freq, n=Math.round(dur*freq), graceNb=Math.min(n-1,Math.floor(grace/(12/freq)));
+  const lf=lang==="fr";
+  let solde=montant, totCap=0, totInt=0, totAnn=0;
+  const tbody=document.getElementById("amort-body"); if(!tbody) return;
+  tbody.innerHTML="";
+  const per=freq===12?(lf?"Mois":"Month"):freq===4?(lf?"Trim.":"Qtr"):lf?"Annee":"Year";
+  for(let p=1;p<=n;p++){
+    const interest=solde*tp; let principal=0, annuite=0;
+    if(p<=graceNb){ annuite=interest; }
+    else{
+      const rem=n-p+1;
+      annuite=tp>0?solde*tp/(1-Math.pow(1+tp,-rem)):solde/rem;
+      principal=annuite-interest;
+    }
+    const soldeFin=Math.max(0,solde-principal);
+    totCap+=principal; totInt+=interest; totAnn+=annuite;
+    const tr=document.createElement("tr");
+    tr.innerHTML="<td>"+per+" "+p+(p<=graceNb?" (grace)":"")+"</td>"+
+      "<td>"+fmtFRW(solde)+"</td><td>"+fmtFRW(principal)+"</td>"+
+      "<td class='cr'>"+fmtFRW(interest)+"</td><td class='co'>"+fmtFRW(annuite)+"</td>"+
+      "<td>"+fmtFRW(soldeFin)+"</td>";
+    tbody.appendChild(tr);
+    solde=soldeFin;
+  }
+  setText("amort-cap", fmtFRW(totCap));
+  setText("amort-int", fmtFRW(totInt));
+  setText("amort-ann", fmtFRW(totAnn));
+  const sb=document.getElementById("credit-summary-body");
+  if(sb) sb.innerHTML=
+    lf?"Credit: <strong>"+fmtFRW(montant)+"</strong> | Taux: <strong>"+v("cr-taux")+"% / an</strong> | Duree: <strong>"+dur+" ans</strong> | Total interets: <strong class='cr'>"+fmtFRW(totInt)+"</strong> | Annuite: <strong class='co'>"+fmtFRW(totAnn/n)+"</strong> (ref. indicative — taux reel selon la banque)":
+    "Loan: <strong>"+fmtFRW(montant)+"</strong> | Rate: <strong>"+v("cr-taux")+"% / year</strong> | Term: <strong>"+dur+" years</strong> | Total interest: <strong class='cr'>"+fmtFRW(totInt)+"</strong> | Payment: <strong class='co'>"+fmtFRW(totAnn/n)+"</strong> (indicative ref. — actual rate per bank)";
+}
+
+// ── EXPERTISE ──
+const EXPERTISE_ITEMS = [
+  {fr:"Structure & Fondations", en:"Structure & Foundations"},
+  {fr:"Gros oeuvre (murs, dalles)", en:"Shell (walls, slabs)"},
+  {fr:"Toiture", en:"Roofing"},
+  {fr:"Menuiseries (portes, fenetres)", en:"Carpentry (doors, windows)"},
+  {fr:"Installations electriques", en:"Electrical installations"},
+  {fr:"Plomberie & Sanitaires", en:"Plumbing & Sanitary"},
+  {fr:"Revetements (carrelage, peinture)", en:"Finishes (tiling, paint)"},
+  {fr:"Isolation & Etancheite", en:"Insulation & Waterproofing"},
+  {fr:"Etat general & Entretien", en:"General condition & Maintenance"},
+  {fr:"Environnement & Acces", en:"Environment & Access"},
+];
+
+function buildExpertiseGrid(){
+  const tbody=document.getElementById("expertise-body"); if(!tbody) return;
+  tbody.innerHTML="";
+  EXPERTISE_ITEMS.forEach(function(item,i){
+    const tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+(lang==="en"?item.en:item.fr)+"</td>"+
+      "<td><input type='number' id='ex-note-"+i+"' min='0' max='20' value='15' oninput='recalcExpertise()' style='width:70px'/>/20</td>"+
+      "<td><input type='text' id='ex-obs-"+i+"' placeholder='"+(lang==="fr"?"Observations...":"Observations...")+"'/></td>";
+    tbody.appendChild(tr);
+  });
+  recalcExpertise();
+}
+
+function recalcExpertise(){
+  let tot=0, count=0;
+  for(let i=0;i<EXPERTISE_ITEMS.length;i++){
+    const n=parseFloat(document.getElementById("ex-note-"+i)?.value||0)||0;
+    tot+=n; count++;
+  }
+  const avg=count>0?tot/count:0;
+  const pct=avg/20*100;
+  let grade="E", label="", cls="grade-E", lf=lang==="fr";
+  if(pct>=90){ grade="A"; label=lf?"Excellent — Tres bon etat":"Excellent — Very good condition"; cls="grade-A"; }
+  else if(pct>=75){ grade="B"; label=lf?"Bon etat — Entretien courant":"Good condition — Regular maintenance"; cls="grade-B"; }
+  else if(pct>=60){ grade="C"; label=lf?"Etat moyen — Travaux mineurs":"Average condition — Minor works"; cls="grade-C"; }
+  else if(pct>=40){ grade="D"; label=lf?"Etat mediocre — Travaux importants":"Poor condition — Major works needed"; cls="grade-D"; }
+  else { grade="E"; label=lf?"Mauvais etat — Renovation complete":"Very poor — Full renovation needed"; cls="grade-E"; }
+  const gradeEl=document.getElementById("ex-grade");
+  if(gradeEl){ gradeEl.textContent=grade; gradeEl.className="exp-grade "+cls; }
+  setText("ex-label", label);
+  setText("ex-sub", lf?"Note globale: "+avg.toFixed(1)+"/20 ("+pct.toFixed(0)+"%)":"Overall score: "+avg.toFixed(1)+"/20 ("+pct.toFixed(0)+"%)");
+  // Valeurs estimatives
+  const surf=v("ex-surface")||1;
+  const zone=document.getElementById("ex-zone")?.value||"resid";
+  const etat=document.getElementById("ex-etat")?.value||"bon";
+  const annee=parseInt(txt("ex-annee"))||2010;
+  const age=2026-annee;
+  const ZONE_COEF={prime:1.8, resid:1.0, periph:0.6, rural:0.3};
+  const ETAT_COEF={neuf:1.0, bon:0.85, moyen:0.65, mauvais:0.40};
+  const AGE_COEF=Math.max(0.5, 1-age*0.008);
+  const BASE_M2=450000;
+  const valMarche=surf*BASE_M2*(ZONE_COEF[zone]||1)*(ETAT_COEF[etat]||0.85)*AGE_COEF;
+  const valLocative=valMarche*0.006; // ~0.6% par mois
+  const valRemplacement=surf*600000*(ZONE_COEF[zone]||1);
+  const valTbl=document.getElementById("expertise-vals"); if(!valTbl) return;
+  valTbl.innerHTML=[
+    [lf?"Valeur marchande estimative":"Estimated market value", valMarche, lf?"Surface x prix/m2 x coefficients zone, etat, age":"Area x price/m2 x zone, condition, age coefficients"],
+    [lf?"Valeur locative mensuelle estimative":"Estimated monthly rental value", valLocative, lf?"~0.6% de la valeur marchande (indicatif)":"~0.6% of market value (indicative)"],
+    [lf?"Valeur de remplacement":"Replacement value", valRemplacement, lf?"Cout de reconstruction neuf":"Cost of new construction"],
+    [lf?"Valeur d'assurance":"Insurance value", valRemplacement*0.9, lf?"Valeur de remplacement x 90%":"Replacement value x 90%"],
+  ].map(function(r){
+    return "<tr><td>"+r[0]+"</td><td class='co' style='font-weight:700'>"+fmtFRW(r[1])+"</td><td class='cb'>"+fmtUSD(r[1])+"</td><td style='font-size:10px;color:var(--muted)'>"+r[2]+"</td></tr>";
+  }).join("");
+}
+
+// ── RAPPORT ──
+function buildRapportSummary(){
+  const el=document.getElementById("rapport-summary"); if(!el) return;
+  const cout=getCoutTotal(), smart=getSmartTot();
+  const surf=v("b-surface")||0;
+  const lf=lang==="fr";
+  el.innerHTML=
+    "<div class='kpi-grid'>"+
+    "<div class='kpi-card'><div class='kpi-val co'>"+fmtFRW(cout)+"</div><div class='kpi-lbl'>"+(lf?"Cout total projet":"Total project cost")+"</div></div>"+
+    "<div class='kpi-card'><div class='kpi-val cb'>"+fmtFRW(surf>0?Math.round(cout/surf):0)+"/m2</div><div class='kpi-lbl'>"+(lf?"Cout au m2":"Cost per m2")+"</div></div>"+
+    "<div class='kpi-card'><div class='kpi-val cp'>"+fmtFRW(smart)+"</div><div class='kpi-lbl'>"+(lf?"Smart House":"Smart House")+"</div></div>"+
+    "<div class='kpi-card'><div class='kpi-val cg'>"+fmtUSD(cout+smart)+"</div><div class='kpi-lbl'>"+(lf?"Total en USD":"Total in USD")+"</div></div>"+
+    "</div>";
+}
+
+function printReport(){
+  buildFullReport();
+  document.body.classList.add("reporting");
+  document.getElementById("report-panel").className="report-panel active";
+  window.scrollTo(0,0);
+}
+
+function closeReport(){
+  document.body.classList.remove("reporting");
+  document.getElementById("report-panel").className="report-panel";
+}
+
+function buildFullReport(){
+  const rpt=document.getElementById("rpt-content"); if(!rpt) return;
+  const cout=getCoutTotal(), smart=getSmartTot();
+  const surf=v("b-surface")||0;
+  const lf=lang==="fr";
+  const now=new Date().toLocaleDateString(lf?"fr-RW":"en-GB");
+  const type=document.getElementById("b-type")?.options[document.getElementById("b-type")?.selectedIndex]?.text||"—";
+  const standing=document.getElementById("b-standing")?.options[document.getElementById("b-standing")?.selectedIndex]?.text||"—";
+  // Phases table
+  let phRows="";
+  PHASES_DEF.forEach(function(ph){
+    const amt=v("ph-amt-"+ph.key);
+    phRows+="<tr><td>"+(lf?ph.fr:ph.en)+"</td><td>"+fmtPct(v("ph-pct-"+ph.key),0)+"</td><td class='co'>"+fmtFRW(amt)+"</td><td>"+fmtUSD(amt)+"</td></tr>";
+  });
+  // Rooms table
+  let roomRows="";
+  for(let i=1;i<=roomCount;i++){
+    const e=document.getElementById("rn-"+i); if(!e) continue;
+    const surf2=v("rl-"+i)*v("rw-"+i); if(!surf2) continue;
+    const nom=document.getElementById("rname-"+i)?.value||e.options[e.selectedIndex]?.text||"—";
+    roomRows+="<tr><td>"+nom+"</td><td>"+v("rl-"+i)+"</td><td>"+v("rw-"+i)+"</td><td>"+v("rh-"+i)+"</td><td class='co'>"+surf2.toFixed(2)+" m2</td></tr>";
+  }
+  // Smart systems
+  let smartRows="";
+  SMART_SYSTEMS.forEach(function(sys){
+    const chk=document.getElementById("sm-"+sys.key);
+    if(chk&&chk.checked){
+      const cost=v("sm-cost-"+sys.key)||sys.cost;
+      smartRows+="<tr><td>"+(lf?sys.fr:sys.en)+"</td><td class='co'>"+fmtFRW(cost)+"</td><td>"+fmtUSD(cost)+"</td></tr>";
+    }
+  });
+  // Financement
+  const fp=v("fn-cash")+v("fn-nature"), credit=v("fn-credit"), subv=v("fn-subv"), autres=v("fn-autres");
+  const th=function(arr){ return "<tr>"+arr.map(function(h){ return "<th>"+h+"</th>"; }).join("")+"</tr>"; };
+  rpt.innerHTML=
+    "<div class='cover'><div class='logo'>VitaNova — BuildSmart</div>"+
+    "<div class='sub'>"+(lf?"Assistant Construction Intelligent":"Intelligent Construction Assistant")+"</div>"+
+    "<div class='sub' style='font-size:18px;font-weight:700;color:#92400E;margin:10px 0'>"+(txt("b-nom")||lf?"Projet sans titre":"Untitled project")+"</div>"+
+    "<div class='sub'>"+type+" | "+standing+" | "+(txt("b-lieu")||"—")+"</div>"+
+    "<div class='sub'>"+(lf?"Surface: ":"Area: ")+surf+" m2 | "+(lf?"Duree: ":"Duration: ")+txt("b-duree")+" "+(lf?"mois":"months")+" | "+now+"</div>"+
+    (txt("b-ref")?"<div class='sub'>Ref: "+txt("b-ref")+"</div>":"")+
+    "</div>"+
+
+    "<div class='kpi-row'>"+
+    "<div class='kpi-box'><div class='kv'>"+fmtFRW(cout)+"</div><div class='kl'>"+(lf?"Cout construction":"Construction cost")+"</div></div>"+
+    "<div class='kpi-box'><div class='kv'>"+fmtFRW(surf>0?Math.round(cout/surf):0)+"/m2</div><div class='kl'>"+(lf?"Cout au m2":"Cost per m2")+"</div></div>"+
+    "<div class='kpi-box'><div class='kv'>"+fmtUSD(cout)+"</div><div class='kl'>USD</div></div>"+
+    (smart>0?"<div class='kpi-box'><div class='kv'>"+fmtFRW(smart)+"</div><div class='kl'>Smart House</div></div>":"")+
+    "</div>"+
+
+    "<h2>1. "+(lf?"IDENTIFICATION DU PROJET":"PROJECT IDENTIFICATION")+"</h2>"+
+    "<table>"+th([lf?"Caracteristique":"Feature",lf?"Valeur":"Value"])+
+    "<tr><td>"+(lf?"Nom du projet":"Project name")+"</td><td>"+txt("b-nom")+"</td></tr>"+
+    "<tr><td>"+(lf?"Type":"Type")+"</td><td>"+type+"</td></tr>"+
+    "<tr><td>Standing</td><td>"+standing+"</td></tr>"+
+    "<tr><td>"+(lf?"Localisation":"Location")+"</td><td>"+txt("b-lieu")+"</td></tr>"+
+    "<tr><td>"+(lf?"Surface totale":"Total area")+"</td><td>"+surf+" m2</td></tr>"+
+    "<tr><td>"+(lf?"Nombre de niveaux":"Floors")+"</td><td>"+v("b-niveaux")+"</td></tr>"+
+    "<tr><td>"+(lf?"Duree prevue":"Expected duration")+"</td><td>"+txt("b-duree")+" "+(lf?"mois":"months")+"</td></tr>"+
+    (txt("b-desc")?"<tr><td>"+(lf?"Description":"Description")+"</td><td>"+txt("b-desc")+"</td></tr>":"")+
+    "</table>"+
+
+    "<h2>2. "+(lf?"DEVIS PAR PHASE DE CONSTRUCTION":"QUOTE BY CONSTRUCTION PHASE")+"</h2>"+
+    "<table>"+th([lf?"Phase":"Phase","%",lf?"Montant (FRW)":"Amount (FRW)","USD"])+phRows+
+    "<tr class='tot-row'><td colspan='2'>"+(lf?"TOTAL CONSTRUCTION":"TOTAL CONSTRUCTION")+"</td><td>"+fmtFRW(getPhasesTot())+"</td><td>"+fmtUSD(getPhasesTot())+"</td></tr></table>"+
+    "<table>"+th([lf?"Autres couts":"Other costs",lf?"Montant (FRW)":"Amount (FRW)","USD"])+
+    "<tr><td>"+(lf?"Architecture & Permis":"Architecture & Permits")+"</td><td>"+fmtFRW(v("oc-archi")+v("oc-permis"))+"</td><td>"+fmtUSD(v("oc-archi")+v("oc-permis"))+"</td></tr>"+
+    "<tr><td>"+(lf?"Raccordements & Ext.":"Connections & External")+"</td><td>"+fmtFRW(v("oc-raccord")+v("oc-ext"))+"</td><td>"+fmtUSD(v("oc-raccord")+v("oc-ext"))+"</td></tr>"+
+    "<tr><td>"+(lf?"Reserve imprevu":"Contingency reserve")+"</td><td>"+fmtFRW(v("oc-reserve"))+"</td><td>"+fmtUSD(v("oc-reserve"))+"</td></tr>"+
+    "<tr class='tot-row'><td>"+(lf?"COUT TOTAL DU PROJET":"TOTAL PROJECT COST")+"</td><td>"+fmtFRW(cout)+"</td><td>"+fmtUSD(cout)+"</td></tr>"+
+    "</table>"+
+
+    (roomRows?"<h2>3. "+(lf?"PLANS & SURFACES":"PLANS & AREAS")+"</h2>"+
+    "<table>"+th([lf?"Piece":"Room",lf?"Long (m)":"Length",lf?"Larg (m)":"Width",lf?"Haut (m)":"Height",lf?"Surface (m2)":"Area (m2)"])+roomRows+"</table>":"")+ 
+
+    "<h2>"+(roomRows?"4":"3")+". "+(lf?"PLAN DE FINANCEMENT":"FINANCING PLAN")+"</h2>"+
+    "<table>"+th([lf?"Source":"Source",lf?"Montant (FRW)":"Amount (FRW)","%"])+
+    "<tr class='tot-row'><td>"+(lf?"COUT TOTAL":"TOTAL COST")+"</td><td>"+fmtFRW(cout)+"</td><td>100%</td></tr>"+
+    "<tr><td>"+(lf?"Apport propre":"Own contribution")+"</td><td>"+fmtFRW(fp)+"</td><td>"+fmtPct(cout>0?fp/cout*100:0)+"</td></tr>"+
+    "<tr><td>"+(lf?"Credit bancaire":"Bank loan")+"</td><td>"+fmtFRW(credit)+"</td><td>"+fmtPct(cout>0?credit/cout*100:0)+"</td></tr>"+
+    (subv?"<tr><td>Subvention</td><td>"+fmtFRW(subv)+"</td><td>"+fmtPct(cout>0?subv/cout*100:0)+"</td></tr>":"")+
+    (autres?"<tr><td>"+(lf?"Autres":"Other")+"</td><td>"+fmtFRW(autres)+"</td><td>"+fmtPct(cout>0?autres/cout*100:0)+"</td></tr>":"")+
+    "</table>"+
+
+    (smartRows?"<h2>"+(roomRows?"5":"4")+". SMART HOUSE</h2>"+
+    "<table>"+th([lf?"Systeme intelligent":"Smart system",lf?"Cout estimatif (FRW)":"Estimated cost (FRW)","USD"])+smartRows+
+    "<tr class='tot-row'><td>TOTAL SMART HOUSE</td><td>"+fmtFRW(smart)+"</td><td>"+fmtUSD(smart)+"</td></tr></table>":"")+ 
+
+    "<h2>"+lf?"CONCLUSION":"CONCLUSION"+"</h2>"+
+    "<p>"+(lf?"Ce rapport BuildSmart presente l'estimation du projet de construction <strong>"+txt("b-nom")+"</strong> d'une surface de <strong>"+surf+" m2</strong>. Le cout total de construction est evalue a <strong>"+fmtFRW(cout)+"</strong> ("+fmtUSD(cout)+"), soit <strong>"+fmtFRW(surf>0?Math.round(cout/surf):0)+"/m2</strong>."+
+    (smart>0?" En incluant les systemes Smart House selectionnes ("+fmtFRW(smart)+"), le cout global du projet s'eleve a <strong>"+fmtFRW(cout+smart)+"</strong>.":"")+
+    " Ces estimations sont indicatives. Nous recommandons d'obtenir des devis aupres d'entrepreneurs agrees avant toute decision d'investissement.":
+    "This BuildSmart report presents the construction estimate for <strong>"+txt("b-nom")+"</strong>, with a total area of <strong>"+surf+" m2</strong>. The total construction cost is estimated at <strong>"+fmtFRW(cout)+"</strong> ("+fmtUSD(cout)+"), i.e. <strong>"+fmtFRW(surf>0?Math.round(cout/surf):0)+"/m2</strong>."+
+    (smart>0?" Including the selected Smart House systems ("+fmtFRW(smart)+"), the overall project cost is <strong>"+fmtFRW(cout+smart)+"</strong>.":"")+
+    " These estimates are indicative. We recommend obtaining quotes from licensed contractors before any investment decision.")+"</p>"+
+
+    "<p style='margin-top:12px;font-size:10px;color:#6B7280;border-top:1px solid #E5E7EB;padding-top:8px'>"+
+    (lf?"Rapport genere par VitaNova BuildSmart le ":"Report generated by VitaNova BuildSmart on ")+now+
+    " | BNR: 1 USD = "+BNR_RATE.toLocaleString()+" FRW | 1 Pi = $"+gcvVal().toLocaleString()+
+    "<br/>"+(lf?"Les couts sont des estimations indicatives. Consultez un architecte agree et un expert immobilier certifie pour validation officielle. VitaNova n'est pas un cabinet d'architecture.":"Costs are indicative estimates. Consult a licensed architect and certified real estate expert for official validation. VitaNova is not an architectural firm.")+
+    "</p>";
+}
+
+// ── RECALC ALL ──
+function recalcAll(){
+  // Update cost/m2 from standing
+  const standing=document.getElementById("b-standing")?.value||"std";
+  const costEl=document.getElementById("b-cout-m2");
+  if(costEl&&!costEl._userEdited){
+    const mid=STANDING[standing]?.mid||450000;
+    costEl.value=mid;
+  }
+  recalcPhases();
+  recalcCredit();
+  buildRapportSummary();
+}
+
+function updateProjectType(){
+  const type=document.getElementById("b-type")?.value||"maison";
+  // Suggest duration based on type
+  const durEl=document.getElementById("b-duree");
+  if(durEl&&!durEl._userEdited){
+    const durs={maison:12, villa:18, immeuble:24, hotel:30, commercial:20, renovation:6};
+    durEl.value=durs[type]||12;
+  }
+  recalcAll();
+}
+
+// Track user edits
+["b-cout-m2","b-duree","cr-montant"].forEach(function(id){
+  const el=document.getElementById(id);
+  if(el) el.addEventListener("input",function(){ this._userEdited=true; });
+});
+
+// ── MODULE NAVIGATION ──
+function showModule(name){
+  document.querySelectorAll(".module").forEach(function(m){ m.classList.remove("active"); });
+  document.querySelectorAll(".mod-tab").forEach(function(t){ t.classList.remove("active"); });
+  const mod=document.getElementById("mod-"+name);
+  const tab=document.getElementById("tab-"+name);
+  if(mod) mod.classList.add("active");
+  if(tab) tab.classList.add("active");
+  if(name==="rapport") buildRapportSummary();
+  if(name==="materiaux") recalcMat();
+  window.scrollTo(0,0);
+  saveProject();
+}
+
+// ── LANGUAGE ──
+const BS_TR = {
+  fr:{
+    heroTitle:"Assistant <em>Construction Intelligent</em>",
+    heroSub:"Devis, materiaux, plans, Smart House et expertise — tout en un. Rwanda · Kenya · USA",
+    tabs:{devis:"Devis & Estimation",materiaux:"Materiaux",plans:"Plans & Surfaces",
+          financement:"Financement",smarthome:"Smart House",expertise:"Expertise",rapport:"Rapport"},
+  },
+  en:{
+    heroTitle:"Intelligent <em>Construction Assistant</em>",
+    heroSub:"Quote, materials, plans, Smart House and expertise — all in one. Rwanda · Kenya · USA",
+    tabs:{devis:"Quote & Estimate",materiaux:"Materials",plans:"Plans & Areas",
+          financement:"Financing",smarthome:"Smart House",expertise:"Expertise",rapport:"Report"},
+  }
+};
+
+function setLang(l){
+  lang=l;
+  document.getElementById("lbtn-fr").classList.toggle("active",l==="fr");
+  document.getElementById("lbtn-en").classList.toggle("active",l==="en");
+  applyLang();
+}
+
+function applyLang(){
+  const T=BS_TR[lang]||BS_TR.fr;
+  const isEN=lang==="en";
+  // Hero
+  const ht=document.getElementById("hero-title"); if(ht) ht.innerHTML=T.heroTitle;
+  const hs=document.getElementById("hero-sub"); if(hs) hs.textContent=T.heroSub;
+  // Tabs
+  Object.keys(T.tabs).forEach(function(k){
+    const tab=document.getElementById("tab-"+k);
+    if(tab){ const span=tab.querySelector("span:last-child"); if(span) span.textContent=T.tabs[k]; }
+  });
+  // data-fr / data-en
+  document.querySelectorAll("[data-fr]").forEach(function(el){
+    if(el.hasAttribute("data-step")) return;
+    const val=isEN?(el.getAttribute("data-en")||el.getAttribute("data-fr")):el.getAttribute("data-fr");
+    if(!val) return;
+    const tag=el.tagName;
+    if(tag==="INPUT"||tag==="TEXTAREA") el.placeholder=val;
+    else if(tag==="OPTION") el.textContent=val;
+    else el.innerHTML=val;
+  });
+  // Rebuild dynamic content
+  buildPhases();
+  buildSmartHome();
+  buildExpertiseGrid();
+  buildRapportSummary();
+}
+
+// ── SAVE / RESTORE ──
+function saveProject(){
+  try{
+    const fields=["b-nom","b-ref","b-type","b-standing","b-pays","b-lieu","b-start","b-duree",
+      "b-surface","b-niveaux","b-cout-m2","b-desc","oc-archi","oc-permis","oc-raccord","oc-ext","oc-reserve",
+      "fn-cash","fn-nature","fn-credit","fn-subv","fn-autres","cr-montant","cr-taux","cr-duree","cr-grace","cr-freq",
+      "ex-addr","ex-annee","ex-surface","ex-pieces","ex-niveaux","ex-type","ex-zone","ex-etat"];
+    const data={fields:{},phases:{},avancement:{},smart:{},rooms:[],ts:new Date().toISOString()};
+    fields.forEach(function(id){ const e=document.getElementById(id); if(e) data.fields[id]=e.value; });
+    PHASES_DEF.forEach(function(ph){ data.phases[ph.key]={pct:document.getElementById("ph-pct-"+ph.key)?.value, amt:document.getElementById("ph-amt-"+ph.key)?.value}; });
+    PHASES_DEF.forEach(function(ph){ data.avancement[ph.key]=document.getElementById("av-"+ph.key)?.value||0; });
+    SMART_SYSTEMS.forEach(function(sys){ data.smart[sys.key]={checked:document.getElementById("sm-"+sys.key)?.checked, cost:document.getElementById("sm-cost-"+sys.key)?.value}; });
+    for(let i=1;i<=roomCount;i++){
+      const e=document.getElementById("rn-"+i); if(!e) continue;
+      data.rooms.push({type:e.value,name:document.getElementById("rname-"+i)?.value,L:document.getElementById("rl-"+i)?.value,W:document.getElementById("rw-"+i)?.value,H:document.getElementById("rh-"+i)?.value,t:document.getElementById("rt-"+i)?.value});
+    }
+    localStorage.setItem("vitanova_buildsmart",JSON.stringify(data));
+    const banner=document.getElementById("save-banner"), st=document.getElementById("save-time");
+    if(banner) banner.style.display="flex";
+    if(st) st.textContent=(lang==="fr"?"Sauvegarde le ":"Saved ")+new Date().toLocaleTimeString();
+  }catch(e){ console.warn("Save failed:",e); }
+}
+
+function checkSaved(){
+  try{
+    const saved=localStorage.getItem("vitanova_buildsmart"); if(!saved) return;
+    const data=JSON.parse(saved);
+    const banner=document.getElementById("save-banner"), st=document.getElementById("save-time");
+    if(banner) banner.style.display="flex";
+    if(st) st.textContent=(lang==="fr"?"Sauvegarde le ":"Saved ")+new Date(data.ts).toLocaleString();
+  }catch(e){}
+}
+
+function restoreProject(){
+  try{
+    const saved=localStorage.getItem("vitanova_buildsmart"); if(!saved){ showToast(lang==="fr"?"Aucun projet sauvegarde":"No saved project","err"); return; }
+    const data=JSON.parse(saved);
+    Object.keys(data.fields||{}).forEach(function(id){ const e=document.getElementById(id); if(e) e.value=data.fields[id]; });
+    if(data.phases) PHASES_DEF.forEach(function(ph){
+      const pEl=document.getElementById("ph-pct-"+ph.key); if(pEl&&data.phases[ph.key]?.pct) pEl.value=data.phases[ph.key].pct;
+      const aEl=document.getElementById("ph-amt-"+ph.key); if(aEl&&data.phases[ph.key]?.amt) aEl.value=data.phases[ph.key].amt;
+    });
+    if(data.smart) SMART_SYSTEMS.forEach(function(sys){
+      const chk=document.getElementById("sm-"+sys.key); if(chk) chk.checked=!!data.smart[sys.key]?.checked;
+      const cEl=document.getElementById("sm-cost-"+sys.key); if(cEl&&data.smart[sys.key]?.cost) cEl.value=data.smart[sys.key].cost;
+    });
+    if(data.rooms&&data.rooms.length){
+      const tbody=document.getElementById("rooms-body"); if(tbody) tbody.innerHTML="";
+      roomCount=0;
+      data.rooms.forEach(function(r){ addRoomRow(r.type,parseFloat(r.L)||0,parseFloat(r.W)||0,parseFloat(r.H)||2.8); });
+    }
+    recalcAll(); recalcMat(); recalcSmartTot();
+    if(data.avancement) PHASES_DEF.forEach(function(ph){ const el=document.getElementById("av-"+ph.key); if(el&&data.avancement[ph.key]) el.value=data.avancement[ph.key]; });
+    updateAvancement();
+    showToast(lang==="fr"?"Projet restaure!":"Project restored!","ok");
+  }catch(e){ showToast("Error: "+e.message,"err"); }
+}
+
+function newProject(){
+  if(!confirm(lang==="fr"?"Effacer et commencer un nouveau projet?":"Clear and start a new project?")) return;
+  try{ localStorage.removeItem("vitanova_buildsmart"); }catch(e){}
+  location.reload();
+}
+
+// ── PAYMENT ──
+async function pay(){
+  const chk1=document.getElementById("chk1"), chk2=document.getElementById("chk2");
+  if(!chk1?.checked||!chk2?.checked){ showToast(lang==="fr"?"Acceptez les conditions":"Accept the terms","err"); return; }
+  if(!piService.user){
+    const r=await piService.login(["username","payments"]);
+    if(!r.success){ showToast(lang==="fr"?"Ouvrez dans Pi Browser":"Open in Pi Browser","err"); return; }
+    document.getElementById("uname").textContent="@"+r.user.username;
+    document.getElementById("user-pill").style.display="flex";
+  }
+  showToast(lang==="fr"?"Paiement en cours...":"Processing payment...");
+  const ts=Date.now(), uid=piService.user?.username||"user";
+  try{
+    await Pi.init({version:"2.0",sandbox:true});
+    Pi.createPayment({amount:5, memo:"BUILDSMART-"+ts+"-"+uid,
+      metadata:{type:"buildsmart_report",userId:uid,timestamp:ts}},{
+      onReadyForServerApproval:function(id){ console.log("Approval:",id); },
+      onReadyForServerCompletion:function(id,txid){ showSuccess(txid); },
+      onCancel:function(){ showToast(lang==="fr"?"Annule":"Cancelled","err"); },
+      onError:function(e){ console.error(e); showToast(lang==="fr"?"Erreur paiement":"Payment error","err"); }
+    });
+  }catch(e){ showToast(lang==="fr"?"Pi Browser requis":"Pi Browser required","err"); }
+}
+
+function showSuccess(txid){
+  document.querySelector(".content").style.display="none";
+  document.getElementById("success-panel").style.display="block";
+  document.getElementById("txid-box").textContent="TXID: "+(txid||"0x"+Math.random().toString(16).substr(2,40).toUpperCase());
+  showToast(lang==="fr"?"Rapport commande!":"Report ordered!","ok");
+}
+
+function delRow(id, cb){ document.getElementById(id)?.remove(); if(cb) cb(); }
+function showToast(msg,type){
+  const el=document.getElementById("toast");
+  el.textContent=msg; el.className=type||"";
+  el.style.display="block"; setTimeout(function(){ el.style.display="none"; },3500);
+}
+</script>
+</body>
+</html>
