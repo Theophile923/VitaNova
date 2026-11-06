@@ -1,686 +1,395 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LegacyVault -- VitaNova</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    :root{
-      --blue:#4A6BFF;--green:#00A651;--gold:#FFB300;
-      --dark:#0D0F1E;--card:#161929;--card2:#1C1F35;
-      --border:rgba(0,166,81,0.25);--text:#E8EAF6;
-      --muted:#6B7280;--orange:#E67E22;--red:#E53E3E;
-    }
-    body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--text);min-height:100vh;font-size:14px;}
-    .topbar{background:rgba(13,15,30,0.97);border-bottom:2px solid var(--green);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-    .t-left{display:flex;align-items:center;gap:10px;}
-    .back{background:rgba(0,166,81,0.1);border:1px solid var(--green);color:var(--green);padding:6px 12px;border-radius:7px;font-size:12px;text-decoration:none;}
-    .t-brand{font-size:16px;font-weight:800;color:#fff;}
-    .t-brand span{color:var(--green);}
-    .t-right{display:flex;align-items:center;gap:8px;}
-    .lang-wrap{display:flex;gap:4px;}
-    .lbtn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--muted);}
-    .lbtn.active{border-color:var(--green);background:rgba(0,166,81,0.15);color:var(--green);}
-    .user-badge{display:none;background:rgba(0,166,81,0.1);border:1px solid var(--green);color:var(--green);padding:5px 10px;border-radius:6px;font-size:11px;}
-    .hero{background:linear-gradient(160deg,#080A18,#0A1A0D,#080A18);padding:24px 16px 18px;text-align:center;border-bottom:1px solid var(--border);}
-    .d-badge{display:inline-block;background:rgba(0,166,81,0.12);border:1px solid rgba(0,166,81,0.3);color:var(--green);padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1.5px;margin-bottom:10px;}
-    .hero h1{font-size:20px;font-weight:900;margin-bottom:6px;}
-    .hero h1 span{color:var(--green);}
-    .hero p{font-size:12px;color:var(--muted);max-width:420px;margin:0 auto 12px;line-height:1.6;}
-    .price-row{display:inline-flex;gap:16px;background:rgba(0,166,81,0.06);border:1px solid var(--border);border-radius:9px;padding:9px 18px;font-size:12px;}
-    .pr-paid{color:var(--gold);font-weight:700;}
-    .legal-warn{background:rgba(229,62,62,0.06);border:1px solid rgba(229,62,62,0.25);border-radius:8px;padding:10px 14px;margin:12px 16px 0;font-size:11px;color:#D4A0A0;line-height:1.6;}
-    .prog-wrap{padding:14px 16px 0;overflow-x:auto;}
-    .prog-bar{display:flex;align-items:center;min-width:440px;}
-    .ps{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
-    .pc{width:26px;height:26px;border-radius:50%;border:2px solid #333;background:var(--card);color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
-    .ps.active .pc{border-color:var(--green);background:var(--green);color:#fff;}
-    .ps.done .pc{border-color:var(--blue);background:var(--blue);color:#fff;}
-    .pl{font-size:10px;color:var(--muted);white-space:nowrap;}
-    .ps.active .pl{color:var(--green);}
-    .ps.done .pl{color:var(--blue);}
-    .pline{flex:1;height:2px;background:#222;margin:0 3px;margin-bottom:14px;}
-    .pline.done{background:var(--blue);}
-    .form-wrap{padding:14px;max-width:640px;margin:0 auto;}
-    .panel{display:none;}
-    .panel.active{display:block;}
-    .sec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;}
-    .sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
-    .sec-icon{width:30px;height:30px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-    .sec-title{font-size:13px;font-weight:800;color:#fff;}
-    .sec-sub{font-size:11px;color:var(--muted);margin-top:1px;}
-    .field{margin-bottom:11px;}
-    .field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
-    .field input,.field select,.field textarea{width:100%;background:#0D0F1E;border:1px solid rgba(0,166,81,0.2);border-radius:8px;padding:9px 11px;color:var(--text);font-size:13px;outline:none;transition:border-color 0.2s;}
-    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);}
-    .field select option{background:#0D0F1E;}
-    .hint{font-size:10px;color:var(--muted);margin-top:3px;}
-    .row2{display:flex;gap:10px;}
-    .row2 .field{flex:1;}
-    .benef-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
-    .benef-row{background:#0D0F1E;border:1px solid rgba(0,166,81,0.2);border-radius:8px;padding:10px;}
-    .benef-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-    .benef-lbl{font-size:12px;font-weight:700;color:var(--green);}
-    .btn-del{background:rgba(229,62,62,0.1);border:1px solid rgba(229,62,62,0.3);color:var(--red);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;}
-    .btn-add-row{background:rgba(0,166,81,0.06);border:1px dashed rgba(0,166,81,0.35);color:var(--green);padding:9px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px;}
-    .pct-total{font-size:13px;text-align:right;margin-bottom:4px;font-weight:700;}
-    .actif-row{display:flex;gap:8px;margin-bottom:8px;}
-    .actif-row input{flex:1;}
-    .actif-row input.amt{flex:0 0 140px;}
-    .total-box{background:rgba(255,179,0,0.05);border:1px solid rgba(255,179,0,0.2);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-top:8px;}
-    .total-box .lbl{color:var(--muted);font-weight:700;}
-    .total-box .val{font-weight:800;color:var(--gold);}
-    .toggle-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;}
-    .toggle-lbl{font-size:12px;color:var(--text);}
-    .toggle{position:relative;width:40px;height:22px;}
-    .toggle input{opacity:0;width:0;height:0;}
-    .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#333;border-radius:22px;transition:.3s;}
-    .slider:before{position:absolute;content:"";height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
-    input:checked+.slider{background:var(--green);}
-    input:checked+.slider:before{transform:translateX(18px);}
-    .sum-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
-    .sum-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;}
-    .sum-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;}
-    .sum-row:last-child{border-bottom:none;}
-    .sum-key{color:var(--muted);}
-    .sum-val{font-weight:600;text-align:right;max-width:60%;}
-    .gcv-note{background:rgba(255,179,0,0.05);border:1px solid rgba(255,179,0,0.2);border-radius:8px;padding:9px 11px;font-size:11px;color:var(--gold);margin-bottom:12px;line-height:1.5;}
-    .info-note{background:rgba(74,107,255,0.05);border:1px solid rgba(74,107,255,0.15);border-radius:8px;padding:9px 11px;font-size:11px;color:var(--blue);margin-bottom:12px;line-height:1.5;}
-    .legal-note{background:rgba(229,62,62,0.05);border:1px solid rgba(229,62,62,0.2);border-radius:8px;padding:9px 11px;font-size:11px;color:#D4A0A0;margin-bottom:12px;line-height:1.6;}
-    .ds-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;}
-    .ds-item:last-child{border-bottom:none;}
-    .dsc{color:var(--green);font-weight:700;font-size:14px;flex-shrink:0;}
-    .btn-p{background:linear-gradient(135deg,var(--green),#00C864);color:#fff;border:none;padding:12px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;}
-    .btn-s{background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.2);color:var(--green);padding:10px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:6px;}
-    .btn-pay{background:linear-gradient(135deg,var(--gold),#FFA000);color:#1A1A2E;border:none;padding:14px;border-radius:9px;font-size:15px;font-weight:900;cursor:pointer;width:100%;margin-top:8px;}
-    .chk-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;}
-    .chk-row input{width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;}
-    .chk-row label{font-size:12px;color:var(--muted);line-height:1.5;}
-    .success-panel{display:none;text-align:center;padding:40px 20px;}
-    .si{font-size:56px;margin-bottom:14px;}
-    .st{font-size:20px;font-weight:900;color:var(--green);margin-bottom:8px;}
-    .ss{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;}
-    .txid{background:var(--card);border:1px solid var(--blue);border-radius:8px;padding:10px;font-size:11px;font-family:monospace;color:var(--blue);word-break:break-all;margin-bottom:14px;}
-    #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;display:none;z-index:999;color:#fff;background:var(--green);max-width:280px;text-align:center;}
-    #toast.err{background:var(--red);}
-    #toast.info{background:var(--blue);}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LegacyVault — VitaNova</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--green:#00A651;--gold:#FFB300;--blue:#4A6BFF;--dark:#0D0F1E;--card:#161929;--card2:#1C1F35;--border:rgba(0,166,81,0.25);--text:#E8EAF6;--muted:#9CA3AF;--red:#E53E3E;}
+body{font-family:"Segoe UI",Arial,sans-serif;background:var(--dark);color:var(--text);min-height:100vh;font-size:14px;}
+.topbar{background:rgba(13,15,30,0.97);border-bottom:2px solid var(--green);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.t-left,.t-right{display:flex;align-items:center;gap:10px;}
+.back{background:rgba(0,166,81,0.1);border:1px solid var(--green);color:var(--green);padding:6px 12px;border-radius:7px;font-size:12px;text-decoration:none;}
+.t-brand{font-size:16px;font-weight:800;color:#fff;} .t-brand span{color:var(--green);}
+.lbtn{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--muted);}
+.lbtn.active{border-color:var(--green);background:rgba(0,166,81,0.15);color:var(--green);}
+.user-badge{display:none;background:rgba(0,166,81,0.1);border:1px solid var(--green);color:var(--green);padding:5px 10px;border-radius:6px;font-size:11px;}
+.hero{background:linear-gradient(160deg,#080A18,#0A1A0D,#080A18);padding:24px 16px 18px;text-align:center;border-bottom:1px solid var(--border);}
+.d-badge{display:inline-block;background:rgba(0,166,81,0.12);border:1px solid rgba(0,166,81,0.3);color:var(--green);padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1.5px;margin-bottom:10px;}
+.hero h1{font-size:20px;font-weight:900;margin-bottom:6px;} .hero h1 span{color:var(--green);}
+.hero p{font-size:12px;color:var(--muted);max-width:460px;margin:0 auto 12px;line-height:1.6;}
+.price-row{display:inline-flex;gap:12px;background:rgba(0,166,81,0.06);border:1px solid var(--border);border-radius:9px;padding:9px 16px;font-size:12px;flex-wrap:wrap;justify-content:center;}
+.pr-paid{color:var(--gold);font-weight:700;}
+.legal-warn{background:rgba(229,62,62,0.06);border:1px solid rgba(229,62,62,0.25);border-radius:8px;padding:10px 14px;margin:12px 16px 0;font-size:11px;color:#D4A0A0;line-height:1.6;}
+.prog-wrap{padding:14px 16px 0;overflow-x:auto;}
+.prog-bar{display:flex;align-items:center;min-width:440px;}
+.ps{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.pc{width:26px;height:26px;border-radius:50%;border:2px solid #333;background:var(--card);color:var(--muted);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.ps.active .pc{border-color:var(--green);background:var(--green);color:#fff;} .ps.done .pc{border-color:var(--blue);background:var(--blue);color:#fff;}
+.pl{font-size:10px;color:var(--muted);white-space:nowrap;} .ps.active .pl{color:var(--green);} .ps.done .pl{color:var(--blue);}
+.pline{flex:1;height:2px;background:#222;margin:0 3px 14px;} .pline.done{background:var(--blue);}
+.form-wrap{padding:14px;max-width:640px;margin:0 auto;}
+.panel{display:none;} .panel.active{display:block;}
+.sec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.sec-icon{width:30px;height:30px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.sec-title{font-size:13px;font-weight:800;color:#fff;} .sec-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.field{margin-bottom:11px;}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+.field input,.field select,.field textarea{width:100%;background:#0D0F1E;border:1px solid rgba(0,166,81,0.2);border-radius:8px;padding:9px 11px;color:var(--text);font-size:13px;outline:none;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);}
+.field select option{background:#0D0F1E;}
+.hint{font-size:10px;color:var(--muted);margin-top:3px;}
+.row2{display:flex;gap:10px;} .row2 .field{flex:1;}
+.benef-row{background:#0D0F1E;border:1px solid rgba(0,166,81,0.2);border-radius:8px;padding:10px;margin-bottom:8px;}
+.benef-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.benef-lbl{font-size:12px;font-weight:700;color:var(--green);}
+.btn-del{background:rgba(229,62,62,0.1);border:1px solid rgba(229,62,62,0.3);color:var(--red);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;}
+.btn-add-row{background:rgba(0,166,81,0.06);border:1px dashed rgba(0,166,81,0.35);color:var(--green);padding:9px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px;}
+.pct-total{font-size:13px;text-align:right;margin-bottom:4px;font-weight:700;}
+.actif-row{display:flex;gap:8px;margin-bottom:8px;} .actif-row input{flex:1;} .actif-row input.amt{flex:0 0 140px;}
+.total-box{background:rgba(255,179,0,0.05);border:1px solid rgba(255,179,0,0.2);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-top:8px;gap:8px;}
+.total-box .lbl{color:var(--muted);font-weight:700;} .total-box .val{font-weight:800;color:var(--gold);}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;gap:10px;} .toggle-lbl{font-size:12px;}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0;} .toggle input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#333;border-radius:22px;transition:.3s;}
+.slider:before{position:absolute;content:"";height:16px;width:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+input:checked+.slider{background:var(--green);} input:checked+.slider:before{transform:translateX(18px);}
+.sum-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
+.sum-title{font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;text-transform:uppercase;}
+.sum-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;gap:8px;} .sum-row:last-child{border-bottom:none;}
+.sum-key{color:var(--muted);} .sum-val{font-weight:600;text-align:right;max-width:60%;}
+.info-note{background:rgba(74,107,255,0.05);border:1px solid rgba(74,107,255,0.15);border-radius:8px;padding:9px 11px;font-size:11px;color:#93A5FF;margin-bottom:12px;line-height:1.5;}
+.legal-note{background:rgba(229,62,62,0.05);border:1px solid rgba(229,62,62,0.2);border-radius:8px;padding:9px 11px;font-size:11px;color:#D4A0A0;margin-bottom:12px;line-height:1.6;}
+.ds-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;} .ds-item:last-child{border-bottom:none;}
+.dsc{color:var(--green);font-weight:700;font-size:14px;flex-shrink:0;}
+.btn-p{background:linear-gradient(135deg,var(--green),#00C864);color:#fff;border:none;padding:12px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;}
+.btn-s{background:rgba(0,166,81,0.08);border:1px solid rgba(0,166,81,0.2);color:var(--green);padding:10px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:6px;}
+.btn-pay{background:linear-gradient(135deg,var(--gold),#FFA000);color:#1A1A2E;border:none;padding:14px;border-radius:9px;font-size:15px;font-weight:900;cursor:pointer;width:100%;margin-top:8px;}
+.chk-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;} .chk-row input{width:15px;height:15px;flex-shrink:0;margin-top:2px;cursor:pointer;} .chk-row label{font-size:12px;color:var(--muted);line-height:1.5;}
+.small-btn{background:rgba(0,166,81,0.1);border:1px solid var(--green);color:var(--green);padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;}
+.success-panel{display:none;text-align:center;padding:40px 20px;} .si{font-size:56px;margin-bottom:14px;} .st{font-size:20px;font-weight:900;color:var(--green);margin-bottom:8px;} .ss{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;}
+.txid{background:var(--card);border:1px solid var(--blue);border-radius:8px;padding:10px;font-size:11px;font-family:monospace;color:var(--blue);word-break:break-all;margin-bottom:14px;}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;display:none;z-index:999;color:#fff;background:var(--green);max-width:280px;text-align:center;} #toast.err{background:var(--red);}
+.report-panel{display:none;} .report-panel.active{display:block;background:#E5E7EB;padding-bottom:40px;}
+.rpt-bar{position:sticky;top:0;display:flex;gap:8px;justify-content:center;padding:8px;background:#0D0F1E;border-bottom:2px solid var(--green);z-index:300;}
+.rpt-bar button{padding:8px 16px;border-radius:6px;border:1px solid var(--green);background:#007A3D;color:#fff;font-weight:700;cursor:pointer;font-size:12px;}
+.rpt{background:#fff;color:#111;padding:28px;max-width:720px;margin:0 auto;font-family:"Times New Roman",serif;line-height:1.7;}
+.rpt h1{font-size:18px;text-align:center;color:#065F46;margin-bottom:4px;} .rpt h2{font-size:13px;color:#065F46;border-bottom:1px solid #065F46;margin:14px 0 6px;padding-bottom:3px;}
+.rpt p,.rpt li{font-size:12px;} .rpt ul{margin:4px 0 4px 20px;}
+.rpt table{width:100%;border-collapse:collapse;margin:6px 0;font-size:12px;} .rpt th{background:#065F46;color:#fff;padding:5px 8px;text-align:left;} .rpt td{padding:4px 8px;border-bottom:1px solid #E5E7EB;}
+.rpt .sigs{display:flex;gap:16px;margin-top:30px;} .rpt .sig{flex:1;border-top:1px solid #111;padding-top:4px;font-size:11px;text-align:center;}
+.rpt .fp{font-family:monospace;font-size:10px;word-break:break-all;background:#F3F4F6;padding:6px;border-radius:4px;}
+.rpt .draft-banner{background:#FEF3C7;border:1px solid #B45309;color:#92400E;padding:8px 12px;border-radius:6px;font-size:11px;margin-bottom:12px;text-align:center;font-family:"Segoe UI",Arial,sans-serif;}
+.rpt.preview{position:relative;}
+.rpt.preview::before{content:"BROUILLON / DRAFT";position:fixed;top:45%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:58px;font-weight:900;color:rgba(6,95,70,0.12);pointer-events:none;white-space:nowrap;z-index:5;}
+body.reporting .topbar,body.reporting .hero,body.reporting .legal-warn,body.reporting .prog-wrap,body.reporting .form-wrap,body.reporting #success-panel{display:none!important;}
+@media print{.rpt-bar{display:none!important;} body.reporting{background:#fff;} .report-panel.active{background:#fff;padding:0;}}
+</style>
 </head>
 <body>
-
 <header class="topbar">
-  <div class="t-left">
-    <a class="back" href="index.html">&#8592; <span data-fr="Accueil" data-en="Home">Accueil</span></a>
-    <div class="t-brand"><span>Vita</span>Nova &middot; LegacyVault</div>
-  </div>
-  <div class="t-right">
-    <div class="lang-wrap">
-      <button class="lbtn active" id="lbtn-fr" onclick="setLang('fr')">FR</button>
-      <button class="lbtn" id="lbtn-en" onclick="setLang('en')">EN</button>
-    </div>
-    <div class="user-badge" id="user-badge">&#10003; <span id="uname">--</span></div>
-  </div>
+  <div class="t-left"><a class="back" href="index.html">&#8592; <span data-fr="Accueil" data-en="Home">Accueil</span></a><div class="t-brand"><span>Vita</span>Nova &middot; LegacyVault</div></div>
+  <div class="t-right"><button class="lbtn active" id="lbtn-fr" onclick="setLang('fr')">FR</button><button class="lbtn" id="lbtn-en" onclick="setLang('en')">EN</button><div class="user-badge" id="user-badge">&#10003; <span id="uname">--</span></div></div>
 </header>
 
 <div class="hero">
   <div class="d-badge">DOMAIN 2 &mdash; LEGACYVAULT</div>
-  <h1 data-fr="Contrat de Succession <span>Securise</span>" data-en="Secure <span>Succession Contract</span>">Contrat de Succession <span>Securise</span></h1>
-  <p data-fr="Creez un acte de disposition de biens enregistre sur la blockchain. Protegez votre patrimoine, securisez l'avenir de vos heritiers. Conforme au droit rwandais et aux standards internationaux." data-en="Create a registered asset disposition deed on the blockchain. Protect your estate, secure your heirs' future. Compliant with Rwandan law and international standards.">Creez un acte de disposition de biens enregistre sur la blockchain. Protegez votre patrimoine, securisez l'avenir de vos heritiers.</p>
-  <div class="price-row">
-    <span data-fr="Creation du contrat:" data-en="Contract creation:">Creation:</span>
-    <span class="pr-paid">3pi</span>
-    <span>&middot;</span>
-    <span data-fr="Verification:" data-en="Verification:">Verification:</span>
-    <span class="pr-paid">0.1pi</span>
-  </div>
+  <h1 data-fr="Projet d'Acte de <span>Succession</span>" data-en="Succession Deed <span>Draft</span>">Projet d'Acte de <span>Succession</span></h1>
+  <p data-fr="Preparez un projet d'acte de disposition de vos biens : heritiers, parts, patrimoine et conditions. Vous obtenez un document pret a etre revu et valide par un notaire. Vos informations restent sur votre appareil." data-en="Prepare a draft deed for the disposition of your assets: heirs, shares, estate and conditions. You get a document ready to be reviewed and validated by a notary. Your information stays on your device.">Preparez un projet d'acte de disposition de vos biens.</p>
+  <div class="price-row"><span data-fr="Apercu du document :" data-en="Document preview:">Apercu :</span><span class="pr-paid" data-fr="gratuit" data-en="free">gratuit</span><span>&middot;</span><span data-fr="Version complete :" data-en="Full version:">Version complete :</span><span class="pr-paid">3 Pi</span></div>
 </div>
 
-<div class="legal-warn" id="legal-warn">
-  <strong data-fr="Avertissement Legal Obligatoire:" data-en="Mandatory Legal Warning:">Avertissement Legal Obligatoire:</strong>
-  <span data-fr="LegacyVault est un outil numerique d'enregistrement et de gestion successorale. Il ne remplace pas un testament notarie. Pour une pleine validite juridique au Rwanda, votre succession doit etre etablie conformement a la Loi N22/99 du 12/11/1999 et validee par un notaire agree. Consultez un juriste ou un avocat avant toute decision." data-en="LegacyVault is a digital tool for succession registration and management. It does not replace a notarized will. For full legal validity in Rwanda, your succession must comply with Law N22/99 of 12/11/1999 and be validated by a licensed notary. Consult a lawyer before any decision.">LegacyVault est un outil numerique d'enregistrement successoral. Il ne remplace pas un testament notarie. Pour pleine validite au Rwanda: Loi N22/99 du 12/11/1999. Consultez un notaire.</span>
-</div>
+<div class="legal-warn"><strong data-fr="Avertissement legal :" data-en="Legal warning:">Avertissement legal :</strong> <span data-fr="LegacyVault prepare un PROJET de document. Il ne remplace pas un testament notarie et n'a aucune valeur legale tant qu'il n'a pas ete valide par un notaire agree. Au Rwanda, la succession releve de la Loi N°22/99 du 12/11/1999. Consultez un juriste ou un notaire avant toute decision." data-en="LegacyVault prepares a DRAFT document. It does not replace a notarized will and has no legal value until validated by a licensed notary. In Rwanda, succession is governed by Law N°22/99 of 12/11/1999. Consult a lawyer or notary before any decision.">Projet de document, sans valeur legale avant validation par un notaire.</span></div>
 
-<div class="prog-wrap">
-  <div class="prog-bar">
-    <div class="ps active" id="pt1"><div class="pc">1</div><div class="pl" data-fr="Testateur" data-en="Testator">Testateur</div></div>
-    <div class="pline" id="pl1"></div>
-    <div class="ps" id="pt2"><div class="pc">2</div><div class="pl" data-fr="Heritiers" data-en="Heirs">Heritiers</div></div>
-    <div class="pline" id="pl2"></div>
-    <div class="ps" id="pt3"><div class="pc">3</div><div class="pl" data-fr="Patrimoine" data-en="Estate">Patrimoine</div></div>
-    <div class="pline" id="pl3"></div>
-    <div class="ps" id="pt4"><div class="pc">4</div><div class="pl" data-fr="Conditions" data-en="Conditions">Conditions</div></div>
-    <div class="pline" id="pl4"></div>
-    <div class="ps" id="pt5"><div class="pc">5</div><div class="pl" data-fr="Recapitulatif" data-en="Summary">Recapitulatif</div></div>
-    <div class="pline" id="pl5"></div>
-    <div class="ps" id="pt6"><div class="pc">6</div><div class="pl" data-fr="Paiement" data-en="Payment">Paiement</div></div>
-  </div>
-</div>
+<div class="prog-wrap"><div class="prog-bar">
+  <div class="ps active" id="pt1"><div class="pc">1</div><div class="pl" data-fr="Testateur" data-en="Testator">Testateur</div></div><div class="pline" id="pl1"></div>
+  <div class="ps" id="pt2"><div class="pc">2</div><div class="pl" data-fr="Heritiers" data-en="Heirs">Heritiers</div></div><div class="pline" id="pl2"></div>
+  <div class="ps" id="pt3"><div class="pc">3</div><div class="pl" data-fr="Patrimoine" data-en="Estate">Patrimoine</div></div><div class="pline" id="pl3"></div>
+  <div class="ps" id="pt4"><div class="pc">4</div><div class="pl" data-fr="Conditions" data-en="Conditions">Conditions</div></div><div class="pline" id="pl4"></div>
+  <div class="ps" id="pt5"><div class="pc">5</div><div class="pl" data-fr="Recapitulatif" data-en="Summary">Recapitulatif</div></div><div class="pline" id="pl5"></div>
+  <div class="ps" id="pt6"><div class="pc">6</div><div class="pl" data-fr="Document" data-en="Document">Document</div></div>
+</div></div>
 
 <div class="form-wrap">
-
-<!-- PANEL 1: TESTATEUR -->
 <div class="panel active" id="panel-1">
   <div class="sec">
-    <div class="sec-hdr">
-      <div class="sec-icon">&#128100;</div>
-      <div>
-        <div class="sec-title" data-fr="Identite du Testateur (Disposant)" data-en="Testator (Grantor) Identity">Identite du Testateur</div>
-        <div class="sec-sub" data-fr="La personne qui cree et signe cet acte de disposition successorale" data-en="The person creating and signing this succession deed">La personne qui cree cet acte successoral</div>
-      </div>
-    </div>
-    <div class="row2">
-      <div class="field"><label data-fr="Nom complet *" data-en="Full Name *">Nom complet *</label><input type="text" id="t-nom" placeholder="Ex: HAKIZIMANA Theophile"/></div>
-      <div class="field"><label data-fr="Date de naissance" data-en="Date of Birth">Date de naissance</label><input type="date" id="t-dob"/></div>
-    </div>
-    <div class="row2">
-      <div class="field"><label data-fr="Nationalite *" data-en="Nationality *">Nationalite *</label><input type="text" id="t-nat" placeholder="Ex: Rwandaise"/></div>
-      <div class="field"><label data-fr="Numero d'identite / Passeport" data-en="ID / Passport Number">Numero ID / Passeport</label><input type="text" id="t-id" placeholder="Ex: 1199XXXXXXXXX"/></div>
-    </div>
-    <div class="row2">
-      <div class="field"><label data-fr="Telephone *" data-en="Phone *">Telephone *</label><input type="tel" id="t-tel" placeholder="+250 7XX XXX XXX"/></div>
-      <div class="field"><label data-fr="Email" data-en="Email">Email</label><input type="email" id="t-email" placeholder="nom@email.com"/></div>
-    </div>
-    <div class="field"><label data-fr="Adresse de residence *" data-en="Residence Address *">Adresse de residence *</label><input type="text" id="t-addr" placeholder="Ex: KG 123 St, Kigali, Rwanda"/></div>
-    <div class="row2">
-      <div class="field"><label data-fr="Pays de residence *" data-en="Country of Residence *">Pays de residence *</label>
-        <select id="t-pays">
-          <option value="RW">Rwanda</option>
-          <option value="KE">Kenya</option>
-          <option value="UG">Uganda</option>
-          <option value="TZ">Tanzania</option>
-          <option value="US">USA</option>
-          <option value="OTHER" data-fr="Autre" data-en="Other">Autre</option>
-        </select>
-      </div>
-      <div class="field"><label data-fr="Situation matrimoniale" data-en="Marital Status">Situation matrimoniale</label>
-        <select id="t-mariage">
-          <option value="marie" data-fr="Marie(e)" data-en="Married">Marie(e)</option>
-          <option value="celibataire" data-fr="Celibataire" data-en="Single">Celibataire</option>
-          <option value="divorce" data-fr="Divorce(e)" data-en="Divorced">Divorce(e)</option>
-          <option value="veuf" data-fr="Veuf/Veuve" data-en="Widowed">Veuf/Veuve</option>
-        </select>
-      </div>
-    </div>
-    <div class="field"><label data-fr="Adresse Blockchain (identifiant reseau) *" data-en="Blockchain Address (network ID) *">Adresse Blockchain *</label>
-      <input type="text" id="t-addr-bc" placeholder="Ex: @theophile923"/>
-      <div class="hint" data-fr="Votre identifiant sur le reseau blockchain utilise par VitaNova" data-en="Your identifier on the blockchain network used by VitaNova">Votre identifiant sur le reseau blockchain</div>
-    </div>
+    <div class="sec-hdr"><div class="sec-icon">&#128100;</div><div><div class="sec-title" data-fr="Identite du Testateur (Disposant)" data-en="Testator (Grantor) Identity">Identite du Testateur</div><div class="sec-sub" data-fr="La personne qui prepare l'acte. Ces informations restent sur votre appareil." data-en="The person preparing the deed. This information stays on your device.">La personne qui prepare l'acte</div></div></div>
+    <div class="row2"><div class="field"><label data-fr="Nom complet *" data-en="Full name *">Nom complet *</label><input type="text" id="t-nom" placeholder="Ex: HAKIZIMANA Theophile"/></div><div class="field"><label data-fr="Date de naissance" data-en="Date of birth">Date de naissance</label><input type="date" id="t-dob"/></div></div>
+    <div class="row2"><div class="field"><label data-fr="Nationalite *" data-en="Nationality *">Nationalite *</label><input type="text" id="t-nat" placeholder="Ex: Rwandaise"/></div><div class="field"><label data-fr="Situation matrimoniale" data-en="Marital status">Situation matrimoniale</label><select id="t-mariage"><option value="marie" data-fr="Marie(e)" data-en="Married">Marie(e)</option><option value="celibataire" data-fr="Celibataire" data-en="Single">Celibataire</option><option value="divorce" data-fr="Divorce(e)" data-en="Divorced">Divorce(e)</option><option value="veuf" data-fr="Veuf / Veuve" data-en="Widowed">Veuf / Veuve</option></select></div></div>
+    <div class="field"><label data-fr="Adresse de residence *" data-en="Residence address *">Adresse de residence *</label><input type="text" id="t-addr" placeholder="Ex: KG 123 St, Kigali"/></div>
+    <div class="field"><label data-fr="Pays de residence *" data-en="Country of residence *">Pays de residence *</label><select id="t-pays"><option value="RW">Rwanda</option><option value="KE">Kenya</option><option value="UG">Uganda</option><option value="TZ">Tanzania</option><option value="US">USA</option><option value="OTHER" data-fr="Autre" data-en="Other">Autre</option></select></div>
   </div>
   <button class="btn-p" onclick="goTo(2)" data-fr="Continuer vers les Heritiers" data-en="Continue to Heirs">Continuer vers les Heritiers</button>
 </div>
 
-<!-- PANEL 2: HERITIERS -->
 <div class="panel" id="panel-2">
   <div class="sec">
-    <div class="sec-hdr">
-      <div class="sec-icon">&#128106;</div>
-      <div>
-        <div class="sec-title" data-fr="Heritiers et Beneficiaires" data-en="Heirs and Beneficiaries">Heritiers et Beneficiaires</div>
-        <div class="sec-sub" data-fr="Ajoutez vos heritiers. Le total des parts doit etre exactement 100%." data-en="Add your heirs. Total shares must be exactly 100%.">Total des parts doit etre exactement 100%</div>
-      </div>
-    </div>
-    <div class="benef-list" id="benef-list"></div>
-    <button class="btn-add-row" onclick="addBenef()">+ <span data-fr="Ajouter un heritier / beneficiaire" data-en="Add an heir / beneficiary">Ajouter un heritier</span></button>
-    <div class="pct-total" id="pct-total" style="color:var(--red);">Total: 0%</div>
-    <div class="info-note" data-fr="Conseil juridique: En droit rwandais, le conjoint survivant et les enfants ont des droits successoraux proteges (reserve hereditaire). Consultez un notaire pour respecter ces droits imperatifs." data-en="Legal advice: Under Rwandan law, the surviving spouse and children have protected inheritance rights (legal reserve). Consult a notary to respect these mandatory rights.">Conseil: En droit rwandais, le conjoint et les enfants ont des droits successoraux proteges. Consultez un notaire.</div>
+    <div class="sec-hdr"><div class="sec-icon">&#128106;</div><div><div class="sec-title" data-fr="Heritiers et Beneficiaires" data-en="Heirs and Beneficiaries">Heritiers et Beneficiaires</div><div class="sec-sub" data-fr="Le total des parts doit etre exactement 100%." data-en="Total shares must be exactly 100%.">Total des parts : 100%</div></div></div>
+    <div id="benef-list"></div>
+    <button class="btn-add-row" onclick="addBenef()" data-fr="+ Ajouter un heritier / beneficiaire" data-en="+ Add an heir / beneficiary">+ Ajouter un heritier</button>
+    <div class="pct-total" id="pct-total" style="color:var(--red);">Total : 0%</div>
+    <div class="info-note" data-fr="Conseil : en droit rwandais, le conjoint survivant et les enfants ont des droits successoraux proteges. Un notaire verifiera que vos parts les respectent." data-en="Advice: under Rwandan law, the surviving spouse and children have protected inheritance rights. A notary will check that your shares respect them.">Le conjoint et les enfants ont des droits proteges : consultez un notaire.</div>
   </div>
   <button class="btn-p" onclick="goTo(3)" data-fr="Continuer vers le Patrimoine" data-en="Continue to Estate">Continuer vers le Patrimoine</button>
   <button class="btn-s" onclick="goTo(1)" data-fr="Retour" data-en="Back">Retour</button>
 </div>
 
-<!-- PANEL 3: PATRIMOINE -->
 <div class="panel" id="panel-3">
   <div class="sec">
-    <div class="sec-hdr">
-      <div class="sec-icon">&#128142;</div>
-      <div>
-        <div class="sec-title" data-fr="Declaration du Patrimoine" data-en="Estate Declaration">Declaration du Patrimoine</div>
-        <div class="sec-sub" data-fr="Declarez les biens et actifs inclus dans cet acte de succession" data-en="Declare the assets included in this succession deed">Biens inclus dans cet acte successoral</div>
-      </div>
-    </div>
-
-    <!-- Actifs blockchain -->
-    <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;" data-fr="Actifs Numeriques (Blockchain)" data-en="Digital Assets (Blockchain)">Actifs Numeriques</div>
-    <div class="row2">
-      <div class="field"><label data-fr="Quantite de Pi (pi)" data-en="Pi Amount (pi)">Pi (pi)</label>
-        <input type="number" id="a-pi" placeholder="0" min="0" step="0.01" oninput="updateAssets()"/>
-      </div>
-      <div class="field"><label data-fr="Valeur estimee (FRW)" data-en="Estimated Value (FRW)">Valeur estimee (FRW)</label>
-        <input type="text" id="a-pi-frw" readonly style="color:var(--gold);"/>
-      </div>
-    </div>
-    <div class="field"><label data-fr="Autres actifs numeriques" data-en="Other Digital Assets">Autres actifs numeriques</label>
-      <input type="text" id="a-digital-desc" placeholder="Ex: Crypto, NFT, comptes en ligne..."/></div>
-    <div class="field"><label data-fr="Valeur autres actifs numeriques (FRW)" data-en="Other Digital Assets Value (FRW)">Valeur autres numeriques (FRW)</label>
-      <input type="number" id="a-digital-val" placeholder="0" min="0" oninput="updateAssets()"/></div>
-
-    <!-- Immobilier -->
-    <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 8px;" data-fr="Biens Immobiliers" data-en="Real Estate">Biens Immobiliers</div>
+    <div class="sec-hdr"><div class="sec-icon">&#128142;</div><div><div class="sec-title" data-fr="Declaration du Patrimoine" data-en="Estate Declaration">Declaration du Patrimoine</div><div class="sec-sub" data-fr="Biens inclus dans l'acte (valeurs estimees en FRW, saisies par vous)" data-en="Assets included in the deed (estimated values in FRW, entered by you)">Biens inclus dans l'acte</div></div></div>
+    <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;margin-bottom:8px;" data-fr="Actifs numeriques" data-en="Digital assets">Actifs numeriques</div>
+    <div class="field"><label data-fr="Quantite de Pi detenue (information, non valorisee)" data-en="Pi held (information, not valued)">Pi detenus</label><input type="number" id="a-pi" placeholder="0" min="0" step="0.01"/><div class="hint" data-fr="Pi n'a pas de prix officiel : la quantite est indiquee dans l'acte, sans valeur en francs." data-en="Pi has no official price: the quantity is stated in the deed with no franc value.">Quantite indiquee sans valeur en francs.</div></div>
+    <div class="field"><label data-fr="Autres actifs numeriques (description)" data-en="Other digital assets (description)">Autres actifs numeriques</label><input type="text" id="a-digital-desc" placeholder="Ex: comptes en ligne, noms de domaine..."/></div>
+    <div class="field"><label data-fr="Valeur de ces autres actifs (FRW)" data-en="Value of these other assets (FRW)">Valeur (FRW)</label><input type="number" id="a-digital-val" placeholder="0" min="0" oninput="updateAssets()"/></div>
+    <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;margin:12px 0 8px;" data-fr="Biens immobiliers" data-en="Real estate">Biens immobiliers</div>
     <div id="immob-list"></div>
-    <button class="btn-add-row" onclick="addImmob()">+ <span data-fr="Ajouter un bien immobilier (maison, terrain, parcelle...)" data-en="Add real estate (house, land, plot...)">Ajouter un bien immobilier</span></button>
-
-    <!-- Biens mobiliers -->
-    <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 8px;" data-fr="Biens Mobiliers et Autres" data-en="Personal Property and Others">Biens Mobiliers et Autres</div>
+    <button class="btn-add-row" onclick="addImmob()" data-fr="+ Ajouter un bien immobilier (maison, terrain, parcelle...)" data-en="+ Add real estate (house, land, plot...)">+ Ajouter un bien immobilier</button>
+    <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;margin:12px 0 8px;" data-fr="Biens mobiliers et autres" data-en="Personal property and others">Biens mobiliers et autres</div>
     <div id="mobil-list"></div>
-    <button class="btn-add-row" onclick="addMobil()">+ <span data-fr="Ajouter un bien mobilier (vehicule, cheptel, equipements...)" data-en="Add personal property (vehicle, livestock, equipment...)">Ajouter un bien mobilier</span></button>
-
-    <div class="total-box">
-      <span class="lbl" data-fr="TOTAL PATRIMOINE DECLARE" data-en="TOTAL DECLARED ESTATE">TOTAL PATRIMOINE</span>
-      <span class="val" id="total-assets">0 FRW</span>
-    </div>
-    <div class="hint" style="margin-top:6px" data-fr="Tous les montants sont declares en FRW et convertis automatiquement en USD et Pi selon les taux en vigueur." data-en="All amounts declared in FRW, automatically converted to USD and Pi at current rates.">Montants en FRW, convertion USD et Pi automatique.</div>
+    <button class="btn-add-row" onclick="addMobil()" data-fr="+ Ajouter un bien mobilier (vehicule, cheptel, equipements...)" data-en="+ Add personal property (vehicle, livestock, equipment...)">+ Ajouter un bien mobilier</button>
+    <div class="total-box"><span class="lbl" data-fr="TOTAL DECLARE (FRW)" data-en="TOTAL DECLARED (FRW)">TOTAL DECLARE</span><span class="val" id="total-assets">0 FRW</span></div>
   </div>
   <button class="btn-p" onclick="goTo(4)" data-fr="Continuer vers les Conditions" data-en="Continue to Conditions">Continuer vers les Conditions</button>
   <button class="btn-s" onclick="goTo(2)" data-fr="Retour" data-en="Back">Retour</button>
 </div>
 
-<!-- PANEL 4: CONDITIONS -->
 <div class="panel" id="panel-4">
   <div class="sec">
-    <div class="sec-hdr">
-      <div class="sec-icon">&#9878;</div>
-      <div>
-        <div class="sec-title" data-fr="Conditions d'Execution de l'Acte" data-en="Deed Execution Conditions">Conditions d'Execution</div>
-        <div class="sec-sub" data-fr="Definissez les regles d'execution de votre acte de succession" data-en="Define the execution rules for your succession deed">Regles d'execution de votre acte successoral</div>
-      </div>
-    </div>
-
-    <!-- Delai -->
-    <div class="field"><label data-fr="Delai minimum avant execution (annees)" data-en="Minimum delay before execution (years)">Delai minimum avant execution</label>
-      <select id="c-delai">
-        <option value="0" data-fr="Aucun delai" data-en="No delay">Aucun delai</option>
-        <option value="1" data-fr="1 an" data-en="1 year">1 an</option>
-        <option value="5" data-fr="5 ans" data-en="5 years">5 ans</option>
-        <option value="10" selected data-fr="10 ans (recommande)" data-en="10 years (recommended)">10 ans (recommande)</option>
-        <option value="25" data-fr="25 ans" data-en="25 years">25 ans</option>
-      </select>
-      <div class="hint" data-fr="L'acte ne peut pas etre execute avant cette periode" data-en="The deed cannot be executed before this period">L'acte ne peut etre execute avant cette periode</div>
-    </div>
-
-    <!-- Multi-signature -->
-    <div class="field"><label data-fr="Validations requises pour execution" data-en="Required validations for execution">Validations requises</label>
-      <select id="c-sig">
-        <option value="1" data-fr="1 validateur (tout heritier peut executer)" data-en="1 validator (any heir can execute)">1 validateur</option>
-        <option value="2" selected data-fr="2 validateurs (recommande)" data-en="2 validators (recommended)">2 validateurs (recommande)</option>
-        <option value="3" data-fr="3 validateurs (haute securite)" data-en="3 validators (high security)">3 validateurs</option>
-      </select>
-      <div class="hint" data-fr="Nombre d'heritiers qui doivent confirmer l'execution de l'acte" data-en="Number of heirs who must confirm execution of the deed">Nombre d'heritiers qui doivent confirmer</div>
-    </div>
-
-    <!-- Acte de deces -->
-    <div class="toggle-row">
-      <span class="toggle-lbl" data-fr="Exiger un acte de deces officiel pour execution" data-en="Require official death certificate for execution">Exiger un acte de deces officiel</span>
-      <label class="toggle"><input type="checkbox" id="c-deces" checked/><span class="slider"></span></label>
-    </div>
-    <div class="hint" style="margin-top:4px;margin-bottom:10px;" data-fr="Les heritiers doivent deposer un acte de deces officiel avant l'execution" data-en="Heirs must submit an official death certificate before execution">Les heritiers doivent deposer un acte de deces officiel</div>
-
-    <!-- Notaire -->
-    <div class="toggle-row">
-      <span class="toggle-lbl" data-fr="Validation notariale requise" data-en="Notarial validation required">Validation notariale requise</span>
-      <label class="toggle"><input type="checkbox" id="c-notaire" checked/><span class="slider"></span></label>
-    </div>
-    <div class="hint" style="margin-top:4px;margin-bottom:10px;" data-fr="Fortement recommande pour conformite avec la Loi N22/99 (Rwanda)" data-en="Strongly recommended for compliance with Law N22/99 (Rwanda)">Fortement recommande - Loi N22/99 Rwanda</div>
-
-    <!-- Cadre juridique -->
-    <div class="field"><label data-fr="Cadre Juridique Applicable" data-en="Applicable Legal Framework">Cadre Juridique Applicable</label>
-      <select id="c-loi">
-        <option value="RW" data-fr="Rwanda - Loi N22/99 du 12/11/1999 (Droit successoral)" data-en="Rwanda - Law N22/99 of 12/11/1999 (Succession Law)">Rwanda - Loi N22/99 du 12/11/1999</option>
-        <option value="INT" data-fr="Standard International (complement au droit local)" data-en="International Standard (complement to local law)">Standard International</option>
-        <option value="KE" data-fr="Kenya - Law of Succession Act (Cap. 160)" data-en="Kenya - Law of Succession Act (Cap. 160)">Kenya - Law of Succession Act</option>
-        <option value="US" data-fr="USA - Uniform Probate Code" data-en="USA - Uniform Probate Code">USA - Uniform Probate Code</option>
-      </select>
-    </div>
-
-    <!-- Executor -->
-    <div class="field"><label data-fr="Executeur testamentaire designe (optionnel)" data-en="Designated executor (optional)">Executeur testamentaire (optionnel)</label>
-      <input type="text" id="c-exec" placeholder="Nom et coordonnees de l'executeur testamentaire..."/>
-      <div class="hint" data-fr="Personne chargee de veiller a l'execution de votre acte de succession" data-en="Person responsible for overseeing execution of your succession deed">Personne chargee de veiller a l'execution</div>
-    </div>
-
-    <div class="info-note" data-fr="Note: LegacyVault enregistre votre acte sur la blockchain comme preuve numerique horodatee. Cet enregistrement est un complement au droit civil et ne se substitue pas aux procedures legales en vigueur dans votre pays." data-en="Note: LegacyVault records your deed on the blockchain as a timestamped digital proof. This registration complements civil law and does not replace legal procedures in your country.">Note: L'enregistrement blockchain est une preuve numerique complementaire. Il ne remplace pas les procedures legales civiles.</div>
+    <div class="sec-hdr"><div class="sec-icon">&#9878;</div><div><div class="sec-title" data-fr="Clauses d'Execution" data-en="Execution Clauses">Clauses d'Execution</div><div class="sec-sub" data-fr="Ces conditions sont ecrites dans le document. LegacyVault ne les fait pas appliquer automatiquement." data-en="These conditions are written into the document. LegacyVault does not enforce them automatically.">Ecrites dans le document</div></div></div>
+    <div class="field"><label data-fr="Delai minimum avant execution" data-en="Minimum delay before execution">Delai minimum avant execution</label><select id="c-delai"><option value="0" data-fr="Aucun delai" data-en="No delay">Aucun delai</option><option value="1" data-fr="1 an" data-en="1 year">1 an</option><option value="5" data-fr="5 ans" data-en="5 years">5 ans</option><option value="10" selected data-fr="10 ans" data-en="10 years">10 ans</option><option value="25" data-fr="25 ans" data-en="25 years">25 ans</option></select></div>
+    <div class="field"><label data-fr="Nombre d'heritiers devant confirmer l'execution" data-en="Number of heirs who must confirm execution">Heritiers devant confirmer</label><select id="c-sig"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>
+    <div class="toggle-row"><span class="toggle-lbl" data-fr="Exiger un acte de deces officiel" data-en="Require an official death certificate">Exiger un acte de deces officiel</span><label class="toggle"><input type="checkbox" id="c-deces" checked/><span class="slider"></span></label></div>
+    <div class="toggle-row"><span class="toggle-lbl" data-fr="Validation notariale requise" data-en="Notarial validation required">Validation notariale requise</span><label class="toggle"><input type="checkbox" id="c-notaire" checked/><span class="slider"></span></label></div>
+    <div class="field" style="margin-top:8px"><label data-fr="Cadre juridique applicable" data-en="Applicable legal framework">Cadre juridique applicable</label><select id="c-loi"><option value="RW" data-fr="Rwanda — Loi N°22/99 du 12/11/1999" data-en="Rwanda — Law N°22/99 of 12/11/1999">Rwanda — Loi N°22/99</option><option value="KE" data-fr="Kenya — Law of Succession Act (Cap. 160)" data-en="Kenya — Law of Succession Act (Cap. 160)">Kenya — Law of Succession Act</option><option value="US" data-fr="USA — Uniform Probate Code" data-en="USA — Uniform Probate Code">USA — Uniform Probate Code</option><option value="INT" data-fr="Droit local applicable (a preciser par le notaire)" data-en="Applicable local law (to be specified by the notary)">Droit local (a preciser)</option></select></div>
+    <div class="field"><label data-fr="Executeur designe (facultatif)" data-en="Designated executor (optional)">Executeur designe (facultatif)</label><input type="text" id="c-exec" placeholder="Nom de la personne chargee de veiller a l'execution"/></div>
+    <div class="field"><label data-fr="Lieu d'etablissement" data-en="Place of signing">Lieu d'etablissement</label><input type="text" id="c-lieu" placeholder="Ex: Kigali"/></div>
   </div>
   <button class="btn-p" onclick="goTo(5)" data-fr="Continuer vers le Recapitulatif" data-en="Continue to Summary">Continuer vers le Recapitulatif</button>
   <button class="btn-s" onclick="goTo(3)" data-fr="Retour" data-en="Back">Retour</button>
 </div>
 
-<!-- PANEL 5: RECAPITULATIF -->
 <div class="panel" id="panel-5">
   <div id="summary-content"></div>
-  <div class="gcv-note">
-    <strong data-fr="Frais d'enregistrement: 3pi" data-en="Registration fee: 3pi">Frais d'enregistrement: 3pi</strong><br/>
-    ~$942,477 (ref. GCV $314,159/pi) | ~<span id="fee-frw">1,225,220,000</span> FRW<br/>
-    <span data-fr="Les prix FRW sont calcules via le taux BNR temps reel." data-en="FRW prices calculated via real-time BNR rate.">Calcule via taux BNR temps reel.</span>
-  </div>
-  <button class="btn-p" onclick="goTo(6)" data-fr="Valider et Proceder au Paiement" data-en="Validate and Proceed to Payment">Valider et Proceder au Paiement</button>
-  <button class="btn-s" onclick="goTo(4)" data-fr="Retour - Modifier les Conditions" data-en="Back - Edit Conditions">Retour - Modifier</button>
+  <button class="btn-p" onclick="goTo(6)" data-fr="Continuer vers le Document" data-en="Continue to the Document">Continuer vers le Document</button>
+  <button class="btn-s" onclick="goTo(4)" data-fr="Retour — Modifier les conditions" data-en="Back — Edit conditions">Retour — Modifier</button>
 </div>
 
-<!-- PANEL 6: PAIEMENT -->
 <div class="panel" id="panel-6">
   <div class="sec">
-    <div class="sec-hdr">
-      <div class="sec-icon">&#128204;</div>
-      <div><div class="sec-title" data-fr="Enregistrement de l'Acte de Succession" data-en="Succession Deed Registration">Enregistrement de l'Acte de Succession</div></div>
-    </div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Acte de disposition successorale signe numeriquement" data-en="Digitally signed succession deed">Acte de disposition successorale signe numeriquement</span></div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Enregistrement horodate sur la blockchain (preuve immuable)" data-en="Timestamped registration on blockchain (immutable proof)">Enregistrement horodate blockchain (preuve immuable)</span></div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Identifiant unique de transaction (TXID) verifable publiquement" data-en="Unique transaction ID (TXID) publicly verifiable">Identifiant unique TXID verifable publiquement</span></div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Document PDF chiffre (AES-256) stocke sur IPFS" data-en="Encrypted PDF (AES-256) stored on IPFS">Document PDF chiffre AES-256 sur IPFS</span></div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Systeme de validation multi-signatures des heritiers" data-en="Multi-signature validation system for heirs">Validation multi-signatures des heritiers</span></div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Procedure de verification du deces et d'execution" data-en="Death verification and execution procedure">Procedure de verification du deces et execution</span></div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Conforme au droit rwandais (Loi N22/99) et standards internationaux" data-en="Compliant with Rwandan law (Law N22/99) and international standards">Conforme Loi N22/99 Rwanda et standards internationaux</span></div>
-    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Notification par email a tous les heritiers designes" data-en="Email notification to all designated heirs">Notification email a tous les heritiers designes</span></div>
+    <div class="sec-hdr"><div class="sec-icon">&#128196;</div><div><div class="sec-title" data-fr="Votre Document" data-en="Your Document">Votre Document</div></div></div>
+    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Projet d'acte de disposition successorale redige a partir de vos informations (FR ou EN)" data-en="Draft succession deed written from your information (FR or EN)">Projet d'acte redige a partir de vos informations</span></div>
+    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Articles : heritiers et parts, patrimoine, clauses d'execution, mentions legales" data-en="Articles: heirs and shares, estate, execution clauses, legal notices">Heritiers, patrimoine, clauses, mentions legales</span></div>
+    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Zones de signature : testateur, temoins, notaire" data-en="Signature areas: testator, witnesses, notary">Signatures : testateur, temoins, notaire</span></div>
+    <div class="ds-item"><span class="dsc">&#10003;</span><span data-fr="Empreinte numerique SHA-256 du texte : toute modification du texte change l'empreinte (ce n'est pas un enregistrement sur une blockchain)" data-en="SHA-256 fingerprint of the text: any change to the text changes the fingerprint (this is not a blockchain registration)">Empreinte SHA-256 du texte (pas un enregistrement blockchain)</span></div>
+    <div class="info-note" style="margin-top:10px" data-fr="Apercu gratuit avec la mention BROUILLON. La version complete (3 Pi) retire le filigrane et reste debloquee sur cet appareil. Paiement en Pi uniquement." data-en="Free preview marked DRAFT. The full version (3 Pi) removes the watermark and stays unlocked on this device. Payment in Pi only.">Apercu gratuit (BROUILLON). Version complete : 3 Pi.</div>
+    <div class="legal-note"><strong data-fr="Rappel :" data-en="Reminder:">Rappel :</strong> <span data-fr="Ce document est un projet. Pour une pleine validite juridique : 1) consultez un notaire agree, 2) faites etablir un testament en bonne et due forme, 3) respectez la loi applicable. VitaNova n'est pas un cabinet juridique." data-en="This document is a draft. For full legal validity: 1) consult a licensed notary, 2) have a proper will drawn up, 3) comply with the applicable law. VitaNova is not a law firm.">Projet : consultez un notaire. VitaNova n'est pas un cabinet juridique.</span></div>
+    <div class="chk-row"><input type="checkbox" id="chk1"/><label for="chk1" data-fr="Je comprends que ce document est un projet et ne remplace pas un testament notarie" data-en="I understand this document is a draft and does not replace a notarized will">Je comprends que ce document est un projet</label></div>
+    <div class="chk-row"><input type="checkbox" id="chk2"/><label for="chk2" data-fr="Je certifie l'exactitude des informations saisies" data-en="I certify the accuracy of the information entered">Je certifie l'exactitude des informations</label></div>
+    <div class="chk-row"><input type="checkbox" id="chk3"/><label for="chk3" data-fr="Je m'engage a faire valider ce document par un notaire agree" data-en="I commit to having this document validated by a licensed notary">Je m'engage a le faire valider par un notaire</label></div>
+    <button class="btn-s" id="btn-preview" onclick="showDeed()" data-fr="Voir le document (apercu gratuit)" data-en="View the document (free preview)">Voir le document (apercu gratuit)</button>
+    <button class="btn-pay" id="btn-pay" onclick="pay()" data-fr="Payer 3 Pi — Debloquer la version complete" data-en="Pay 3 Pi — Unlock the full version">Payer 3 Pi — Debloquer la version complete</button>
+    <button class="btn-s" onclick="goTo(5)" data-fr="Retour" data-en="Back">Retour</button>
+    <div style="text-align:center;margin-top:12px"><button class="small-btn" onclick="saveDraft(true)" data-fr="Sauvegarder sur cet appareil" data-en="Save on this device">Sauvegarder sur cet appareil</button> <button class="small-btn" onclick="restoreDraft()" data-fr="Restaurer" data-en="Restore">Restaurer</button> <button class="small-btn" onclick="eraseDraft()" style="border-color:var(--red);color:var(--red)" data-fr="Effacer mes donnees" data-en="Erase my data">Effacer mes donnees</button></div>
   </div>
-
-  <div class="gcv-note">
-    <strong data-fr="Frais: 3pi" data-en="Fee: 3pi">Frais: 3pi</strong><br/>
-    ~$942,477 (ref. GCV) | ~<span id="fee-frw2">1,225,220,000</span> FRW
-  </div>
-
-  <div class="legal-note">
-    <strong data-fr="Rappel Legal Important:" data-en="Important Legal Reminder:">Rappel Legal Important:</strong>
-    <span data-fr="Cet acte numerique est un complement a votre disposition successorale. Pour une pleine validite juridique: 1) Consultez un notaire agree 2) Etablissez un testament en bonne et due forme 3) Respectez la Loi N22/99 du 12/11/1999 au Rwanda. VitaNova/LegacyVault n'est pas un cabinet juridique." data-en="This digital deed is a complement to your succession. For full legal validity: 1) Consult a licensed notary 2) Establish a proper will 3) Comply with Law N22/99 of 12/11/1999 in Rwanda. VitaNova/LegacyVault is not a law firm.">Cet acte est un complement numerique. Consultez un notaire. VitaNova n'est pas un cabinet juridique.</span>
-  </div>
-
-  <div class="chk-row">
-    <input type="checkbox" id="chk1"/>
-    <label for="chk1" data-fr="Je comprends que cet acte numerique est un complement et ne remplace pas un testament notarie" data-en="I understand this digital deed is a complement and does not replace a notarized will">Je comprends que cet acte est un complement et ne remplace pas un testament notarie</label>
-  </div>
-  <div class="chk-row">
-    <input type="checkbox" id="chk2"/>
-    <label for="chk2" data-fr="Je certifie l'exactitude des informations et confirme avoir ete conseille sur mes droits et obligations legaux" data-en="I certify the accuracy of information and confirm I have been advised of my legal rights and obligations">Je certifie l'exactitude des informations et mes obligations legales</label>
-  </div>
-  <div class="chk-row">
-    <input type="checkbox" id="chk3"/>
-    <label for="chk3" data-fr="Je m'engage a consulter un notaire agree pour la validation legale complete de ma succession" data-en="I commit to consulting a licensed notary for full legal validation of my succession">Je m'engage a consulter un notaire pour validation legale complete</label>
-  </div>
-
-  <button class="btn-pay" onclick="pay()" data-fr="Payer 3pi - Enregistrer l'Acte de Succession" data-en="Pay 3pi - Register the Succession Deed">Payer 3pi - Enregistrer l'Acte</button>
-  <button class="btn-s" onclick="goTo(5)" data-fr="Retour au Recapitulatif" data-en="Back to Summary">Retour au Recapitulatif</button>
+</div>
 </div>
 
-</div>
-
-<!-- SUCCESS -->
 <div class="success-panel" id="success-panel">
   <div class="si">&#127881;</div>
-  <div class="st" data-fr="Acte Enregistre avec Succes!" data-en="Deed Successfully Registered!">Acte Enregistre avec Succes!</div>
-  <div class="ss" data-fr="Votre acte de succession a ete enregistre sur la blockchain. Conservez votre TXID comme preuve d'enregistrement. Pensez a consulter un notaire pour la validation legale complete." data-en="Your succession deed has been registered on the blockchain. Keep your TXID as proof of registration. Remember to consult a notary for full legal validation.">Votre acte est enregistre sur la blockchain. Conservez ce TXID. Consultez un notaire pour validation legale.</div>
+  <div class="st" data-fr="Paiement confirme !" data-en="Payment confirmed!">Paiement confirme !</div>
+  <div class="ss" data-fr="La version complete de votre document est debloquee sur cet appareil. N'oubliez pas de la faire valider par un notaire." data-en="The full version of your document is unlocked on this device. Remember to have it validated by a notary.">Version complete debloquee. Faites-la valider par un notaire.</div>
   <div class="txid" id="txid-box">TXID: --</div>
-  <div class="sec" style="text-align:left;max-width:420px;margin:0 auto 20px;">
-    <div class="sum-title" data-fr="Prochaines Etapes" data-en="Next Steps">Prochaines Etapes</div>
-    <div class="ds-item"><span class="dsc">1</span><span data-fr="Transmettez ce TXID a vos heritiers comme reference" data-en="Share this TXID with your heirs as reference">Transmettez ce TXID a vos heritiers</span></div>
-    <div class="ds-item"><span class="dsc">2</span><span data-fr="Consultez un notaire agree pour validation legale complete" data-en="Consult a licensed notary for full legal validation">Consultez un notaire pour validation legale</span></div>
-    <div class="ds-item"><span class="dsc">3</span><span data-fr="Informez vos heritiers de leur role et des procedures a suivre" data-en="Inform your heirs of their role and procedures">Informez vos heritiers des procedures</span></div>
-    <div class="ds-item"><span class="dsc">4</span><span data-fr="Mettez a jour cet acte en cas de changement de situation" data-en="Update this deed if your situation changes">Mettez a jour en cas de changement de situation</span></div>
-  </div>
-  <button class="btn-p" onclick="location.href='index.html'" style="max-width:300px;margin:0 auto;display:block" data-fr="Retour a VitaNova" data-en="Back to VitaNova">Retour a VitaNova</button>
+  <button class="btn-p" onclick="openPaidDeed()" style="max-width:300px;margin:0 auto 8px;display:block" data-fr="Ouvrir mon document" data-en="Open my document">Ouvrir mon document</button>
+  <button class="btn-s" onclick="location.href='index.html'" style="max-width:300px;margin:0 auto;display:block" data-fr="Retour a VitaNova" data-en="Back to VitaNova">Retour a VitaNova</button>
 </div>
 
+<div class="report-panel" id="report-panel">
+  <div class="rpt-bar"><button onclick="window.print()">&#128424; Imprimer / PDF</button><button onclick="closeDeed()" style="background:#374151">&#8592; Fermer</button></div>
+  <div class="rpt" id="rpt-content"></div>
+</div>
 <div id="toast"></div>
 
 <script>
-const GCV = 314159;
-let BNR_RATE = 1350;
-let lang = 'fr';
-let currentStep = 1;
-let benefCount = 0;
-let immobCount = 0;
-let mobilCount = 0;
+const REPORT_PRICE_PI=3;
+const PAID_KEY="vitanova_legacyvault_paid", SAVE_KEY="vitanova_legacyvault";
+// Production = sandbox false. Sandbox seulement sur localhost ou avec ?sandbox=1.
+const PI_SANDBOX=/[?&]sandbox=1/.test(location.search)||location.hostname==="localhost"||location.hostname==="127.0.0.1";
+let lang="fr", currentStep=1, benefCount=0, immobCount=0, mobilCount=0;
+function L(fr,en){ return lang==="en"?en:fr; }
+function v(id){ return parseFloat((document.getElementById(id)||{}).value||0)||0; }
+function txt(id){ return ((document.getElementById(id)||{}).value||"").trim(); }
+function selText(id){ const e=document.getElementById(id); return e&&e.selectedIndex>=0?e.options[e.selectedIndex].text:""; }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function attr(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+function fmtFRW(n){ return (Math.round(n)||0).toLocaleString()+" FRW"; }
+function t(msg,type){ const el=document.getElementById("toast"); el.textContent=msg; el.className=type||""; el.style.display="block"; setTimeout(function(){ el.style.display="none"; },3500); }
 
-// AUTH
-class AuthService {
-  constructor(){ this.user=null; this.accessToken=null; }
-  onIncompletePaymentFound(p){ console.warn("Incomplete:",p.identifier); }
-  async login(scopes){
-    try{
-      await Pi.init({version:"2.0",sandbox:true});
-      const auth = await Pi.authenticate(scopes, this.onIncompletePaymentFound);
-      this.user=auth.user; this.accessToken=auth.accessToken;
-      try{ await fetch("https://api.minepi.com/v2/me",{headers:{"Authorization":"Bearer "+auth.accessToken}}); }
-      catch(e){ console.warn("v2/me skipped:",e.message); }
-      return {success:true,user:auth.user,accessToken:auth.accessToken};
-    }catch(e){ return {success:false,error:e.message}; }
-  }
-}
-const piService = new AuthService();
-
-window.addEventListener("load", async()=>{
-  await fetchBNR();
-  applyLang();
-  addBenef();
-  addImmob();
-  addMobil();
-  const r = await piService.login(["username","payments"]);
-  if(r.success){
-    document.getElementById("uname").textContent="@"+r.user.username;
-    document.getElementById("user-badge").style.display="flex";
-    if(!document.getElementById("t-nom").value) document.getElementById("t-nom").value=r.user.username;
-    if(!document.getElementById("t-addr-bc").value) document.getElementById("t-addr-bc").value="@"+r.user.username;
-  }
-});
-
-// BNR
-async function fetchBNR(){
-  try{
-    const r=await fetch("https://api.exchangerate-api.com/v4/latest/USD");
-    const d=await r.json();
-    BNR_RATE=d.rates["RWF"]||1350;
-  }catch(e){ BNR_RATE=1350; }
-  const feeFRW=(3*GCV*BNR_RATE).toLocaleString(undefined,{maximumFractionDigits:0});
-  if(document.getElementById("fee-frw")) document.getElementById("fee-frw").textContent=feeFRW;
-  if(document.getElementById("fee-frw2")) document.getElementById("fee-frw2").textContent=feeFRW;
-}
-
-function frwToUsd(f){ return f/BNR_RATE; }
-function frwToPi(f){ return frwToUsd(f)/GCV; }
-function fmtFRW(f){ return f.toLocaleString()+" FRW"; }
-function fmtU(f){ return "$"+(frwToUsd(f)).toLocaleString(undefined,{maximumFractionDigits:0}); }
-function fmtP(f){ return (frwToPi(f)).toFixed(6)+"pi"; }
-function v(id){ return parseFloat(document.getElementById(id)?.value||0)||0; }
-
-// HERITIERS
-function addBenef(){
-  benefCount++;
-  const id=benefCount;
-  const lf=lang==="fr";
-  const div=document.createElement("div");
-  div.className="benef-row"; div.id="benef-"+id;
-  div.innerHTML=`<div class="benef-hdr"><span class="benef-lbl">${lf?"Heritier":"Heir"} #${id}</span><button class="btn-del" onclick="removeBenef(${id})">x</button></div>
-    <div class="row2"><div class="field"><label>${lf?"Nom complet *":"Full Name *"}</label><input type="text" id="bn-${id}" placeholder="${lf?"Ex: Marie UWASE":"Ex: Marie UWASE"}"/></div>
-    <div class="field"><label>${lf?"Lien de parente":"Relationship"}</label><select id="br-${id}">
-      <option value="conjoint" ${lf?"":""}>${lf?"Conjoint(e)":"Spouse"}</option>
-      <option value="enfant">${lf?"Enfant":"Child"}</option>
-      <option value="parent">${lf?"Parent":"Parent"}</option>
-      <option value="frere_soeur">${lf?"Frere/Soeur":"Sibling"}</option>
-      <option value="autre">${lf?"Autre":"Other"}</option>
-    </select></div></div>
-    <div class="row2"><div class="field"><label>${lf?"Adresse Blockchain":"Blockchain Address"}</label><input type="text" id="ba-${id}" placeholder="@nom_heritier"/></div>
-    <div class="field"><label>${lf?"Part (%) *":"Share (%) *"}</label><input type="number" id="bp-${id}" placeholder="Ex: 40" min="1" max="100" oninput="updatePct()"/></div></div>
-    <div class="field"><label>${lf?"Email de notification":"Notification Email"}</label><input type="email" id="be-${id}" placeholder="heritier@email.com"/></div>`;
-  document.getElementById("benef-list").appendChild(div);
-  updatePct();
-}
-function removeBenef(id){ document.getElementById("benef-"+id)?.remove(); updatePct(); }
-function calcPct(){ let t=0; for(let i=1;i<=benefCount;i++){ const el=document.getElementById("bp-"+i); if(el)t+=parseFloat(el.value||0)||0; } return Math.round(t*10)/10; }
-function updatePct(){
-  const total=calcPct();
-  const el=document.getElementById("pct-total");
-  el.textContent="Total: "+total+"%";
-  el.style.color=total===100?"var(--green)":"var(--red)";
-}
-
-// IMMOBILIER
-function addImmob(){
-  immobCount++;
-  const id=immobCount;
-  const lf=lang==="fr";
-  const div=document.createElement("div");
-  div.id="immob-"+id;
-  div.style.marginBottom="8px";
-  div.innerHTML=`<div class="actif-row"><input type="text" id="im-d-${id}" placeholder="${lf?"Ex: Maison 4 chambres a Nyarutarama Kigali":"Ex: 4-bedroom house in Nyarutarama Kigali"}"/><input type="number" id="im-v-${id}" class="amt" placeholder="${lf?"Valeur (FRW)":"Value (FRW)"}" min="0" oninput="updateAssets()"/><button class="btn-del" onclick="removeImmob(${id})">x</button></div><div style="font-size:10px;color:var(--muted);margin-bottom:4px;" id="im-c-${id}"></div>`;
-  document.getElementById("immob-list").appendChild(div);
-}
-function removeImmob(id){ document.getElementById("immob-"+id)?.remove(); updateAssets(); }
-
-// MOBILIER
-function addMobil(){
-  mobilCount++;
-  const id=mobilCount;
-  const lf=lang==="fr";
-  const div=document.createElement("div");
-  div.id="mobil-"+id;
-  div.style.marginBottom="8px";
-  div.innerHTML=`<div class="actif-row"><input type="text" id="mo-d-${id}" placeholder="${lf?"Ex: Toyota RAV4 2020, 50 vaches laitieres...":"Ex: Toyota RAV4 2020, 50 dairy cows..."}"/><input type="number" id="mo-v-${id}" class="amt" placeholder="${lf?"Valeur (FRW)":"Value (FRW)"}" min="0" oninput="updateAssets()"/><button class="btn-del" onclick="removeMobil(${id})">x</button></div><div style="font-size:10px;color:var(--muted);margin-bottom:4px;" id="mo-c-${id}"></div>`;
-  document.getElementById("mobil-list").appendChild(div);
-}
-function removeMobil(id){ document.getElementById("mobil-"+id)?.remove(); updateAssets(); }
-
-// ASSETS TOTAL
-function updateAssets(){
-  const piAmt=v("a-pi"); const piVal=piAmt*GCV*BNR_RATE;
-  if(document.getElementById("a-pi-frw")) document.getElementById("a-pi-frw").value=piAmt>0?piVal.toLocaleString(undefined,{maximumFractionDigits:0})+" FRW":"";
-  let total=piVal+v("a-digital-val");
-  for(let i=1;i<=immobCount;i++){ const el=document.getElementById("im-v-"+i); if(el){ const val=parseFloat(el.value||0)||0; total+=val; const c=document.getElementById("im-c-"+i); if(c&&val>0)c.textContent="= "+fmtU(val)+" | "+fmtP(val); } }
-  for(let i=1;i<=mobilCount;i++){ const el=document.getElementById("mo-v-"+i); if(el){ const val=parseFloat(el.value||0)||0; total+=val; const c=document.getElementById("mo-c-"+i); if(c&&val>0)c.textContent="= "+fmtU(val)+" | "+fmtP(val); } }
-  document.getElementById("total-assets").textContent=fmtFRW(total)+" (= "+fmtU(total)+" | "+fmtP(total)+")";
-}
-
-// SUMMARY
-function buildSummary(){
-  const lf=lang==="fr";
-  const nom=document.getElementById("t-nom").value||"--";
-  const nat=document.getElementById("t-nat").value||"--";
-  const pays=document.getElementById("t-pays").options[document.getElementById("t-pays").selectedIndex].text;
-  const bc=document.getElementById("t-addr-bc").value||"--";
-  const delai=document.getElementById("c-delai").options[document.getElementById("c-delai").selectedIndex].text;
-  const sig=document.getElementById("c-sig").options[document.getElementById("c-sig").selectedIndex].text;
-  const loi=document.getElementById("c-loi").options[document.getElementById("c-loi").selectedIndex].text;
-  const deces=document.getElementById("c-deces").checked;
-  const notaire=document.getElementById("c-notaire").checked;
-  let benefHTML="";
-  for(let i=1;i<=benefCount;i++){
-    const bn=document.getElementById("bn-"+i); const bp=document.getElementById("bp-"+i); const ba=document.getElementById("ba-"+i);
-    if(bn&&bn.value) benefHTML+=`<div class="sum-row"><span class="sum-key">${bn.value}</span><span class="sum-val">${bp?.value||0}% | ${ba?.value||"--"}</span></div>`;
-  }
-  const piAmt=v("a-pi"); const piVal=piAmt*GCV*BNR_RATE;
-  let totalAssets=piVal+v("a-digital-val");
-  for(let i=1;i<=immobCount;i++){ const el=document.getElementById("im-v-"+i); if(el)totalAssets+=parseFloat(el.value||0)||0; }
-  for(let i=1;i<=mobilCount;i++){ const el=document.getElementById("mo-v-"+i); if(el)totalAssets+=parseFloat(el.value||0)||0; }
-  document.getElementById("summary-content").innerHTML=`
-    <div class="sum-card"><div class="sum-title">${lf?"Testateur":"Testator"}</div>
-      <div class="sum-row"><span class="sum-key">${lf?"Nom":"Name"}</span><span class="sum-val">${nom}</span></div>
-      <div class="sum-row"><span class="sum-key">${lf?"Nationalite":"Nationality"}</span><span class="sum-val">${nat}</span></div>
-      <div class="sum-row"><span class="sum-key">${lf?"Pays":"Country"}</span><span class="sum-val">${pays}</span></div>
-      <div class="sum-row"><span class="sum-key">${lf?"Adresse Blockchain":"Blockchain Address"}</span><span class="sum-val">${bc}</span></div>
-    </div>
-    <div class="sum-card"><div class="sum-title">${lf?"Heritiers et Parts":"Heirs and Shares"}</div>${benefHTML||"<div style='color:var(--muted);font-size:12px;'>--</div>"}
-      <div class="sum-row" style="margin-top:6px;"><span class="sum-key" style="font-weight:700;">Total</span><span class="sum-val" style="color:${calcPct()===100?"var(--green)":"var(--red)"};">${calcPct()}%</span></div>
-    </div>
-    <div class="sum-card"><div class="sum-title">${lf?"Patrimoine Declare":"Declared Estate"}</div>
-      <div class="sum-row"><span class="sum-key">Pi</span><span class="sum-val">${piAmt}pi (~${fmtFRW(piVal)})</span></div>
-      <div class="sum-row"><span class="sum-key">TOTAL</span><span class="sum-val" style="color:var(--gold);font-size:13px;">${fmtFRW(totalAssets)} (${fmtU(totalAssets)})</span></div>
-    </div>
-    <div class="sum-card"><div class="sum-title">${lf?"Conditions d'Execution":"Execution Conditions"}</div>
-      <div class="sum-row"><span class="sum-key">${lf?"Delai":"Delay"}</span><span class="sum-val">${delai}</span></div>
-      <div class="sum-row"><span class="sum-key">${lf?"Validations":"Validations"}</span><span class="sum-val">${sig}</span></div>
-      <div class="sum-row"><span class="sum-key">${lf?"Acte de deces":"Death cert."}</span><span class="sum-val">${deces?(lf?"Requis":"Required"):(lf?"Non requis":"Not required")}</span></div>
-      <div class="sum-row"><span class="sum-key">${lf?"Validation notariale":"Notarial validation"}</span><span class="sum-val">${notaire?(lf?"Requise":"Required"):(lf?"Non requise":"Not required")}</span></div>
-      <div class="sum-row"><span class="sum-key">${lf?"Cadre juridique":"Legal framework"}</span><span class="sum-val">${loi}</span></div>
-    </div>`;
-}
-
-// NAVIGATION
-function goTo(n){
-  if(n>currentStep&&!validate(currentStep)) return;
-  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-  document.getElementById("panel-"+n).classList.add("active");
-  for(let i=1;i<=6;i++){ const t=document.getElementById("pt"+i); if(!t)continue; t.classList.remove("active","done"); if(i<n)t.classList.add("done"); else if(i===n)t.classList.add("active"); }
-  for(let i=1;i<=5;i++){ const l=document.getElementById("pl"+i); if(l)l.classList.toggle("done",i<n); }
-  currentStep=n;
-  if(n===5) buildSummary();
-  window.scrollTo(0,0);
-}
-
-function validate(n){
-  const lf=lang==="fr";
-  const req=(id,msg)=>{ if(!document.getElementById(id)?.value?.trim()){t(msg,true);return false;} return true; };
-  if(n===1){
-    if(!req("t-nom",lf?"Entrez votre nom complet":"Enter your full name"))return false;
-    if(!req("t-nat",lf?"Entrez votre nationalite":"Enter your nationality"))return false;
-    if(!req("t-tel",lf?"Entrez votre telephone":"Enter your phone"))return false;
-    if(!req("t-addr",lf?"Entrez votre adresse":"Enter your address"))return false;
-    return true;
-  }
-  if(n===2){
-    const bens=document.querySelectorAll("[id^='bn-']");
-    if(bens.length===0){t(lf?"Ajoutez au moins un heritier":"Add at least one heir",true);return false;}
-    const total=calcPct();
-    if(total!==100){t(lf?"Le total des parts doit etre exactement 100% (actuellement "+total+"%)":"Total shares must be exactly 100% (currently "+total+"%)","err");return false;}
-    return true;
-  }
-  if(n===6){
-    if(!document.getElementById("chk1").checked||!document.getElementById("chk2").checked||!document.getElementById("chk3").checked){
-      t(lf?"Acceptez toutes les conditions":"Accept all terms",true);return false;
-    }
-    return true;
-  }
-  return true;
-}
-
-// PAYMENT
+// ── Pi ──
+class AuthService{ constructor(){ this.user=null; } onIncompletePaymentFound(p){ handleIncompletePayment(p); }
+  async login(scopes){ try{ await Pi.init({version:"2.0",sandbox:PI_SANDBOX}); const a=await Pi.authenticate(scopes,this.onIncompletePaymentFound); this.user=a.user; return {success:true,user:a.user}; }catch(e){ return {success:false,error:e.message}; } } }
+const piService=new AuthService();
+async function callPaymentApi(path,body){ const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}); let d={}; try{ d=await r.json(); }catch(e){} if(!r.ok) throw new Error(d.error||("HTTP "+r.status)); return d; }
+async function paymentsAvailable(){ try{ const r=await fetch("/api/pi/approve",{method:"GET"}); return r.status===405; }catch(e){ return false; } }
+async function handleIncompletePayment(p){ try{ const tx=p&&p.transaction&&p.transaction.txid; if(p&&p.identifier&&tx) await callPaymentApi("/api/pi/complete",{paymentId:p.identifier,txid:tx}); }catch(e){ console.warn("Incomplete:",e.message); } }
+function isPaid(){ try{ return !!localStorage.getItem(PAID_KEY); }catch(e){ return false; } }
+function refreshPaidUI(){ const b=document.getElementById("btn-pay"); if(b) b.style.display=isPaid()?"none":"block"; const p=document.getElementById("btn-preview"); if(p) p.innerHTML=isPaid()?L("Ouvrir le document complet","Open the full document"):L("Voir le document (apercu gratuit)","View the document (free preview)"); }
 async function pay(){
-  if(!validate(6))return;
-  if(!piService.user){
-    const r=await piService.login(["username","payments"]);
-    if(!r.success){t(lang==="fr"?"Ouvrez dans Pi Browser":"Open in Pi Browser",true);return;}
-    document.getElementById("uname").textContent="@"+r.user.username;
-    document.getElementById("user-badge").style.display="flex";
-  }
-  t(lang==="fr"?"Enregistrement en cours...":"Registering...");
-  const ts=Date.now(); const uid=piService.user?.username||"user";
+  if(!validate(6)) return;
+  if(!(await paymentsAvailable())){ t(L("Paiement bientot disponible","Payment coming soon"),"err"); return; }
+  if(!piService.user){ const r=await piService.login(["username","payments"]); if(!r.success){ t(L("Ouvrez dans Pi Browser","Open in Pi Browser"),"err"); return; } document.getElementById("uname").textContent="@"+r.user.username; document.getElementById("user-badge").style.display="flex"; }
+  t(L("Paiement en cours...","Processing payment..."));
+  const ts=Date.now(), uid=piService.user&&piService.user.username||"user";
   try{
-    await Pi.init({version:"2.0",sandbox:true});
-    Pi.createPayment({amount:3,memo:"LEGACYVAULT-creation-"+ts+"-"+uid,metadata:{type:"legacy_vault",domain:"LegacyVault",userId:uid,timestamp:ts}},{
-      onReadyForServerApproval:(id)=>{console.log("Approval:",id);},
-      onReadyForServerCompletion:(id,txid)=>{ showSuccess(txid); },
-      onCancel:()=>{t(lang==="fr"?"Annule":"Cancelled",true);},
-      onError:(e)=>{console.error(e);t(lang==="fr"?"Erreur paiement":"Payment error",true);}
+    await Pi.init({version:"2.0",sandbox:PI_SANDBOX});
+    Pi.createPayment({amount:REPORT_PRICE_PI,memo:"LEGACYVAULT-"+ts+"-"+uid,metadata:{type:"legacyvault_deed",userId:uid,timestamp:ts}},{
+      onReadyForServerApproval:function(id){ callPaymentApi("/api/pi/approve",{paymentId:id}).catch(function(e){ console.error(e); t(L("Serveur de paiement indisponible","Payment server unavailable"),"err"); }); },
+      onReadyForServerCompletion:function(id,txid){ callPaymentApi("/api/pi/complete",{paymentId:id,txid:txid}).then(function(){ showSuccess(txid); }).catch(function(e){ console.error(e); t(L("Paiement non confirme — contactez-nous","Payment not confirmed — contact us"),"err"); }); },
+      onCancel:function(){ t(L("Annule","Cancelled"),"err"); },
+      onError:function(e){ console.error(e); t(L("Erreur paiement","Payment error"),"err"); }
     });
-  }catch(e){console.error(e);t(lang==="fr"?"Pi Browser requis":"Pi Browser required",true);}
+  }catch(e){ t(L("Pi Browser requis","Pi Browser required"),"err"); }
 }
 function showSuccess(txid){
-  document.querySelector(".form-wrap").style.display="none";
-  document.querySelector(".prog-wrap").style.display="none";
-  document.getElementById("success-panel").style.display="block";
-  document.getElementById("txid-box").textContent="TXID: "+(txid||"0x"+Math.random().toString(16).substr(2,40).toUpperCase());
-  t(lang==="fr"?"Acte enregistre avec succes!":"Deed registered successfully!");
-  applyLang();
+  try{ localStorage.setItem(PAID_KEY,JSON.stringify({txid:txid||null,ts:new Date().toISOString()})); }catch(e){}
+  refreshPaidUI(); document.querySelector(".form-wrap").style.display="none"; document.querySelector(".prog-wrap").style.display="none";
+  document.getElementById("success-panel").style.display="block"; document.getElementById("txid-box").textContent="TXID: "+(txid||"--");
+}
+function openPaidDeed(){ document.getElementById("success-panel").style.display="none"; document.querySelector(".form-wrap").style.display=""; document.querySelector(".prog-wrap").style.display=""; showDeed(true); }
+window.addEventListener("load",function(){
+  applyLang(); addBenef(); addImmob(); addMobil(); refreshPaidUI(); checkSaved();
+  setTimeout(function(){ piService.login(["username","payments"]).then(function(r){ if(r&&r.success){ document.getElementById("uname").textContent="@"+r.user.username; document.getElementById("user-badge").style.display="flex"; } }).catch(function(){}); },400);
+});
+
+// ── Heritiers, biens ──
+function addBenef(name,rel,pct){
+  const id=++benefCount, d=document.createElement("div"); d.className="benef-row"; d.id="benef-"+id;
+  const opts=[["conjoint","Conjoint(e)","Spouse"],["enfant","Enfant","Child"],["parent","Parent","Parent"],["frere_soeur","Frere / Soeur","Sibling"],["autre","Autre","Other"]].map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===rel?' selected':'')+'>'+L(o[1],o[2])+'</option>'; }).join("");
+  d.innerHTML='<div class="benef-hdr"><span class="benef-lbl">'+L("Heritier","Heir")+' #'+id+'</span><button class="btn-del" onclick="removeBenef('+id+')">x</button></div><div class="row2"><div class="field"><label>'+L("Nom complet *","Full name *")+'</label><input type="text" id="bn-'+id+'" value="'+attr(name)+'" placeholder="Ex: Marie UWASE"/></div><div class="field"><label>'+L("Lien de parente","Relationship")+'</label><select id="br-'+id+'">'+opts+'</select></div></div><div class="field"><label>'+L("Part (%) *","Share (%) *")+'</label><input type="number" id="bp-'+id+'" value="'+attr(pct||"")+'" placeholder="Ex: 40" min="1" max="100" oninput="updatePct()"/></div>';
+  document.getElementById("benef-list").appendChild(d); updatePct();
+}
+function removeBenef(id){ const e=document.getElementById("benef-"+id); if(e) e.remove(); updatePct(); }
+function calcPct(){ let s=0; for(let i=1;i<=benefCount;i++){ if(document.getElementById("bp-"+i)) s+=v("bp-"+i); } return Math.round(s*10)/10; }
+function updatePct(){ const s=calcPct(), el=document.getElementById("pct-total"); el.textContent="Total : "+s+"%"; el.style.color=s===100?"var(--green)":"var(--red)"; }
+function addAsset(kind,desc,val){
+  const id=kind==="im"?++immobCount:++mobilCount, list=document.getElementById(kind==="im"?"immob-list":"mobil-list"), d=document.createElement("div"); d.id=(kind==="im"?"immob-":"mobil-")+id;
+  d.innerHTML='<div class="actif-row"><input type="text" id="'+kind+'-d-'+id+'" value="'+attr(desc)+'" placeholder="'+(kind==="im"?L("Ex: Maison 4 chambres a Kigali","Ex: 4-bedroom house in Kigali"):L("Ex: Vehicule, 50 vaches laitieres...","Ex: Vehicle, 50 dairy cows..."))+'"/><input type="number" id="'+kind+'-v-'+id+'" class="amt" value="'+attr(val||"")+'" placeholder="'+L("Valeur (FRW)","Value (FRW)")+'" min="0" oninput="updateAssets()"/><button class="btn-del" onclick="removeAsset(\''+kind+'\','+id+')">x</button></div>';
+  list.appendChild(d); updateAssets();
+}
+function addImmob(d,v2){ addAsset("im",d,v2); } function addMobil(d,v2){ addAsset("mo",d,v2); }
+function removeAsset(kind,id){ const e=document.getElementById((kind==="im"?"immob-":"mobil-")+id); if(e) e.remove(); updateAssets(); }
+function totalAssets(){ let s=v("a-digital-val"); for(let i=1;i<=immobCount;i++){ if(document.getElementById("im-v-"+i)) s+=v("im-v-"+i); } for(let i=1;i<=mobilCount;i++){ if(document.getElementById("mo-v-"+i)) s+=v("mo-v-"+i); } return s; }
+function updateAssets(){ document.getElementById("total-assets").textContent=fmtFRW(totalAssets()); }
+function collect(kind,n){ const out=[]; for(let i=1;i<=n;i++){ const e=document.getElementById(kind+"-d-"+i); if(!e) continue; const val=v(kind+"-v-"+i); if(e.value.trim()||val) out.push({d:e.value.trim(),v:val}); } return out; }
+function collectHeirs(){ const out=[]; for(let i=1;i<=benefCount;i++){ const n=document.getElementById("bn-"+i); if(!n||!n.value.trim()) continue; out.push({n:n.value.trim(),r:selText("br-"+i),p:v("bp-"+i)}); } return out; }
+
+// ── Recapitulatif ──
+function buildSummary(){
+  const H=collectHeirs(), row=function(k,val){ return '<div class="sum-row"><span class="sum-key">'+k+'</span><span class="sum-val">'+esc(val)+'</span></div>'; };
+  document.getElementById("summary-content").innerHTML=
+   '<div class="sum-card"><div class="sum-title">'+L("Testateur","Testator")+'</div>'+row(L("Nom","Name"),txt("t-nom")||"--")+row(L("Nationalite","Nationality"),txt("t-nat")||"--")+row(L("Pays","Country"),selText("t-pays"))+'</div>'+
+   '<div class="sum-card"><div class="sum-title">'+L("Heritiers et parts","Heirs and shares")+'</div>'+(H.map(function(h){ return row(h.n+" ("+h.r+")",h.p+"%"); }).join("")||row("--","--"))+row("Total",calcPct()+"%")+'</div>'+
+   '<div class="sum-card"><div class="sum-title">'+L("Patrimoine declare","Declared estate")+'</div>'+row("Pi",(v("a-pi")||0)+" Pi")+row(L("Total en FRW (hors Pi)","Total in FRW (excl. Pi)"),fmtFRW(totalAssets()))+'</div>'+
+   '<div class="sum-card"><div class="sum-title">'+L("Clauses d'execution","Execution clauses")+'</div>'+row(L("Delai minimum","Minimum delay"),selText("c-delai"))+row(L("Heritiers devant confirmer","Heirs who must confirm"),txt("c-sig"))+row(L("Acte de deces","Death certificate"),document.getElementById("c-deces").checked?L("Requis","Required"):L("Non requis","Not required"))+row(L("Validation notariale","Notarial validation"),document.getElementById("c-notaire").checked?L("Requise","Required"):L("Non requise","Not required"))+row(L("Cadre juridique","Legal framework"),selText("c-loi"))+'</div>';
 }
 
-// LANGUAGE
-function setLang(l){
-  lang=l;
-  document.getElementById("lbtn-fr").classList.toggle("active",l==="fr");
-  document.getElementById("lbtn-en").classList.toggle("active",l==="en");
-  applyLang();
+// ── Document ──
+function deedLines(){
+  const H=collectHeirs(), IM=collect("im",immobCount), MO=collect("mo",mobilCount), now=new Date().toLocaleDateString(lang==="en"?"en-GB":"fr-FR");
+  const L1=[];
+  L1.push(L("PROJET D'ACTE DE DISPOSITION SUCCESSORALE","DRAFT SUCCESSION DEED"));
+  L1.push(L("Le soussigne, ","The undersigned, ")+txt("t-nom")+(txt("t-dob")?L(", ne(e) le ",", born on ")+txt("t-dob"):"")+L(", de nationalite ",", of nationality ")+txt("t-nat")+L(", demeurant a ",", residing at ")+txt("t-addr")+" ("+selText("t-pays")+"), "+L("situation matrimoniale : ","marital status: ")+selText("t-mariage")+L(", declare exprimer les dispositions suivantes.",", declares the following dispositions."));
+  L1.push(L("ARTICLE 1 — HERITIERS ET PARTS","ARTICLE 1 — HEIRS AND SHARES"));
+  H.forEach(function(h){ L1.push("- "+h.n+" ("+h.r+") : "+h.p+"%"); }); L1.push("Total : "+calcPct()+"%");
+  L1.push(L("ARTICLE 2 — PATRIMOINE DECLARE","ARTICLE 2 — DECLARED ESTATE"));
+  L1.push("- Pi : "+(v("a-pi")||0)+L(" (quantite indiquee, non valorisee)"," (quantity stated, not valued)"));
+  if(txt("a-digital-desc")||v("a-digital-val")) L1.push("- "+L("Autres actifs numeriques : ","Other digital assets: ")+txt("a-digital-desc")+" ("+fmtFRW(v("a-digital-val"))+")");
+  IM.forEach(function(x){ L1.push("- "+L("Immobilier : ","Real estate: ")+x.d+" ("+fmtFRW(x.v)+")"); });
+  MO.forEach(function(x){ L1.push("- "+L("Mobilier : ","Personal property: ")+x.d+" ("+fmtFRW(x.v)+")"); });
+  L1.push(L("Total declare (hors Pi) : ","Total declared (excl. Pi): ")+fmtFRW(totalAssets()));
+  L1.push(L("ARTICLE 3 — CLAUSES D'EXECUTION","ARTICLE 3 — EXECUTION CLAUSES"));
+  L1.push("- "+L("Delai minimum avant execution : ","Minimum delay before execution: ")+selText("c-delai"));
+  L1.push("- "+L("Nombre d'heritiers devant confirmer l'execution : ","Number of heirs who must confirm execution: ")+txt("c-sig"));
+  L1.push("- "+L("Acte de deces officiel : ","Official death certificate: ")+(document.getElementById("c-deces").checked?L("requis","required"):L("non requis","not required")));
+  L1.push("- "+L("Validation notariale : ","Notarial validation: ")+(document.getElementById("c-notaire").checked?L("requise","required"):L("non requise","not required")));
+  L1.push("- "+L("Cadre juridique : ","Legal framework: ")+selText("c-loi"));
+  if(txt("c-exec")) L1.push("- "+L("Executeur designe : ","Designated executor: ")+txt("c-exec"));
+  L1.push(L("ARTICLE 4 — MENTIONS","ARTICLE 4 — NOTICES"));
+  L1.push(L("Le present document est un projet etabli avec VitaNova LegacyVault. Il n'a aucune valeur legale tant qu'il n'a pas ete revu et valide par un notaire agree conformement a la loi applicable. Les clauses ci-dessus sont declaratives : elles ne sont pas appliquees automatiquement par un logiciel.","This document is a draft prepared with VitaNova LegacyVault. It has no legal value until reviewed and validated by a licensed notary in accordance with the applicable law. The clauses above are declarative: no software enforces them automatically."));
+  L1.push(L("Fait a ","Done at ")+(txt("c-lieu")||"__________")+L(", le ",", on ")+now);
+  return L1;
 }
+async function sha256(text){
+  try{ const buf=await (window.crypto||self.crypto).subtle.digest("SHA-256",new TextEncoder().encode(text)); return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,"0"); }).join(""); }catch(e){ return null; }
+}
+async function buildDeed(){
+  const lines=deedLines(), canonical=lines.join("\n"), fp=await sha256(canonical), paid=isPaid(), rpt=document.getElementById("rpt-content");
+  const H=collectHeirs(), IM=collect("im",immobCount), MO=collect("mo",mobilCount); let h="";
+  h+=(paid?"":'<div class="draft-banner">'+L("Apercu BROUILLON. Payez 3 Pi (etape 6) pour obtenir la version complete sans filigrane.","DRAFT preview. Pay 3 Pi (step 6) to get the full version without watermark.")+'</div>');
+  h+='<h1>'+esc(lines[0])+'</h1><p>'+esc(lines[1])+'</p>';
+  h+='<h2>'+esc(L("ARTICLE 1 — HERITIERS ET PARTS","ARTICLE 1 — HEIRS AND SHARES"))+'</h2><table><tr><th>'+L("Heritier","Heir")+'</th><th>'+L("Lien","Relationship")+'</th><th>'+L("Part","Share")+'</th></tr>'+H.map(function(x){ return '<tr><td>'+esc(x.n)+'</td><td>'+esc(x.r)+'</td><td>'+x.p+'%</td></tr>'; }).join("")+'<tr><td colspan="2"><strong>Total</strong></td><td><strong>'+calcPct()+'%</strong></td></tr></table>';
+  h+='<h2>'+esc(L("ARTICLE 2 — PATRIMOINE DECLARE","ARTICLE 2 — DECLARED ESTATE"))+'</h2><ul><li>Pi : '+(v("a-pi")||0)+' '+L("(quantite indiquee, non valorisee)","(quantity stated, not valued)")+'</li>'+((txt("a-digital-desc")||v("a-digital-val"))?'<li>'+L("Autres actifs numeriques : ","Other digital assets: ")+esc(txt("a-digital-desc"))+' ('+fmtFRW(v("a-digital-val"))+')</li>':'')+IM.map(function(x){ return '<li>'+L("Immobilier : ","Real estate: ")+esc(x.d)+' ('+fmtFRW(x.v)+')</li>'; }).join("")+MO.map(function(x){ return '<li>'+L("Mobilier : ","Personal property: ")+esc(x.d)+' ('+fmtFRW(x.v)+')</li>'; }).join("")+'</ul><p><strong>'+L("Total declare (hors Pi) : ","Total declared (excl. Pi): ")+fmtFRW(totalAssets())+'</strong></p>';
+  const art3=lines.slice(lines.indexOf(L("ARTICLE 3 — CLAUSES D'EXECUTION","ARTICLE 3 — EXECUTION CLAUSES"))+1,lines.indexOf(L("ARTICLE 4 — MENTIONS","ARTICLE 4 — NOTICES")));
+  h+='<h2>'+esc(L("ARTICLE 3 — CLAUSES D'EXECUTION","ARTICLE 3 — EXECUTION CLAUSES"))+'</h2><ul>'+art3.map(function(x){ return '<li>'+esc(x.replace(/^- /,""))+'</li>'; }).join("")+'</ul>';
+  h+='<h2>'+esc(L("ARTICLE 4 — MENTIONS","ARTICLE 4 — NOTICES"))+'</h2><p>'+esc(lines[lines.length-2])+'</p><p>'+esc(lines[lines.length-1])+'</p>';
+  h+='<div class="sigs"><div class="sig">'+L("Le testateur","The testator")+'<br/>'+esc(txt("t-nom"))+'</div><div class="sig">'+L("Temoin 1","Witness 1")+'</div><div class="sig">'+L("Temoin 2","Witness 2")+'</div><div class="sig">'+L("Le notaire","The notary")+'</div></div>';
+  h+='<h2>'+L("EMPREINTE NUMERIQUE DU TEXTE (SHA-256)","DIGITAL FINGERPRINT OF THE TEXT (SHA-256)")+'</h2><div class="fp">'+(fp||L("Indisponible sur cet appareil","Unavailable on this device"))+'</div><p style="font-size:10px;color:#6B7280">'+L("L'empreinte est calculee localement a partir du texte de l'acte (articles 1 a 4 et date). Toute modification du texte change l'empreinte. Ce n'est pas un enregistrement sur une blockchain. Ce document est un projet : il doit etre valide par un notaire agree.","The fingerprint is computed locally from the deed text (articles 1 to 4 and date). Any change to the text changes the fingerprint. This is not a blockchain registration. This document is a draft: it must be validated by a licensed notary.")+'</p>';
+  rpt.className=paid?"rpt":"rpt preview"; rpt.innerHTML=h; return fp;
+}
+async function showDeed(force){
+  if(!force&&!validate(6,true)) return;
+  await buildDeed(); document.body.classList.add("reporting"); document.getElementById("report-panel").className="report-panel active"; window.scrollTo(0,0);
+}
+function closeDeed(){ document.body.classList.remove("reporting"); document.getElementById("report-panel").className="report-panel"; }
+
+// ── Navigation ──
+function validate(n,previewOnly){
+  const req=function(id,msg){ if(!txt(id)){ t(msg,"err"); return false; } return true; };
+  if(n===1){ return req("t-nom",L("Entrez votre nom complet","Enter your full name"))&&req("t-nat",L("Entrez votre nationalite","Enter your nationality"))&&req("t-addr",L("Entrez votre adresse","Enter your address")); }
+  if(n===2){ if(!collectHeirs().length){ t(L("Ajoutez au moins un heritier","Add at least one heir"),"err"); return false; } if(calcPct()!==100){ t(L("Le total des parts doit etre exactement 100% (actuellement "+calcPct()+"%)","Total shares must be exactly 100% (currently "+calcPct()+"%)"),"err"); return false; } return true; }
+  if(n===6){ if(!document.getElementById("chk1").checked||!document.getElementById("chk2").checked||!document.getElementById("chk3").checked){ t(L("Acceptez toutes les conditions","Accept all terms"),"err"); return false; } return true; }
+  return true;
+}
+function goTo(n){
+  if(n>currentStep){ for(let s=currentStep;s<n&&s<=2;s++){ if(!validate(s)) return; } }
+  document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("active"); });
+  document.getElementById("panel-"+n).classList.add("active");
+  for(let i=1;i<=6;i++){ const e=document.getElementById("pt"+i); e.classList.remove("active","done"); if(i<n) e.classList.add("done"); else if(i===n) e.classList.add("active"); }
+  for(let i=1;i<=5;i++){ document.getElementById("pl"+i).classList.toggle("done",i<n); }
+  currentStep=n; if(n===5) buildSummary(); if(n===6) refreshPaidUI(); window.scrollTo(0,0);
+}
+
+// ── Sauvegarde locale ──
+function saveDraft(toast){
+  try{
+    const d={fields:{},heirs:[],im:[],mo:[],ts:new Date().toISOString()};
+    document.querySelectorAll(".form-wrap input[id],.form-wrap select[id],.form-wrap textarea[id]").forEach(function(e){ if(/-\d+$/.test(e.id)||e.type==="checkbox"&&!/^c-/.test(e.id)) return; d.fields[e.id]=e.type==="checkbox"?e.checked:e.value; });
+    for(let i=1;i<=benefCount;i++){ if(document.getElementById("bn-"+i)) d.heirs.push([txt("bn-"+i),txt("br-"+i),txt("bp-"+i)]); }
+    d.im=collect("im",immobCount); d.mo=collect("mo",mobilCount);
+    localStorage.setItem(SAVE_KEY,JSON.stringify(d)); if(toast) t(L("Sauvegarde sur cet appareil","Saved on this device"));
+  }catch(e){ t(L("Sauvegarde impossible","Could not save"),"err"); }
+}
+function checkSaved(){}
+function restoreDraft(){
+  try{
+    const s=localStorage.getItem(SAVE_KEY); if(!s){ t(L("Aucune sauvegarde","No saved draft"),"err"); return; } const d=JSON.parse(s);
+    Object.keys(d.fields||{}).forEach(function(id){ const e=document.getElementById(id); if(e){ if(e.type==="checkbox") e.checked=!!d.fields[id]; else e.value=d.fields[id]; } });
+    document.getElementById("benef-list").innerHTML=""; benefCount=0; (d.heirs||[]).forEach(function(h){ addBenef(h[0],h[1],h[2]); }); if(!(d.heirs||[]).length) addBenef();
+    document.getElementById("immob-list").innerHTML=""; immobCount=0; (d.im||[]).forEach(function(x){ addImmob(x.d,x.v); }); if(!(d.im||[]).length) addImmob();
+    document.getElementById("mobil-list").innerHTML=""; mobilCount=0; (d.mo||[]).forEach(function(x){ addMobil(x.d,x.v); }); if(!(d.mo||[]).length) addMobil();
+    updatePct(); updateAssets(); t(L("Sauvegarde restauree","Draft restored"));
+  }catch(e){ t("Erreur: "+e.message,"err"); }
+}
+function eraseDraft(){ if(!confirm(L("Effacer toutes vos donnees LegacyVault de cet appareil ?","Erase all your LegacyVault data from this device?"))) return; try{ localStorage.removeItem(SAVE_KEY); }catch(e){} location.reload(); }
+
+// ── Langue ──
+function setLang(l){ lang=l; document.getElementById("lbtn-fr").classList.toggle("active",l==="fr"); document.getElementById("lbtn-en").classList.toggle("active",l==="en"); applyLang(); }
 function applyLang(){
-  document.querySelectorAll("[data-"+lang+"]").forEach(el=>{
-    const val=el.getAttribute("data-"+lang);
-    if(el.tagName==="INPUT"||el.tagName==="TEXTAREA")el.placeholder=val;
-    else if(el.tagName==="OPTION")el.textContent=val;
-    else el.innerHTML=val;
-  });
-}
-
-// TOAST
-function t(msg,type=""){
-  const el=document.getElementById("toast");
-  el.textContent=msg; el.className=type;
-  el.style.display="block"; setTimeout(()=>{el.style.display="none";},3500);
+  document.querySelectorAll("[data-fr]").forEach(function(el){ const val=lang==="en"?(el.getAttribute("data-en")||el.getAttribute("data-fr")):el.getAttribute("data-fr"); if(!val) return; if(el.tagName==="OPTION") el.textContent=val; else el.innerHTML=val; });
+  const h=document.querySelectorAll("#benef-list .benef-row"); if(h.length){ saveDraft(false); const keep=currentStep; const s=localStorage.getItem(SAVE_KEY); if(s){ const d=JSON.parse(s); document.getElementById("benef-list").innerHTML=""; benefCount=0; (d.heirs||[]).forEach(function(x){ addBenef(x[0],x[1],x[2]); }); document.getElementById("immob-list").innerHTML=""; immobCount=0; (d.im||[]).forEach(function(x){ addImmob(x.d,x.v); }); if(!(d.im||[]).length) addImmob(); document.getElementById("mobil-list").innerHTML=""; mobilCount=0; (d.mo||[]).forEach(function(x){ addMobil(x.d,x.v); }); if(!(d.mo||[]).length) addMobil(); } }
+  updatePct(); updateAssets(); refreshPaidUI(); if(currentStep===5) buildSummary();
 }
 </script>
 </body>
