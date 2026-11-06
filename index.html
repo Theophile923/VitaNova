@@ -312,7 +312,7 @@
     <p>3 professional domains covering business, heritage and construction. Rwanda-ready. All payments on the blockchain.</p>
     <div class="stats-row">
       <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Domains</div></div>
-      <div class="stat"><div class="stat-num">4</div><div class="stat-lbl">Languages</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-lbl">Languages</div></div>
       <div class="stat"><div class="stat-num">3+</div><div class="stat-lbl">Countries</div></div>
       <div class="stat"><div class="stat-num">24/7</div><div class="stat-lbl">Available</div></div>
     </div>
@@ -320,8 +320,8 @@
 
   <!-- GCV BANNER -->
   <div class="gcv-banner">
-    ⚠️ <strong>Reference rate:</strong> 1 Pi = $314,159 (GCV — Pi community internal standard).
-    USD/FRW prices are estimates only. Actual value depends on market rate at transaction time.
+    ℹ️ <strong>All payments are made in Pi only.</strong>
+    Any USD or FRW figure shown in VitaNova's tools is an unofficial estimate: Pi has no official market price.
   </div>
 
   <!-- DOMAINS -->
@@ -409,24 +409,23 @@
       <div class="p-card featured">
         <div class="p-name">📅 Monthly Subscription</div>
         <div class="p-pi">0.25π / month</div>
-        <div class="p-usd">~$78,540 · ~102,102,000 FRW (ref. GCV)</div>
-        <div class="p-note">⚠️ USD/FRW estimated at GCV rate</div>
+        <div class="p-usd">Billed in Pi only</div>
       </div>
       <div class="p-card">
         <div class="p-name">📅 Quarterly Subscription</div>
         <div class="p-pi">0.7π / quarter</div>
-        <div class="p-usd">~$219,911 · ~285,884,000 FRW (ref. GCV)</div>
+        <div class="p-usd">Billed in Pi only</div>
       </div>
       <div class="p-card">
         <div class="p-name">📅 Annual Subscription</div>
         <div class="p-pi">2.75π / year</div>
-        <div class="p-usd">~$863,937 · ~1,123,118,000 FRW (ref. GCV)</div>
+        <div class="p-usd">Billed in Pi only</div>
       </div>
       <div class="p-card featured">
         <div class="p-name">📄 Deep Study Report (any domain)</div>
         <div class="p-pi">3π</div>
-        <div class="p-usd">~$942,477 · ~1,225,220,000 FRW (ref. GCV)</div>
-        <div class="p-note">Full bankable PDF · Delivered within 7 business days</div>
+        <div class="p-usd">Billed in Pi only</div>
+        <div class="p-note">Full report · unlocked after payment</div>
       </div>
     </div>
   </div>
@@ -439,7 +438,7 @@
       For legal or financial advice, consult a licensed professional in your jurisdiction.
       LegacyVault contracts must be validated by a notary for full legal compliance.
       In Rwanda, succession must comply with Law N°22/99 of 12/11/1999.
-      Prices in USD/FRW are estimates based on GCV (1π = $314,159).<br/><br/>
+      All prices are in Pi. Any USD or FRW figure shown in the tools is an unofficial estimate; Pi has no official market price.<br/><br/>
       <a href="privacy.html">Privacy Policy</a> ·
       <a href="mailto:theophileh56@gmail.com">Contact</a> ·
       Built by Theophile HAKIZIMANA · Rwanda · VitaNova 2026
@@ -463,13 +462,17 @@ function closeSidebar(){
   document.body.style.overflow="";
 }
 
+// ── Pi mode ──
+// Production (real Pi Browser) = sandbox false. Sandbox mode only on localhost or with ?sandbox=1 in the address.
+const PI_SANDBOX = /[?&]sandbox=1/.test(location.search) || location.hostname==="localhost" || location.hostname==="127.0.0.1";
+
 // ── Auth ──
 class AuthService{
   constructor(){this.user=null;this.accessToken=null;}
   onIncompletePaymentFound(p){console.warn("Incomplete:",p.identifier);}
   async login(scopes){
     try{
-      await Pi.init({version:"2.0",sandbox:true});
+      await Pi.init({version:"2.0",sandbox:PI_SANDBOX});
       const auth=await Pi.authenticate(scopes,this.onIncompletePaymentFound);
       this.user=auth.user;this.accessToken=auth.accessToken;
       try{
