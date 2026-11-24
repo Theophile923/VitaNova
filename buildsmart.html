@@ -231,6 +231,9 @@ body.reporting .content,body.reporting .save-banner{display:none!important;}
 .rpt .kpi-box{flex:1;border:1px solid #E5E7EB;border-radius:6px;padding:8px;text-align:center;}
 .rpt .kpi-box .kv{font-size:16px;font-weight:900;color:#92400E;}
 .rpt .kpi-box .kl{font-size:9px;color:#6B7280;text-transform:uppercase;}
+.rpt .draft-banner{background:#FEF3C7;border:1px solid #B45309;color:#92400E;padding:8px 12px;border-radius:6px;font-size:11px;margin-bottom:12px;text-align:center;font-family:"Segoe UI",Arial,sans-serif;}
+.rpt.preview{position:relative;}
+.rpt.preview::before{content:"BROUILLON / DRAFT";position:fixed;top:45%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:58px;font-weight:900;color:rgba(146,64,14,0.12);pointer-events:none;white-space:nowrap;z-index:5;}
 @media print{.rpt-bar{display:none!important;} body.reporting{background:#fff;} .report-panel.active{background:#fff;padding:0;}}
 
 /* SUCCESS */
@@ -924,7 +927,7 @@ body.reporting .content,body.reporting .save-banner{display:none!important;}
     </div>
     <button class="btn-report" onclick="printReport()" data-fr="&#128424; Imprimer / Exporter le Rapport" data-en="&#128424; Print / Export Report">&#128424; Imprimer / Exporter le Rapport</button>
     <!-- Prix du rapport : modifier REPORT_PRICE_PI dans le script ET le texte de ce bouton -->
-    <button class="btn-pay" onclick="pay()" data-fr="&#128176; Payer 3 Pi — Rapport Complet BuildSmart" data-en="&#128176; Pay 3 Pi — Full BuildSmart Report">&#128176; Payer 3 Pi — Rapport Complet BuildSmart</button>
+    <button class="btn-pay" id="btn-pay" onclick="pay()" data-fr="&#128176; Payer 3 Pi — Rapport Complet BuildSmart" data-en="&#128176; Pay 3 Pi — Full BuildSmart Report">&#128176; Payer 3 Pi — Rapport Complet BuildSmart</button>
     <button class="btn-s" onclick="showModule('expertise')" data-fr="&#8592; Retour" data-en="&#8592; Back">&#8592; Retour</button>
   </div>
 </div>
@@ -934,9 +937,10 @@ body.reporting .content,body.reporting .save-banner{display:none!important;}
 <!-- SUCCESS -->
 <div class="success-panel" id="success-panel">
   <div class="si">&#127881;</div>
-  <div class="st" data-fr="Rapport BuildSmart commande!" data-en="BuildSmart Report ordered!">Rapport BuildSmart commande!</div>
-  <div class="ss" data-fr="Votre rapport professionnel sera livre dans les 7 jours ouvrables." data-en="Your professional report will be delivered within 7 business days.">Votre rapport sera livre dans les 7 jours ouvrables.</div>
+  <div class="st" data-fr="Paiement confirme !" data-en="Payment confirmed!">Paiement confirme !</div>
+  <div class="ss" data-fr="Le rapport complet est debloque sur cet appareil. Il reste indicatif : faites-le valider par un architecte agree." data-en="The full report is unlocked on this device. It remains indicative: have it validated by a licensed architect.">Le rapport complet est debloque sur cet appareil.</div>
   <div class="txid-box" id="txid-box">TXID: --</div>
+  <button class="btn-p" onclick="openPaidReport()" style="max-width:280px;margin:0 auto 8px;display:block" data-fr="Ouvrir mon rapport" data-en="Open my report">Ouvrir mon rapport</button>
   <button class="btn-p" onclick="location.href='index.html'" style="max-width:280px;margin:0 auto;display:block" data-fr="Retour a VitaNova" data-en="Back to VitaNova">Retour a VitaNova</button>
 </div>
 
@@ -963,13 +967,17 @@ let lang = "fr";
 let roomCount = 0, matCount = 0, smartCount = 0;
 let expertiseRows = [];
 
+const PAID_KEY = "vitanova_buildsmart_paid";
+// Production (vrai Pi Browser) = sandbox false. Mode test seulement sur localhost ou avec ?sandbox=1 dans l'adresse.
+const PI_SANDBOX = /[?&]sandbox=1/.test(location.search) || location.hostname==="localhost" || location.hostname==="127.0.0.1";
+
 // AUTH
 class AuthService {
   constructor(){ this.user=null; }
-  onIncompletePaymentFound(p){ console.warn("Incomplete:",p.identifier); }
+  onIncompletePaymentFound(p){ handleIncompletePayment(p); }
   async login(scopes){
     try{
-      await Pi.init({version:"2.0",sandbox:true});
+      await Pi.init({version:"2.0",sandbox:PI_SANDBOX});
       const auth = await Pi.authenticate(scopes, this.onIncompletePaymentFound);
       this.user = auth.user;
       return {success:true, user:auth.user};
@@ -977,6 +985,25 @@ class AuthService {
   }
 }
 const piService = new AuthService();
+
+// ── PAIEMENT : liaison avec le serveur (api/pi/approve et api/pi/complete) ──
+async function callPaymentApi(path, body){
+  const r = await fetch(path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  let d = {}; try{ d = await r.json(); }catch(e){}
+  if(!r.ok) throw new Error(d.error || ("HTTP "+r.status));
+  return d;
+}
+async function paymentsAvailable(){
+  try{ const r = await fetch("/api/pi/approve", {method:"GET"}); return r.status===405; }catch(e){ return false; }
+}
+async function handleIncompletePayment(p){
+  try{
+    const tx = p && p.transaction && p.transaction.txid;
+    if(p && p.identifier && tx) await callPaymentApi("/api/pi/complete", {paymentId:p.identifier, txid:tx});
+  }catch(e){ console.warn("Incomplete:", e.message); }
+}
+function isPaid(){ try{ return !!localStorage.getItem(PAID_KEY); }catch(e){ return false; } }
+function refreshPaidUI(){ const b=document.getElementById("btn-pay"); if(b) b.style.display = isPaid() ? "none" : "block"; }
 
 // ── INIT ──
 window.addEventListener("load", function(){
@@ -993,6 +1020,7 @@ window.addEventListener("load", function(){
     }catch(e){}
   },400);
   checkSaved();
+  refreshPaidUI();
 });
 
 function initAll(){
@@ -1699,7 +1727,9 @@ function buildFullReport(){
     ? "Les couts sont des estimations indicatives. Consultez un architecte agree et un expert immobilier certifie pour validation officielle. VitaNova n'est pas un cabinet d'architecture."
     : "Costs are indicative estimates. Consult a licensed architect and certified real estate expert for official validation. VitaNova is not an architectural firm.";
 
-  rpt.innerHTML=
+  const draftBanner = isPaid() ? "" : "<div class='draft-banner'>"+(lf?"Apercu BROUILLON. Payez "+REPORT_PRICE_PI+" Pi pour obtenir le rapport complet sans filigrane.":"DRAFT preview. Pay "+REPORT_PRICE_PI+" Pi to get the full report without watermark.")+"</div>";
+  rpt.className = isPaid() ? "rpt" : "rpt preview";
+  rpt.innerHTML=draftBanner+
     "<div class='cover'><div class='logo'>VitaNova — BuildSmart</div>"+
     "<div class='sub'>"+(lf?"Assistant Construction Intelligent":"Intelligent Construction Assistant")+"</div>"+
     "<div class='sub' style='font-size:18px;font-weight:700;color:#92400E;margin:10px 0'>"+projName+"</div>"+
@@ -1926,33 +1956,48 @@ function newProject(){
 
 // ── PAYMENT ──
 async function pay(){
+  const lf = lang==="fr";
   const chk1=document.getElementById("chk1"), chk2=document.getElementById("chk2");
-  if(!chk1?.checked||!chk2?.checked){ showToast(lang==="fr"?"Acceptez les conditions":"Accept the terms","err"); return; }
+  if(!chk1?.checked||!chk2?.checked){ showToast(lf?"Acceptez les conditions":"Accept the terms","err"); return; }
+  if(!(await paymentsAvailable())){ showToast(lf?"Paiement bientot disponible":"Payment coming soon","err"); return; }
   if(!piService.user){
     const r=await piService.login(["username","payments"]);
-    if(!r.success){ showToast(lang==="fr"?"Ouvrez dans Pi Browser":"Open in Pi Browser","err"); return; }
+    if(!r.success){ showToast(lf?"Ouvrez dans Pi Browser":"Open in Pi Browser","err"); return; }
     document.getElementById("uname").textContent="@"+r.user.username;
     document.getElementById("user-pill").style.display="flex";
   }
-  showToast(lang==="fr"?"Paiement en cours...":"Processing payment...");
+  showToast(lf?"Paiement en cours...":"Processing payment...");
   const ts=Date.now(), uid=piService.user?.username||"user";
   try{
-    await Pi.init({version:"2.0",sandbox:true});
+    await Pi.init({version:"2.0",sandbox:PI_SANDBOX});
     Pi.createPayment({amount:REPORT_PRICE_PI, memo:"BUILDSMART-"+ts+"-"+uid,
       metadata:{type:"buildsmart_report",userId:uid,timestamp:ts}},{
-      onReadyForServerApproval:function(id){ console.log("Approval:",id); },
-      onReadyForServerCompletion:function(id,txid){ showSuccess(txid); },
-      onCancel:function(){ showToast(lang==="fr"?"Annule":"Cancelled","err"); },
-      onError:function(e){ console.error(e); showToast(lang==="fr"?"Erreur paiement":"Payment error","err"); }
+      onReadyForServerApproval:function(paymentId){
+        callPaymentApi("/api/pi/approve",{paymentId:paymentId}).catch(function(e){ console.error(e); showToast(lf?"Serveur de paiement indisponible":"Payment server unavailable","err"); });
+      },
+      onReadyForServerCompletion:function(paymentId,txid){
+        callPaymentApi("/api/pi/complete",{paymentId:paymentId,txid:txid}).then(function(){ showSuccess(txid); })
+          .catch(function(e){ console.error(e); showToast(lf?"Paiement non confirme — contactez-nous":"Payment not confirmed — contact us","err"); });
+      },
+      onCancel:function(){ showToast(lf?"Annule":"Cancelled","err"); },
+      onError:function(e){ console.error(e); showToast(lf?"Erreur paiement":"Payment error","err"); }
     });
-  }catch(e){ showToast(lang==="fr"?"Pi Browser requis":"Pi Browser required","err"); }
+  }catch(e){ showToast(lf?"Pi Browser requis":"Pi Browser required","err"); }
 }
 
 function showSuccess(txid){
+  try{ localStorage.setItem(PAID_KEY, JSON.stringify({txid:txid||null, ts:new Date().toISOString()})); }catch(e){}
+  refreshPaidUI();
   document.querySelector(".content").style.display="none";
   document.getElementById("success-panel").style.display="block";
-  document.getElementById("txid-box").textContent="TXID: "+(txid||"0x"+Math.random().toString(16).substr(2,40).toUpperCase());
-  showToast(lang==="fr"?"Rapport commande!":"Report ordered!","ok");
+  document.getElementById("txid-box").textContent="TXID: "+(txid||"--");
+  showToast(lang==="fr"?"Paiement confirme !":"Payment confirmed!","ok");
+}
+
+function openPaidReport(){
+  document.getElementById("success-panel").style.display="none";
+  document.querySelector(".content").style.display="";
+  printReport();
 }
 
 function delRow(id, cb){ document.getElementById(id)?.remove(); if(cb) cb(); }
