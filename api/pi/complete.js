@@ -1,4 +1,7 @@
 // VitaNova — serveur de paiement Pi : ETAPE 3 « Confirmation »
+// Emplacement dans le depot GitHub : api/pi/complete.js
+// Necessite la variable secrete PI_API_KEY (reglee dans Vercel, jamais ecrite dans le code).
+
 const PI_API = "https://api.minepi.com/v2";
 
 module.exports = async function handler(req, res) {
