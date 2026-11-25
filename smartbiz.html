@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SmartBiz — Moteur de Montage de Projets | VitaNova</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="vn-analytics.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--blue:#1A3C6E;--blue2:#2563EB;--green:#006B3C;--green2:#059669;--gold:#B8860B;--gold2:#D97706;--dark:#0A0E1A;--card:#111827;--card2:#1F2937;--border:#374151;--text:#F9FAFB;--muted:#9CA3AF;--red:#DC2626;--orange:#EA580C;}
@@ -549,9 +550,20 @@ body.reporting .topbar,body.reporting .hero,body.reporting .prog-wrap,body.repor
 // ═══════════════════════════════════════════════════════════
 const GCV_DEFAULT = 314159;                 // hypothese de conversion Pi (non officielle, modifiable dans l'etape 1)
 const REPORT_PRICE_PI = 3;                  // prix du rapport complet (doit correspondre au texte du bouton et au serveur)
-const PAID_KEY = "vitanova_smartbiz_paid";  // memorise sur l'appareil que le rapport complet est debloque
-// Production (vrai Pi Browser) = sandbox false. Sandbox seulement sur localhost ou avec ?sandbox=1.
-const PI_SANDBOX = /[?&]sandbox=1/.test(location.search) || location.hostname==="localhost" || location.hostname==="127.0.0.1";
+// Production (vrai Pi Browser) = sandbox false.
+// Mode test (sandbox) : adresse avec ?sandbox=1, page ouverte depuis une page ?sandbox=1, page affichee dans sandbox.minepi.com, ou localhost.
+// Le mode test est memorise pour l'onglet en cours, pour qu'il survive au passage d'une page a l'autre.
+const PI_SANDBOX = (function(){
+  var on = /[?&]sandbox=1/.test(location.search) || location.hostname==="localhost" || location.hostname==="127.0.0.1";
+  try{ if(!on && /[?&]sandbox=1/.test(document.referrer)) on = true; }catch(e){}
+  try{ var ao = location.ancestorOrigins; if(!on && ao){ for(var k=0;k<ao.length;k++){ if(/sandbox\.minepi\.com/.test(ao[k])) on = true; } } }catch(e){}
+  try{ if(on) sessionStorage.setItem("vitanova_sandbox","1"); else if(sessionStorage.getItem("vitanova_sandbox")==="1") on = true; }catch(e){}
+  return on;
+})();
+// Un paiement fait en mode test (Test-Pi) debloque seulement le mode test, jamais l'application reelle.
+const PAID_KEY = "vitanova_smartbiz_paid" + (PI_SANDBOX ? "_sandbox" : "");
+// Adresse du serveur de paiement (api/pi/*). Un seul endroit a changer si le site change d'adresse.
+const API_BASE = "https://vitanova-test.vercel.app";
 let BNR_RATE = 1350, RATE_OK = true;
 let lang = "fr", mode = "A", currentStep = 1, TOTAL_STEPS = 10, YEARS = 3;
 let patrCount=0, revCount=0, prodCount=0, concCount=0, invCount=0, chvarCount=0, chfixCount=0, riskCount=0, garCount=0;
@@ -573,33 +585,61 @@ class AuthService {
 const piService = new AuthService();
 
 async function callPaymentApi(path, body){
-  const r = await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-  let data={}; try{ data=await r.json(); }catch(e){}
-  if(!r.ok) throw new Error(data.error||("HTTP "+r.status));
+  const r = await fetch(API_BASE + path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  let data = {}; try{ data = await r.json(); }catch(e){}
+  if(!r.ok) throw new Error(data.error || ("HTTP " + r.status));
   return data;
 }
 async function paymentsAvailable(){
-  try{ const r=await fetch("/api/pi/approve",{method:"GET"}); return r.status===405; }catch(e){ return false; }
+  // Test du serveur de paiement : il doit repondre "405 Method not allowed" a une simple visite.
+  // Le code obtenu est conserve pour etre affiche dans le message en cas de probleme.
+  try{ const r = await fetch(API_BASE + "/api/pi/approve", {method:"GET", cache:"no-store"}); window._payStatus = r.status; return r.status===405; }
+  catch(e){ window._payStatus = "reseau"; return false; }
 }
+// Paiement interrompu : avec un txid on le termine, sans txid on l'annule, pour ne pas bloquer les paiements suivants.
 async function handleIncompletePayment(payment){
   try{
-    const txid = payment && payment.transaction && payment.transaction.txid;
-    if(payment && payment.identifier && txid) await callPaymentApi("/api/pi/complete",{paymentId:payment.identifier, txid:txid});
+    if(!payment || !payment.identifier) return;
+    const txid = payment.transaction && payment.transaction.txid;
+    if(txid) await callPaymentApi("/api/pi/complete", {paymentId:payment.identifier, txid:txid});
+    else await callPaymentApi("/api/pi/cancel", {paymentId:payment.identifier});
   }catch(e){ console.warn("Incomplete payment:", e.message); }
 }
+// Mesure d'audience (anonyme, voir vn-analytics.js) : ne doit jamais gener le paiement.
+function vnPay(s){ try{ if(window.VN) VN.payment(s); }catch(e){} }
+function vnDone(){ try{ if(window.VN) VN.complete(); }catch(e){} }
+// Mode test uniquement : bouton pour recommencer un essai de paiement.
+function syncResetButton(){
+  try{
+    var b=document.getElementById("btn-pay"), r=document.getElementById("btn-reset-test");
+    if(PI_SANDBOX && isPaid() && b){
+      if(!r){
+        r=document.createElement("button"); r.id="btn-reset-test"; r.className="btn-s";
+        r.textContent=(typeof lang!=="undefined"&&lang==="en")?"Reset the test (test mode only)":"Reinitialiser le test (mode test seulement)";
+        r.onclick=function(){ try{ localStorage.removeItem(PAID_KEY); }catch(e){} refreshPaidUI(); };
+        b.parentNode.insertBefore(r,b.nextSibling);
+      }
+    }else if(r){ r.remove(); }
+  }catch(e){}
+}
 function isPaid(){ try{ return !!localStorage.getItem(PAID_KEY); }catch(e){ return false; } }
-function refreshPaidUI(){
+function refreshPaidUI_base(){
   const paid=isPaid();
   const pb=document.getElementById("btn-pay"), rb=document.getElementById("btn-report");
   if(pb){ pb.style.display=paid?"none":"block"; pb.innerHTML=lang==="en"?"&#128176; Pay 3 Pi — Unlock the full report":"&#128176; Payer 3 Pi — Debloquer le rapport complet"; }
   if(rb) rb.innerHTML=paid?(lang==="en"?"&#128424; Print the full report":"&#128424; Imprimer le rapport complet"):(lang==="en"?"&#128424; Free report preview":"&#128424; Apercu gratuit du rapport");
 }
+function refreshPaidUI(){ refreshPaidUI_base(); syncResetButton(); }
 async function pay(){
   const lf=lang==="fr";
   if(!document.getElementById("chk1").checked||!document.getElementById("chk2").checked){ showToast(lf?"Acceptez les conditions":"Accept the terms","err"); return; }
-  if(!(await paymentsAvailable())){ showToast(lf?"Paiement bientot disponible":"Payment coming soon","err"); return; }
+  if(!(await paymentsAvailable())){ showToast((lf?"Paiement bientot disponible":"Payment coming soon")+" (code "+window._payStatus+")","err"); return; }
   if(!piService.user){
+    showToast(lf?"Connexion a Pi...":"Connecting to Pi...");
+    // Hors du Pi Browser, la connexion Pi ne repond jamais : on previent l'utilisateur au bout de 10 secondes.
+    const hint=setTimeout(function(){ showToast(lf?"En attente de Pi... Ouvrez cette page dans Pi Browser":"Waiting for Pi... open this page in Pi Browser","err"); },10000);
     const r=await piService.login(["username","payments"]);
+    clearTimeout(hint);
     if(!r.success){ showToast(lf?"Ouvrez dans Pi Browser":"Open in Pi Browser","err"); return; }
     document.getElementById("uname").textContent="@"+r.user.username;
     document.getElementById("user-pill").style.display="flex";
@@ -608,6 +648,7 @@ async function pay(){
   const ts=Date.now(), uid=piService.user&&piService.user.username||"user";
   try{
     await Pi.init({version:"2.0",sandbox:PI_SANDBOX});
+    vnPay("initiated");
     Pi.createPayment({amount:REPORT_PRICE_PI, memo:"SMARTBIZ-"+ts+"-"+uid, metadata:{type:"smartbiz_report",userId:uid,timestamp:ts}},{
       onReadyForServerApproval:function(paymentId){
         callPaymentApi("/api/pi/approve",{paymentId:paymentId}).catch(function(e){ console.error(e); showToast(lf?"Serveur de paiement indisponible":"Payment server unavailable","err"); });
@@ -616,12 +657,13 @@ async function pay(){
         callPaymentApi("/api/pi/complete",{paymentId:paymentId,txid:txid}).then(function(){ showSuccessPanel(txid); })
           .catch(function(e){ console.error(e); showToast(lf?"Paiement non confirme — contactez-nous":"Payment not confirmed — contact us","err"); });
       },
-      onCancel:function(){ showToast(lf?"Annule":"Cancelled","err"); },
-      onError:function(e){ console.error(e); showToast(lf?"Erreur paiement":"Payment error","err"); }
+      onCancel:function(){ vnPay("cancelled"); showToast(lf?"Annule":"Cancelled","err"); },
+      onError:function(e){ console.error(e); vnPay("error"); showToast(lf?"Erreur paiement":"Payment error","err"); }
     });
   }catch(e){ showToast(lf?"Pi Browser requis":"Pi Browser required","err"); }
 }
 function showSuccessPanel(txid){
+  vnPay("confirmed"); vnDone();
   try{ localStorage.setItem(PAID_KEY, JSON.stringify({txid:txid||null, ts:new Date().toISOString()})); }catch(e){}
   refreshPaidUI();
   document.querySelector(".form-wrap").style.display="none";
@@ -1414,6 +1456,7 @@ function goTo(n){
 // ── Rapport ──
 const GLOSSARY=[["TRI / IRR","Taux de Rentabilite Interne / Internal Rate of Return","Taux d'actualisation qui annule la VAN.","Discount rate that sets the NPV to zero."],["VAN / NPV","Valeur Actuelle Nette / Net Present Value","Somme des flux futurs actualises moins l'investissement initial.","Sum of discounted future cash flows minus the initial investment."],["BFR / WCR","Besoin en Fonds de Roulement / Working Capital Requirement","Stocks + creances clients + tresorerie minimale - dettes fournisseurs.","Inventory + receivables + minimum cash - payables."],["RCSD / DSCR","Ratio de Couverture du Service de la Dette / Debt Service Coverage Ratio","CFADS divise par le service de la dette (capital + interets).","CFADS divided by debt service (principal + interest)."],["EBITDA / EBE","Excedent Brut d'Exploitation","Resultat avant interets, impots et amortissements.","Result before interest, taxes, depreciation and amortization."],["CFADS","Cash Flow Available for Debt Service","Flux disponible pour rembourser la dette (EBITDA - impots).","Cash flow available to repay debt (EBITDA - tax)."],["ROI","Retour sur Investissement / Return on Investment","Resultat net moyen annuel divise par le cout total.","Average annual net result divided by total cost."]];
 function showReport(){
+  vnDone();
   buildReport(); document.body.classList.add("reporting");
   const rp=document.getElementById("report-panel"); if(rp) rp.className="report-panel active"; window.scrollTo(0,0);
 }
@@ -1479,5 +1522,6 @@ function buildReport(){
 // ── Demarrage ──
 (function(){ const c=document.getElementById("cr-montant"); if(c) c.addEventListener("input",function(){ this._userEdited=true; }); })();
 </script>
+<script>try{ if(window.VN) VN.init("smartbiz"); }catch(e){}</script>
 </body>
 </html>
