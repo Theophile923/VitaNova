@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>LegacyVault — VitaNova</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="vn-analytics.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--green:#00A651;--gold:#FFB300;--blue:#4A6BFF;--dark:#0D0F1E;--card:#161929;--card2:#1C1F35;--border:rgba(0,166,81,0.25);--text:#E8EAF6;--muted:#9CA3AF;--red:#E53E3E;}
@@ -214,9 +215,21 @@ body.reporting .topbar,body.reporting .hero,body.reporting .legal-warn,body.repo
 
 <script>
 const REPORT_PRICE_PI=3;
-const PAID_KEY="vitanova_legacyvault_paid", SAVE_KEY="vitanova_legacyvault";
-// Production = sandbox false. Sandbox seulement sur localhost ou avec ?sandbox=1.
-const PI_SANDBOX=/[?&]sandbox=1/.test(location.search)||location.hostname==="localhost"||location.hostname==="127.0.0.1";
+const SAVE_KEY="vitanova_legacyvault";
+// Production (vrai Pi Browser) = sandbox false.
+// Mode test (sandbox) : adresse avec ?sandbox=1, page ouverte depuis une page ?sandbox=1, page affichee dans sandbox.minepi.com, ou localhost.
+// Le mode test est memorise pour l'onglet en cours, pour qu'il survive au passage d'une page a l'autre.
+const PI_SANDBOX = (function(){
+  var on = /[?&]sandbox=1/.test(location.search) || location.hostname==="localhost" || location.hostname==="127.0.0.1";
+  try{ if(!on && /[?&]sandbox=1/.test(document.referrer)) on = true; }catch(e){}
+  try{ var ao = location.ancestorOrigins; if(!on && ao){ for(var k=0;k<ao.length;k++){ if(/sandbox\.minepi\.com/.test(ao[k])) on = true; } } }catch(e){}
+  try{ if(on) sessionStorage.setItem("vitanova_sandbox","1"); else if(sessionStorage.getItem("vitanova_sandbox")==="1") on = true; }catch(e){}
+  return on;
+})();
+// Un paiement fait en mode test (Test-Pi) debloque seulement le mode test, jamais l'application reelle.
+const PAID_KEY = "vitanova_legacyvault_paid" + (PI_SANDBOX ? "_sandbox" : "");
+// Adresse du serveur de paiement (api/pi/*). Un seul endroit a changer si le site change d'adresse.
+const API_BASE = "https://vitanova-test.vercel.app";
 let lang="fr", currentStep=1, benefCount=0, immobCount=0, mobilCount=0;
 function L(fr,en){ return lang==="en"?en:fr; }
 function v(id){ return parseFloat((document.getElementById(id)||{}).value||0)||0; }
@@ -231,35 +244,95 @@ function t(msg,type){ const el=document.getElementById("toast"); el.textContent=
 class AuthService{ constructor(){ this.user=null; } onIncompletePaymentFound(p){ handleIncompletePayment(p); }
   async login(scopes){ try{ await Pi.init({version:"2.0",sandbox:PI_SANDBOX}); const a=await Pi.authenticate(scopes,this.onIncompletePaymentFound); this.user=a.user; return {success:true,user:a.user}; }catch(e){ return {success:false,error:e.message}; } } }
 const piService=new AuthService();
-async function callPaymentApi(path,body){ const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}); let d={}; try{ d=await r.json(); }catch(e){} if(!r.ok) throw new Error(d.error||("HTTP "+r.status)); return d; }
-async function paymentsAvailable(){ try{ const r=await fetch("/api/pi/approve",{method:"GET"}); return r.status===405; }catch(e){ return false; } }
-async function handleIncompletePayment(p){ try{ const tx=p&&p.transaction&&p.transaction.txid; if(p&&p.identifier&&tx) await callPaymentApi("/api/pi/complete",{paymentId:p.identifier,txid:tx}); }catch(e){ console.warn("Incomplete:",e.message); } }
+async function callPaymentApi(path, body){
+  const r = await fetch(API_BASE + path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  let data = {}; try{ data = await r.json(); }catch(e){}
+  if(!r.ok) throw new Error(data.error || ("HTTP " + r.status));
+  return data;
+}
+async function paymentsAvailable(){
+  // Test du serveur de paiement : il doit repondre "405 Method not allowed" a une simple visite.
+  // Le code obtenu est conserve pour etre affiche dans le message en cas de probleme.
+  try{ const r = await fetch(API_BASE + "/api/pi/approve", {method:"GET", cache:"no-store"}); window._payStatus = r.status; return r.status===405; }
+  catch(e){ window._payStatus = "reseau"; return false; }
+}
+// Paiement interrompu : avec un txid on le termine, sans txid on l'annule, pour ne pas bloquer les paiements suivants.
+async function handleIncompletePayment(payment){
+  try{
+    if(!payment || !payment.identifier) return;
+    const txid = payment.transaction && payment.transaction.txid;
+    if(txid) await callPaymentApi("/api/pi/complete", {paymentId:payment.identifier, txid:txid});
+    else await callPaymentApi("/api/pi/cancel", {paymentId:payment.identifier});
+  }catch(e){ console.warn("Incomplete payment:", e.message); }
+}
+// Mesure d'audience (anonyme, voir vn-analytics.js) : ne doit jamais gener le paiement.
+function vnPay(s){ try{ if(window.VN) VN.payment(s); }catch(e){} }
+function vnDone(){ try{ if(window.VN) VN.complete(); }catch(e){} }
+// Mode test uniquement : bouton pour recommencer un essai de paiement.
+function syncResetButton(){
+  try{
+    var b=document.getElementById("btn-pay"), r=document.getElementById("btn-reset-test");
+    if(PI_SANDBOX && isPaid() && b){
+      if(!r){
+        r=document.createElement("button"); r.id="btn-reset-test"; r.className="btn-s";
+        r.textContent=(typeof lang!=="undefined"&&lang==="en")?"Reset the test (test mode only)":"Reinitialiser le test (mode test seulement)";
+        r.onclick=function(){ try{ localStorage.removeItem(PAID_KEY); }catch(e){} refreshPaidUI(); };
+        b.parentNode.insertBefore(r,b.nextSibling);
+      }
+    }else if(r){ r.remove(); }
+  }catch(e){}
+}
 function isPaid(){ try{ return !!localStorage.getItem(PAID_KEY); }catch(e){ return false; } }
-function refreshPaidUI(){ const b=document.getElementById("btn-pay"); if(b) b.style.display=isPaid()?"none":"block"; const p=document.getElementById("btn-preview"); if(p) p.innerHTML=isPaid()?L("Ouvrir le document complet","Open the full document"):L("Voir le document (apercu gratuit)","View the document (free preview)"); }
+function refreshPaidUI_base(){ const b=document.getElementById("btn-pay"); if(b) b.style.display=isPaid()?"none":"block"; const p=document.getElementById("btn-preview"); if(p) p.innerHTML=isPaid()?L("Ouvrir le document complet","Open the full document"):L("Voir le document (apercu gratuit)","View the document (free preview)"); }
+function refreshPaidUI(){ refreshPaidUI_base(); syncResetButton(); }
 async function pay(){
   if(!validate(6)) return;
-  if(!(await paymentsAvailable())){ t(L("Paiement bientot disponible","Payment coming soon"),"err"); return; }
-  if(!piService.user){ const r=await piService.login(["username","payments"]); if(!r.success){ t(L("Ouvrez dans Pi Browser","Open in Pi Browser"),"err"); return; } document.getElementById("uname").textContent="@"+r.user.username; document.getElementById("user-badge").style.display="flex"; }
+  if(!(await paymentsAvailable())){ t(L("Paiement bientot disponible","Payment coming soon")+" (code "+window._payStatus+")","err"); return; }
+  if(!piService.user){ t(L("Connexion a Pi...","Connecting to Pi...")); const hint=setTimeout(function(){ t(L("En attente de Pi... Ouvrez cette page dans Pi Browser","Waiting for Pi... open this page in Pi Browser"),"err"); },10000); const r=await piService.login(["username","payments"]); clearTimeout(hint); if(!r.success){ t(L("Ouvrez dans Pi Browser","Open in Pi Browser"),"err"); return; } document.getElementById("uname").textContent="@"+r.user.username; document.getElementById("user-badge").style.display="flex"; }
   t(L("Paiement en cours...","Processing payment..."));
   const ts=Date.now(), uid=piService.user&&piService.user.username||"user";
   try{
     await Pi.init({version:"2.0",sandbox:PI_SANDBOX});
+    vnPay("initiated");
     Pi.createPayment({amount:REPORT_PRICE_PI,memo:"LEGACYVAULT-"+ts+"-"+uid,metadata:{type:"legacyvault_deed",userId:uid,timestamp:ts}},{
       onReadyForServerApproval:function(id){ callPaymentApi("/api/pi/approve",{paymentId:id}).catch(function(e){ console.error(e); t(L("Serveur de paiement indisponible","Payment server unavailable"),"err"); }); },
       onReadyForServerCompletion:function(id,txid){ callPaymentApi("/api/pi/complete",{paymentId:id,txid:txid}).then(function(){ showSuccess(txid); }).catch(function(e){ console.error(e); t(L("Paiement non confirme — contactez-nous","Payment not confirmed — contact us"),"err"); }); },
-      onCancel:function(){ t(L("Annule","Cancelled"),"err"); },
-      onError:function(e){ console.error(e); t(L("Erreur paiement","Payment error"),"err"); }
+      onCancel:function(){ vnPay("cancelled"); t(L("Annule","Cancelled"),"err"); },
+      onError:function(e){ console.error(e); vnPay("error"); t(L("Erreur paiement","Payment error"),"err"); }
     });
   }catch(e){ t(L("Pi Browser requis","Pi Browser required"),"err"); }
 }
 function showSuccess(txid){
+  vnPay("confirmed"); vnDone();
   try{ localStorage.setItem(PAID_KEY,JSON.stringify({txid:txid||null,ts:new Date().toISOString()})); }catch(e){}
   refreshPaidUI(); document.querySelector(".form-wrap").style.display="none"; document.querySelector(".prog-wrap").style.display="none";
   document.getElementById("success-panel").style.display="block"; document.getElementById("txid-box").textContent="TXID: "+(txid||"--");
 }
 function openPaidDeed(){ document.getElementById("success-panel").style.display="none"; document.querySelector(".form-wrap").style.display=""; document.querySelector(".prog-wrap").style.display=""; showDeed(true); }
+// ── Exemple de test (visible seulement en mode test) ──
+function loadExample(){
+  try{
+    var set=function(id,val){ var e=document.getElementById(id); if(e) e.value=val; };
+    set("t-nom","EXEMPLE Jean"); set("t-dob","1980-01-01"); set("t-nat","Rwandaise"); set("t-mariage","marie");
+    set("t-addr","KG 123 St, Kigali"); set("t-pays","RW"); set("c-lieu","Kigali"); set("a-pi","100");
+    document.getElementById("benef-list").innerHTML=""; benefCount=0;
+    addBenef("UWASE Marie","conjoint",60); addBenef("MUGISHA Paul","enfant",40);
+    document.getElementById("immob-list").innerHTML=""; immobCount=0; addImmob("Maison a Kigali",50000000);
+    document.getElementById("mobil-list").innerHTML=""; mobilCount=0; addMobil("Vehicule",8000000);
+    updatePct(); updateAssets(); goTo(1);
+    t(L("Exemple charge (mode test)","Example loaded (test mode)"));
+  }catch(e){ t("Erreur: "+e.message,"err"); }
+}
+function addExampleButton(){
+  if(!PI_SANDBOX) return;
+  var fw=document.querySelector(".form-wrap"); if(!fw||document.getElementById("btn-example")) return;
+  var b=document.createElement("button"); b.id="btn-example"; b.className="small-btn"; b.style.cssText="display:block;width:100%;margin-bottom:10px";
+  b.textContent="Charger un exemple (mode test) / Load example (test mode)"; b.onclick=loadExample;
+  fw.insertBefore(b,fw.firstChild);
+}
+
 window.addEventListener("load",function(){
-  applyLang(); addBenef(); addImmob(); addMobil(); refreshPaidUI(); checkSaved();
+  addExampleButton(); applyLang(); addBenef(); addImmob(); addMobil(); refreshPaidUI(); checkSaved();
   setTimeout(function(){ piService.login(["username","payments"]).then(function(r){ if(r&&r.success){ document.getElementById("uname").textContent="@"+r.user.username; document.getElementById("user-badge").style.display="flex"; } }).catch(function(){}); },400);
 });
 
@@ -340,7 +413,7 @@ async function buildDeed(){
 }
 async function showDeed(force){
   if(!force&&!validate(6,true)) return;
-  await buildDeed(); document.body.classList.add("reporting"); document.getElementById("report-panel").className="report-panel active"; window.scrollTo(0,0);
+  vnDone(); await buildDeed(); document.body.classList.add("reporting"); document.getElementById("report-panel").className="report-panel active"; window.scrollTo(0,0);
 }
 function closeDeed(){ document.body.classList.remove("reporting"); document.getElementById("report-panel").className="report-panel"; }
 
@@ -392,5 +465,6 @@ function applyLang(){
   updatePct(); updateAssets(); refreshPaidUI(); if(currentStep===5) buildSummary();
 }
 </script>
+<script>try{ if(window.VN) VN.init("legacyvault"); }catch(e){}</script>
 </body>
 </html>
