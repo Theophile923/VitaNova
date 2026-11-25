@@ -1002,7 +1002,10 @@ async function callPaymentApi(path, body){
   return d;
 }
 async function paymentsAvailable(){
-  try{ const r = await fetch("/api/pi/approve", {method:"GET"}); return r.status===405; }catch(e){ return false; }
+  // Test du serveur de paiement : il doit repondre "405 Method not allowed" a une simple visite.
+  // Le code obtenu est conserve pour etre affiche dans le message en cas de probleme.
+  try{ const r = await fetch("/api/pi/approve", {method:"GET", cache:"no-store"}); window._payStatus = r.status; return r.status===405; }
+  catch(e){ window._payStatus = "reseau"; return false; }
 }
 async function handleIncompletePayment(p){
   try{
@@ -1967,7 +1970,7 @@ async function pay(){
   const lf = lang==="fr";
   const chk1=document.getElementById("chk1"), chk2=document.getElementById("chk2");
   if(!chk1?.checked||!chk2?.checked){ showToast(lf?"Acceptez les conditions":"Accept the terms","err"); return; }
-  if(!(await paymentsAvailable())){ showToast(lf?"Paiement bientot disponible":"Payment coming soon","err"); return; }
+  if(!(await paymentsAvailable())){ showToast((lf?"Paiement bientot disponible":"Payment coming soon")+" (code "+window._payStatus+")","err"); return; }
   if(!piService.user){
     showToast(lf?"Connexion a Pi...":"Connecting to Pi...");
     // Hors du Pi Browser, la connexion Pi ne repond jamais : on previent l'utilisateur au bout de 10 secondes.
