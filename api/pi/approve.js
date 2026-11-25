@@ -3,8 +3,24 @@
 // Necessite la variable secrete PI_API_KEY (reglee dans Vercel, jamais ecrite dans le code).
 
 const PI_API = "https://api.minepi.com/v2";
+// Sites autorises a appeler ce serveur : le site VitaNova et les adresses Pi (xxx.pinet.com).
+const ALLOWED_ORIGIN = /^https?:\/\/(vitanova-test\.vercel\.app|[a-z0-9-]+\.pinet\.com)$/i;
+
+function cors(req, res) {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGIN.test(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  }
+}
 
 module.exports = async function handler(req, res) {
+  cors(req, res);
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
