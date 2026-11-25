@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BuildSmart — VitaNova</title>
 <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="vn-analytics.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -967,7 +968,6 @@ let lang = "fr";
 let roomCount = 0, matCount = 0, smartCount = 0;
 let expertiseRows = [];
 
-const PAID_KEY = "vitanova_buildsmart_paid";
 // Production (vrai Pi Browser) = sandbox false.
 // Mode test (sandbox) : adresse avec ?sandbox=1, page ouverte depuis une page ?sandbox=1, page affichee dans sandbox.minepi.com, ou localhost.
 // Le mode test est memorise pour l'onglet en cours, pour qu'il survive au passage d'une page a l'autre.
@@ -978,6 +978,10 @@ const PI_SANDBOX = (function(){
   try{ if(on) sessionStorage.setItem("vitanova_sandbox","1"); else if(sessionStorage.getItem("vitanova_sandbox")==="1") on = true; }catch(e){}
   return on;
 })();
+// Un paiement fait en mode test (Test-Pi) debloque seulement le mode test, jamais l'application reelle.
+const PAID_KEY = "vitanova_buildsmart_paid" + (PI_SANDBOX ? "_sandbox" : "");
+// Adresse du serveur de paiement (api/pi/*). Un seul endroit a changer si le site change d'adresse.
+const API_BASE = "https://vitanova-test.vercel.app";
 
 // AUTH
 class AuthService {
@@ -996,25 +1000,43 @@ const piService = new AuthService();
 
 // ── PAIEMENT : liaison avec le serveur (api/pi/approve et api/pi/complete) ──
 async function callPaymentApi(path, body){
-  const r = await fetch(path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
-  let d = {}; try{ d = await r.json(); }catch(e){}
-  if(!r.ok) throw new Error(d.error || ("HTTP "+r.status));
-  return d;
+  const r = await fetch(API_BASE + path, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+  let data = {}; try{ data = await r.json(); }catch(e){}
+  if(!r.ok) throw new Error(data.error || ("HTTP " + r.status));
+  return data;
 }
 async function paymentsAvailable(){
   // Test du serveur de paiement : il doit repondre "405 Method not allowed" a une simple visite.
   // Le code obtenu est conserve pour etre affiche dans le message en cas de probleme.
-  try{ const r = await fetch("/api/pi/approve", {method:"GET", cache:"no-store"}); window._payStatus = r.status; return r.status===405; }
+  try{ const r = await fetch(API_BASE + "/api/pi/approve", {method:"GET", cache:"no-store"}); window._payStatus = r.status; return r.status===405; }
   catch(e){ window._payStatus = "reseau"; return false; }
 }
-async function handleIncompletePayment(p){
+// Paiement interrompu : avec un txid on le termine, sans txid on l'annule, pour ne pas bloquer les paiements suivants.
+async function handleIncompletePayment(payment){
   try{
-    const tx = p && p.transaction && p.transaction.txid;
-    if(p && p.identifier && tx) await callPaymentApi("/api/pi/complete", {paymentId:p.identifier, txid:tx});
-  }catch(e){ console.warn("Incomplete:", e.message); }
+    if(!payment || !payment.identifier) return;
+    const txid = payment.transaction && payment.transaction.txid;
+    if(txid) await callPaymentApi("/api/pi/complete", {paymentId:payment.identifier, txid:txid});
+    else await callPaymentApi("/api/pi/cancel", {paymentId:payment.identifier});
+  }catch(e){ console.warn("Incomplete payment:", e.message); }
 }
+// Mesure d'audience (anonyme, voir vn-analytics.js) : ne doit jamais gener le paiement.
+function vnPay(s){ try{ if(window.VN) VN.payment(s); }catch(e){} }
+function vnDone(){ try{ if(window.VN) VN.complete(); }catch(e){} }
 function isPaid(){ try{ return !!localStorage.getItem(PAID_KEY); }catch(e){ return false; } }
-function refreshPaidUI(){ const b=document.getElementById("btn-pay"); if(b) b.style.display = isPaid() ? "none" : "block"; }
+function refreshPaidUI(){
+  const b=document.getElementById("btn-pay"); if(b) b.style.display = isPaid() ? "none" : "block";
+  // Mode test uniquement : permet de recommencer un essai de paiement.
+  let r=document.getElementById("btn-reset-test");
+  if(PI_SANDBOX && isPaid() && b){
+    if(!r){
+      r=document.createElement("button"); r.id="btn-reset-test"; r.className="btn-s";
+      r.textContent=(typeof lang!=="undefined"&&lang==="en")?"Reset the test (test mode only)":"Reinitialiser le test (mode test seulement)";
+      r.onclick=function(){ try{ localStorage.removeItem(PAID_KEY); }catch(e){} refreshPaidUI(); showToast("OK"); };
+      b.parentNode.insertBefore(r,b.nextSibling);
+    }
+  }else if(r){ r.remove(); }
+}
 
 // ── INIT ──
 window.addEventListener("load", function(){
@@ -1680,6 +1702,7 @@ function buildRapportSummary(){
 }
 
 function printReport(){
+  vnDone();
   buildFullReport();
   document.body.classList.add("reporting");
   document.getElementById("report-panel").className="report-panel active";
@@ -1985,6 +2008,7 @@ async function pay(){
   const ts=Date.now(), uid=piService.user?.username||"user";
   try{
     await Pi.init({version:"2.0",sandbox:PI_SANDBOX});
+    vnPay("initiated");
     Pi.createPayment({amount:REPORT_PRICE_PI, memo:"BUILDSMART-"+ts+"-"+uid,
       metadata:{type:"buildsmart_report",userId:uid,timestamp:ts}},{
       onReadyForServerApproval:function(paymentId){
@@ -1994,13 +2018,14 @@ async function pay(){
         callPaymentApi("/api/pi/complete",{paymentId:paymentId,txid:txid}).then(function(){ showSuccess(txid); })
           .catch(function(e){ console.error(e); showToast(lf?"Paiement non confirme — contactez-nous":"Payment not confirmed — contact us","err"); });
       },
-      onCancel:function(){ showToast(lf?"Annule":"Cancelled","err"); },
-      onError:function(e){ console.error(e); showToast(lf?"Erreur paiement":"Payment error","err"); }
+      onCancel:function(){ vnPay("cancelled"); showToast(lf?"Annule":"Cancelled","err"); },
+      onError:function(e){ console.error(e); vnPay("error"); showToast(lf?"Erreur paiement":"Payment error","err"); }
     });
   }catch(e){ showToast(lf?"Pi Browser requis":"Pi Browser required","err"); }
 }
 
 function showSuccess(txid){
+  vnPay("confirmed"); vnDone();
   try{ localStorage.setItem(PAID_KEY, JSON.stringify({txid:txid||null, ts:new Date().toISOString()})); }catch(e){}
   refreshPaidUI();
   document.querySelector(".content").style.display="none";
@@ -2022,5 +2047,6 @@ function showToast(msg,type){
   el.style.display="block"; setTimeout(function(){ el.style.display="none"; },3500);
 }
 </script>
+<script>try{ if(window.VN) VN.init("buildsmart"); }catch(e){}</script>
 </body>
 </html>
