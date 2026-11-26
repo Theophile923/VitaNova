@@ -3,8 +3,8 @@
 // Necessite la variable secrete PI_API_KEY (reglee dans Vercel, jamais ecrite dans le code).
 
 const PI_API = "https://api.minepi.com/v2";
-// Sites autorises a appeler ce serveur : le site VitaNova et les adresses Pi (xxx.pinet.com).
-const ALLOWED_ORIGIN = /^https?:\/\/(vitanova-test\.vercel\.app|[a-z0-9-]+\.pinet\.com)$/i;
+// Sites autorises a appeler ce serveur : le site VitaNova (Vercel), la page GitHub Pages et les adresses Pi (xxx.pinet.com).
+const ALLOWED_ORIGIN = /^https?:\/\/(vitanova-test\.vercel\.app|theophile923\.github\.io|[a-z0-9-]+\.pinet\.com)$/i;
 
 function cors(req, res) {
   const origin = req.headers.origin;
