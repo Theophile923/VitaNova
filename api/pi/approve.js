@@ -1,6 +1,8 @@
 // VitaNova — serveur de paiement Pi : ETAPE 1 « Approbation »
 // Emplacement dans le depot GitHub : api/pi/approve.js
 // Necessite la variable secrete PI_API_KEY (reglee dans Vercel, jamais ecrite dans le code).
+// Version diagnostic : en cas de refus, la reponse contient aussi le code et le message renvoyes par Pi
+// (jamais la cle secrete), pour comprendre la cause.
 
 const PI_API = "https://api.minepi.com/v2";
 // Sites autorises a appeler ce serveur : le site VitaNova (Vercel), la page GitHub Pages et les adresses Pi (xxx.pinet.com).
@@ -43,10 +45,17 @@ module.exports = async function handler(req, res) {
     });
     const data = await r.json().catch(function () { return {}; });
     if (!r.ok) {
-      return res.status(502).json({ error: "Approbation refusee par Pi" });
+      const piMessage = (data && (data.message || data.error_message || data.error)) || null;
+      console.error("Approbation refusee par Pi :", r.status, JSON.stringify(data));
+      return res.status(502).json({
+        error: "Approbation refusee par Pi",
+        piStatus: r.status,
+        piMessage: piMessage
+      });
     }
     return res.status(200).json({ ok: true, paymentId: paymentId, status: data.status || null });
   } catch (e) {
+    console.error("Erreur serveur approve :", e && e.message);
     return res.status(500).json({ error: "Erreur serveur" });
   }
 };
