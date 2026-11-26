@@ -33,7 +33,7 @@ a{color:var(--blue);}
 
 <!-- ═════════ ENGLISH ═════════ -->
 <h1>Privacy Policy</h1>
-<div class="updated">VitaNova · Last updated: November 5, 2026</div>
+<div class="updated">VitaNova · Last updated: November 26, 2026</div>
 
 <p>VitaNova is a set of planning tools (SmartBiz, LegacyVault, BuildSmart) for Pi Network Pioneers, operated by Theophile HAKIZIMANA (Rwanda). We collect as little data as possible. This page explains exactly what is used and why.</p>
 
@@ -41,12 +41,14 @@ a{color:var(--blue);}
 <ul>
   <li><strong>Your Pi username.</strong> When you sign in with Pi Authentication, we receive your Pi username (and, only where payment is offered, permission to request a payment). We do not receive your password, wallet keys, email address or phone number.</li>
   <li><strong>Payment references.</strong> If you pay in Pi, our payment server receives the payment identifier and the transaction ID so it can confirm the payment with Pi. We do not keep a database of payments.</li>
+  <li><strong>Anonymous usage statistics.</strong> We measure how the tools are used, without knowing who you are. See section 4.</li>
 </ul>
 
 <h2>2. What stays on your device</h2>
 <ul>
   <li>The information you type into the tools (for example business plans, succession drafts, building quotes, saved projects) is stored in your browser on your own device (local storage). It is not sent to our servers.</li>
   <li>If you pay to unlock a full report, a marker containing the payment transaction ID is saved on your device so the report stays unlocked.</li>
+  <li>When anonymous statistics are active, a random anonymous identifier, and a small marker showing that you already sent feedback for a tool, are also saved on your device.</li>
   <li>You can delete all of this at any time with the “New” button inside a tool or by clearing your browser data.</li>
 </ul>
 
@@ -55,16 +57,28 @@ a{color:var(--blue);}
   <li><strong>Pi Network</strong> (Pi Browser, Pi SDK, Pi servers) handles sign-in and payments, under Pi’s own terms and privacy policy.</li>
   <li><strong>Exchange-rate service.</strong> BuildSmart requests the USD/FRW exchange rate from api.exchangerate-api.com. That service can see your IP address like any website you visit. No project data is sent.</li>
   <li><strong>Hosting.</strong> The site and its payment server are hosted on Vercel, which may keep standard technical logs (for example IP address and time of request).</li>
+  <li><strong>Anonymous statistics.</strong> PostHog (posthog.com) receives the anonymous usage events described in section 4.</li>
   <li><strong>LegacyVault.</strong> The draft deed you prepare (names of heirs, estate, clauses) stays on your device. VitaNova does not send it to any server or storage network. If you print or share the document, you control where it goes.</li>
 </ul>
 
-<h2>4. What we do not do</h2>
+<h2>4. Anonymous usage statistics (PostHog)</h2>
+<p>To understand which tools are useful and to improve them, VitaNova uses PostHog, an analytics service, to count simple actions. This is designed to be anonymous.</p>
 <ul>
-  <li>No advertising, no tracking or analytics scripts, no selling or sharing of personal data.</li>
+  <li><strong>What is measured:</strong> that the app was opened; which tool was chosen on the home page; that a tool was opened, used (for example that a field was changed, never what was typed), completed, or left before completion; the steps of a payment (started, confirmed, cancelled, error) without any amount, identifier or transaction ID; the language shown (French or English); the page address; and whether the visit is a test visit.</li>
+  <li><strong>Optional feedback:</strong> if you tap the small “Feedback?” button, we receive your rating from 1 to 5 and the optional comment you choose to write (up to 500 characters). Please do not write any personal information in that comment.</li>
+  <li><strong>Anonymous identifier:</strong> a random number generated on your device lets us count visits. It is not linked to your Pi username or to any other identity. If you clear your browser data, a new random number is created.</li>
+  <li><strong>What is never measured:</strong> your Pi username, wallet address, keys or tokens, email address, phone number, or anything you type into the tools.</li>
+  <li><strong>Technical data:</strong> like any server that receives a request, PostHog’s servers receive technical information such as your IP address when an event is sent.</li>
+  <li><strong>Your choice:</strong> if “Do Not Track” is turned on in your browser, no statistics are sent. The feedback button is optional. To ask us to look into or delete data linked to you, write to the address in section 6.</li>
+</ul>
+
+<h2>5. What we do not do</h2>
+<ul>
+  <li>No advertising, no advertising or cross-site tracking scripts, no selling or sharing of personal data. The only measurement is the anonymous usage statistics described in section 4.</li>
   <li>No account other than Pi Authentication. No email or phone collection.</li>
 </ul>
 
-<h2>5. Your choices and contact</h2>
+<h2>6. Your choices and contact</h2>
 <p>You can stop using VitaNova at any time and erase local data as described above. For any privacy question or request, write to <a href="mailto:theophileh56@gmail.com">theophileh56@gmail.com</a>.</p>
 
 <div class="box"><strong>Important.</strong> VitaNova gives educational and indicative estimates only. It is not legal, financial, medical or engineering advice. USD or FRW amounts shown in the tools are unofficial estimates; Pi has no official market price.</div>
@@ -72,42 +86,56 @@ a{color:var(--blue);}
 <hr class="lang-sep"/>
 
 <!-- ═════════ FRANCAIS ═════════ -->
-<h1>Politique de confidentialite</h1>
-<div class="updated">VitaNova · Derniere mise a jour : 5 novembre 2026</div>
+<h1>Politique de confidentialité</h1>
+<div class="updated">VitaNova · Dernière mise à jour : 26 novembre 2026</div>
 
-<p>VitaNova est un ensemble d'outils de planification (SmartBiz, LegacyVault, BuildSmart) pour les Pionniers de Pi Network, exploite par Theophile HAKIZIMANA (Rwanda). Nous collectons le moins de donnees possible. Cette page explique exactement ce qui est utilise et pourquoi.</p>
+<p>VitaNova est un ensemble d'outils de planification (SmartBiz, LegacyVault, BuildSmart) pour les Pionniers de Pi Network, exploité par Theophile HAKIZIMANA (Rwanda). Nous collectons le moins de données possible. Cette page explique exactement ce qui est utilisé et pourquoi.</p>
 
 <h2>1. Ce que nous collectons</h2>
 <ul>
-  <li><strong>Votre nom d'utilisateur Pi.</strong> Quand vous vous connectez avec Pi Authentication, nous recevons votre nom d'utilisateur Pi (et, seulement la ou un paiement est propose, l'autorisation de demander un paiement). Nous ne recevons ni mot de passe, ni cles de portefeuille, ni adresse e-mail, ni numero de telephone.</li>
-  <li><strong>References de paiement.</strong> Si vous payez en Pi, notre serveur de paiement recoit l'identifiant du paiement et l'identifiant de transaction pour le confirmer aupres de Pi. Nous ne gardons pas de base de donnees des paiements.</li>
+  <li><strong>Votre nom d'utilisateur Pi.</strong> Quand vous vous connectez avec Pi Authentication, nous recevons votre nom d'utilisateur Pi (et, seulement là où un paiement est proposé, l'autorisation de demander un paiement). Nous ne recevons ni mot de passe, ni clés de portefeuille, ni adresse e-mail, ni numéro de téléphone.</li>
+  <li><strong>Références de paiement.</strong> Si vous payez en Pi, notre serveur de paiement reçoit l'identifiant du paiement et l'identifiant de transaction pour le confirmer auprès de Pi. Nous ne gardons pas de base de données des paiements.</li>
+  <li><strong>Statistiques d'usage anonymes.</strong> Nous mesurons la façon dont les outils sont utilisés, sans savoir qui vous êtes. Voir la section 4.</li>
 </ul>
 
 <h2>2. Ce qui reste sur votre appareil</h2>
 <ul>
-  <li>Les informations que vous saisissez dans les outils (plans d'affaires, projets d'acte de succession, devis de construction, projets sauvegardes) sont enregistrees dans votre navigateur, sur votre propre appareil (stockage local). Elles ne sont pas envoyees a nos serveurs.</li>
-  <li>Si vous payez pour debloquer un rapport complet, un marqueur contenant l'identifiant de transaction est garde sur votre appareil pour que le rapport reste debloque.</li>
-  <li>Vous pouvez tout supprimer a tout moment avec le bouton « Nouveau » d'un outil ou en effacant les donnees de votre navigateur.</li>
+  <li>Les informations que vous saisissez dans les outils (plans d'affaires, projets d'acte de succession, devis de construction, projets sauvegardés) sont enregistrées dans votre navigateur, sur votre propre appareil (stockage local). Elles ne sont pas envoyées à nos serveurs.</li>
+  <li>Si vous payez pour débloquer un rapport complet, un marqueur contenant l'identifiant de transaction est gardé sur votre appareil pour que le rapport reste débloqué.</li>
+  <li>Lorsque les statistiques anonymes sont actives, un identifiant anonyme aléatoire, ainsi qu'un petit marqueur indiquant que vous avez déjà donné votre avis pour un outil, sont aussi enregistrés sur votre appareil.</li>
+  <li>Vous pouvez tout supprimer à tout moment avec le bouton « Nouveau » d'un outil ou en effaçant les données de votre navigateur.</li>
 </ul>
 
 <h2>3. Services tiers</h2>
 <ul>
-  <li><strong>Pi Network</strong> (Pi Browser, SDK Pi, serveurs Pi) gere la connexion et les paiements, selon ses propres conditions et sa propre politique de confidentialite.</li>
-  <li><strong>Service de taux de change.</strong> BuildSmart demande le taux USD/FRW a api.exchangerate-api.com. Ce service peut voir votre adresse IP, comme tout site visite. Aucune donnee de projet n'est envoyee.</li>
-  <li><strong>Hebergement.</strong> Le site et son serveur de paiement sont heberges chez Vercel, qui peut conserver des journaux techniques standards (par exemple adresse IP et heure de la requete).</li>
-  <li><strong>LegacyVault.</strong> Le projet d'acte que vous preparez (noms des heritiers, patrimoine, clauses) reste sur votre appareil. VitaNova ne l'envoie a aucun serveur ni reseau de stockage. Si vous imprimez ou partagez le document, vous decidez ou il va.</li>
+  <li><strong>Pi Network</strong> (Pi Browser, SDK Pi, serveurs Pi) gère la connexion et les paiements, selon ses propres conditions et sa propre politique de confidentialité.</li>
+  <li><strong>Service de taux de change.</strong> BuildSmart demande le taux USD/FRW à api.exchangerate-api.com. Ce service peut voir votre adresse IP, comme tout site visité. Aucune donnée de projet n'est envoyée.</li>
+  <li><strong>Hébergement.</strong> Le site et son serveur de paiement sont hébergés chez Vercel, qui peut conserver des journaux techniques standards (par exemple adresse IP et heure de la requête).</li>
+  <li><strong>Statistiques anonymes.</strong> PostHog (posthog.com) reçoit les événements d'usage anonymes décrits à la section 4.</li>
+  <li><strong>LegacyVault.</strong> Le projet d'acte que vous préparez (noms des héritiers, patrimoine, clauses) reste sur votre appareil. VitaNova ne l'envoie à aucun serveur ni réseau de stockage. Si vous imprimez ou partagez le document, vous décidez où il va.</li>
 </ul>
 
-<h2>4. Ce que nous ne faisons pas</h2>
+<h2>4. Statistiques d'usage anonymes (PostHog)</h2>
+<p>Pour savoir quels outils sont utiles et les améliorer, VitaNova utilise PostHog, un service d'analyse, afin de compter des actions simples. Le dispositif est conçu pour rester anonyme.</p>
 <ul>
-  <li>Aucune publicite, aucun outil de suivi ou d'analyse, aucune vente ni partage de donnees personnelles.</li>
-  <li>Aucun compte autre que Pi Authentication. Aucune collecte d'e-mail ou de telephone.</li>
+  <li><strong>Ce qui est mesuré :</strong> l'ouverture de l'application ; l'outil choisi sur la page d'accueil ; l'ouverture d'un outil, son utilisation (par exemple qu'un champ a été modifié, jamais ce qui a été écrit), son achèvement, ou son abandon avant la fin ; les étapes d'un paiement (démarré, confirmé, annulé, erreur), sans montant, sans identifiant et sans identifiant de transaction ; la langue affichée (français ou anglais) ; l'adresse de la page ; et si la visite est une visite de test.</li>
+  <li><strong>Avis facultatif :</strong> si vous touchez le petit bouton « Votre avis ? », nous recevons votre note de 1 à 5 et le commentaire facultatif que vous choisissez d'écrire (500 caractères maximum). Merci de n'y écrire aucune information personnelle.</li>
+  <li><strong>Identifiant anonyme :</strong> un numéro aléatoire généré sur votre appareil nous permet de compter les visites. Il n'est lié ni à votre nom d'utilisateur Pi ni à aucune autre identité. Si vous effacez les données de votre navigateur, un nouveau numéro est créé.</li>
+  <li><strong>Ce qui n'est jamais mesuré :</strong> votre nom d'utilisateur Pi, votre adresse de portefeuille, vos clés ou jetons, votre adresse e-mail, votre numéro de téléphone, ou tout ce que vous saisissez dans les outils.</li>
+  <li><strong>Données techniques :</strong> comme tout serveur qui reçoit une requête, les serveurs de PostHog reçoivent des informations techniques, par exemple votre adresse IP, lorsqu'un événement est envoyé.</li>
+  <li><strong>Votre choix :</strong> si l'option « Ne pas me suivre » (Do Not Track) est activée dans votre navigateur, aucune statistique n'est envoyée. Le bouton d'avis est facultatif. Pour demander que nous examinions ou supprimions des données vous concernant, écrivez à l'adresse indiquée à la section 6.</li>
 </ul>
 
-<h2>5. Vos choix et contact</h2>
-<p>Vous pouvez cesser d'utiliser VitaNova a tout moment et effacer les donnees locales comme decrit ci-dessus. Pour toute question ou demande, ecrivez a <a href="mailto:theophileh56@gmail.com">theophileh56@gmail.com</a>.</p>
+<h2>5. Ce que nous ne faisons pas</h2>
+<ul>
+  <li>Aucune publicité, aucun script publicitaire ou de suivi entre sites, aucune vente ni partage de données personnelles. La seule mesure est celle des statistiques d'usage anonymes décrites à la section 4.</li>
+  <li>Aucun compte autre que Pi Authentication. Aucune collecte d'e-mail ou de téléphone.</li>
+</ul>
 
-<div class="box"><strong>Important.</strong> VitaNova fournit des estimations educatives et indicatives uniquement. Ce n'est pas un conseil juridique, financier, medical ou d'ingenierie. Les montants en USD ou FRW affiches dans les outils sont des estimations non officielles ; Pi n'a pas de prix officiel.</div>
+<h2>6. Vos choix et contact</h2>
+<p>Vous pouvez cesser d'utiliser VitaNova à tout moment et effacer les données locales comme décrit ci-dessus. Pour toute question ou demande, écrivez à <a href="mailto:theophileh56@gmail.com">theophileh56@gmail.com</a>.</p>
+
+<div class="box"><strong>Important.</strong> VitaNova fournit des estimations éducatives et indicatives uniquement. Ce n'est pas un conseil juridique, financier, médical ou d'ingénierie. Les montants en USD ou FRW affichés dans les outils sont des estimations non officielles ; Pi n'a pas de prix officiel.</div>
 
 </div>
 </body>
